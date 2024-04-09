@@ -1,7 +1,5 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import Cookies from "js-cookie";
-import { logUserOut } from "../cms/actions";
 
 export const useUserStore = create(
   persist(
@@ -9,10 +7,8 @@ export const useUserStore = create(
       user: null,
       setUser: (payload) => set({ user: payload }),
       getUser: () => get().user,
-      logOut: () => {
+      clearUser: () => {
         set({ user: null });
-        Cookies.remove("token");
-        logUserOut();
       },
     }),
     {

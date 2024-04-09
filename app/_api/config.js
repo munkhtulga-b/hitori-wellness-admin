@@ -39,7 +39,7 @@ const fetchData = async (endpoint, method, body, serverToken) => {
     const data = await response.json();
 
     if (!isOk) {
-      toast.error(data?.error?.message || "An error occurred");
+      toast.error(data?.error?.message || "An error occured");
 
       // Redirects the user back to login page if their token has expired
       if (status === 401) {

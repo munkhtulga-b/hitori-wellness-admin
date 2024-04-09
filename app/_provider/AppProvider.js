@@ -13,11 +13,10 @@ dayjs.updateLocale("ja", {
 });
 
 const colors = {
-  primary: "#635D50",
-  primaryHover: "#635D50",
+  primary: "#121316",
+  primaryHover: "#1D1F24",
   primaryDisabled: "#EFEFF1",
   secondary: "#B7DDFF",
-  textPrimary: "#121316",
   textSecondary: "#1890FF",
   error: "#EA202B",
   inputPlaceholder: "#838795",
@@ -35,24 +34,27 @@ const AppProvider = ({ children, fontFamily }) => {
           fontFamily,
           colorPrimary: colors.primary,
           colorPrimaryHover: colors.primaryHover,
-          colorPrimaryText: colors.textPrimary,
+          colorPrimaryText: colors.primary,
           colorError: colors.error,
         },
         components: {
           Button: {
-            defaultActiveBorderColor: colors.secondary,
-            defaultHoverBorderColor: colors.secondary,
+            defaultActiveBorderColor: colors.primary,
+            defaultHoverBorderColor: colors.primary,
             defaultHoverColor: colors.textSecondary,
             defaultActiveColor: colors.textSecondary,
             colorBgContainerDisabled: colors.primaryDisabled,
             colorTextDisabled: "#BABCC4",
+            lineHeightLG: 26,
             borderRadius: 8,
             borderRadiusSM: 8,
-            controlHeightLG: 48,
+            controlHeightLG: 46,
             controlHeight: 40,
             controlHeightSM: 36,
             paddingInline: 16,
             paddingInlineSM: 16,
+            primaryShadow: "0 8px 16px 0 rgba(0, 0, 0, 0)",
+            primaryColor: "#FFF",
           },
           Radio: {
             colorPrimary: colors.textSecondary,
@@ -70,6 +72,7 @@ const AppProvider = ({ children, fontFamily }) => {
             fontSize: 14,
             colorBgContainer: colors.formInputBackground,
             colorTextPlaceholder: colors.inputPlaceholder,
+            controlOutlineWidth: 0.5,
           },
           Select: {
             controlHeightLG: 46,
@@ -77,6 +80,7 @@ const AppProvider = ({ children, fontFamily }) => {
             fontSize: 14,
             colorBgContainer: colors.formInputBackground,
             colorTextPlaceholder: colors.inputPlaceholder,
+            controlOutlineWidth: 0.5,
           },
           DatePicker: {
             controlHeight: 46,
@@ -86,6 +90,7 @@ const AppProvider = ({ children, fontFamily }) => {
           Layout: {
             headerBg: colors.headerBg,
             siderBg: colors.headerBg,
+            screenLG: 1024,
           },
         },
       }}

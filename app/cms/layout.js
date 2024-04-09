@@ -1,9 +1,9 @@
 "use client";
 
-// import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 import NavigationBar from "@/app/_components/NavigationBar";
 import { useLayoutEffect, useState, Suspense } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, redirect, useRouter } from "next/navigation";
 import { Layout } from "antd";
 import { useUserStore } from "../_store/user";
 import SideBar from "@/app/_components/SideBar";
@@ -14,21 +14,24 @@ const { Header, Content, Sider } = Layout;
 
 const AdminLayout = ({ children }) => {
   const pathName = usePathname();
+  const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
   const windowWidth = useWindowWidth();
-  const clearUser = useUserStore((state) => state.logOut);
+  const clearUser = useUserStore((state) => state.clearUser);
 
   useLayoutEffect(() => {
-    // const token = Cookies.get("token");
-    // if (!token) {
-    //   redirect("/auth/login");
-    // }
+    const token = Cookies.get("token");
+    if (!token) {
+      redirect("/auth/login");
+    }
     setIsMounted(true);
   }, []);
 
   const logOut = () => {
     clearUser();
+    Cookies.remove("token");
+    router.push("/auth/login");
   };
 
   return (
@@ -45,6 +48,8 @@ const AdminLayout = ({ children }) => {
               collapsed={collapsed}
               onCollapse={(value) => setCollapsed(value)}
               collapsedWidth={0}
+              breakpoint="lg"
+              onBreakpoint={(value) => setCollapsed(!value)}
               trigger={null}
               width={275}
               style={{

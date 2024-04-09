@@ -1,10 +1,29 @@
 "use client";
 
+import $api from "@/app/_api";
+import Cookies from "js-cookie";
+import { useUserStore } from "@/app/_store/user";
 import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const AuthLogin = () => {
+  const router = useRouter();
   const [form] = Form.useForm();
+  const [isLoading, setIsLoading] = useState(false);
+  const setUser = useUserStore((state) => state.setUser);
+
+  const login = async (params) => {
+    setIsLoading(true);
+    const { isOk, data } = await $api.auth.login(params);
+    if (isOk) {
+      Cookies.set("token", data.tokens);
+      setUser(data.admin);
+      router.push("/cms");
+    }
+    setIsLoading(false);
+  };
 
   return (
     <motion.div
@@ -19,7 +38,7 @@ const AuthLogin = () => {
           form={form}
           layout="vertical"
           name="loginForm"
-          onFinish={(params) => console.log(params)}
+          onFinish={(params) => login(params)}
         >
           <Form.Item
             required={false}
@@ -58,6 +77,7 @@ const AuthLogin = () => {
               size="large"
               type="primary"
               htmlType="submit"
+              loading={isLoading}
               className="tw-w-full"
             >
               ログイン

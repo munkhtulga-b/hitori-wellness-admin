@@ -18,6 +18,7 @@ module.exports = {
         aquaLight: "#B7DDFF",
         bgForm: "#FAFAFA",
         bgLayout: "#EBEBEB",
+        bgTag: "#ECEDF0",
       },
       textColor: {
         primary: "#121316",
@@ -26,6 +27,7 @@ module.exports = {
         required: "#D51E27",
         disabled: "#1C20243D",
         grayLight: "#505050",
+        tableHeader: "#3F4145",
       },
       borderColor: {
         primary: "#BABCC4",
@@ -34,6 +36,8 @@ module.exports = {
         available: "#1890FF",
         subtle: "#EFEFF1",
         warning: "#F0ACB0",
+        divider: "#ECEDF0",
+        tableHeader: "#D6D8DB",
       },
       ringColor: {
         active: "#B7DDFF",
