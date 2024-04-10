@@ -9,6 +9,7 @@ import { useUserStore } from "../_store/user";
 import SideBar from "@/app/_components/SideBar";
 import { motion } from "framer-motion";
 import { useWindowWidth } from "../_utils/custom-hooks";
+import { useAdminAccessStore } from "../_store/admin-access";
 
 const { Header, Content, Sider } = Layout;
 
@@ -19,6 +20,7 @@ const AdminLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(true);
   const windowWidth = useWindowWidth();
   const clearUser = useUserStore((state) => state.clearUser);
+  const clearAccess = useAdminAccessStore((state) => state.clearAccess);
 
   useLayoutEffect(() => {
     const token = Cookies.get("token");
@@ -30,6 +32,7 @@ const AdminLayout = ({ children }) => {
 
   const logOut = () => {
     clearUser();
+    clearAccess();
     Cookies.remove("token");
     router.push("/auth/login");
   };

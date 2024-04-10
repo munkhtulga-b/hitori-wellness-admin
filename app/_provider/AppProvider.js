@@ -23,6 +23,7 @@ const colors = {
   formInputBackground: "#FAFAFA",
   formRequiredMark: "#D51E27",
   headerBg: "#E4DCD5",
+  optionSelected: "#ECEDF0",
 };
 
 const AppProvider = ({ children, fontFamily }) => {
@@ -81,6 +82,7 @@ const AppProvider = ({ children, fontFamily }) => {
             colorBgContainer: colors.formInputBackground,
             colorTextPlaceholder: colors.inputPlaceholder,
             controlOutlineWidth: 0.5,
+            optionSelectedBg: colors.optionSelected,
           },
           DatePicker: {
             controlHeight: 46,

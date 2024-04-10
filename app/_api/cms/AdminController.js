@@ -5,3 +5,11 @@ export const getMany = (queries) => {
   const queryString = createQueryString(queries);
   return fetchData(`admins${queryString}`, "GET");
 };
+
+export const create = (body) => {
+  return fetchData("auth/admin/register", "POST", body);
+};
+
+export const deleteMany = (body) => {
+  return fetchData("admins", "DELETE", body);
+};

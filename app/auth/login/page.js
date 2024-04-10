@@ -7,22 +7,46 @@ import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAdminAccessStore } from "@/app/_store/admin-access";
+import _ from "lodash";
 
 const AuthLogin = () => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const setUser = useUserStore((state) => state.setUser);
+  const setAccess = useAdminAccessStore((state) => state.setAccess);
 
   const login = async (params) => {
     setIsLoading(true);
     const { isOk, data } = await $api.auth.login(params);
     if (isOk) {
-      Cookies.set("token", data.tokens);
-      setUser(data.admin);
-      router.push("/cms");
+      const access = await getAdminAccess();
+      if (access) {
+        Cookies.set("token", data.tokens);
+        setUser(data.admin);
+        setAccess(access);
+        router.push("/cms");
+      }
     }
     setIsLoading(false);
+  };
+
+  const getAdminAccess = async () => {
+    const { isOk, data } = await $api.admin.access.getMany();
+    if (isOk) {
+      const sorted = _.uniqBy(data, "level_type");
+      const mapped = _.map(
+        sorted,
+        ({ level_type: value, level_type: label }) => ({
+          value,
+          label: `タイプ${label}`,
+        })
+      );
+      return mapped;
+    } else {
+      return null;
+    }
   };
 
   return (

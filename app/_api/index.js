@@ -3,6 +3,8 @@ import login from "./auth/LoginController";
 
 // Admin API
 import * as admin from "./cms/AdminController";
+import * as access from "./cms/AdminAccessController";
+import * as studio from "./cms/StudioController";
 
 const $api = {
   auth: {
@@ -10,6 +12,8 @@ const $api = {
   },
   admin: {
     admin,
+    studio,
+    access,
   },
 };
 

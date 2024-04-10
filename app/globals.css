@@ -24,3 +24,9 @@ body {
 u {
   text-underline-offset: 4px !important;
 }
+
+.ant-modal-title {
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  line-height: 30px !important;
+}
