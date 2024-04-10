@@ -108,9 +108,17 @@ const UsersPage = () => {
   };
 
   const onFilterChange = (filter) => {
-    let shallow = _.merge(filters, filter);
+    const shallow = _.merge(filters, filter);
     setFilters(shallow);
     fetchAdmins(shallow);
+  };
+
+  const onFilterClear = (filterKey) => {
+    if (filters) {
+      const shallow = _.omit(filters, filterKey);
+      setFilters(shallow);
+      fetchAdmins(shallow);
+    }
   };
 
   return (
@@ -123,6 +131,7 @@ const UsersPage = () => {
           onAdd={() => setIsModalOpen(true)}
           onLevelTypeChange={(value) => onFilterChange({ levelType: value })}
           onStudioChange={(value) => onFilterChange({ studioId: value })}
+          onFilterClear={onFilterClear}
           isRequesting={isRequesting}
         />
         <BaseTable

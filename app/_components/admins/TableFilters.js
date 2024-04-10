@@ -12,6 +12,7 @@ const AdminTableFilters = ({
   onAdd,
   onLevelTypeChange,
   onStudioChange,
+  onFilterClear,
   isRequesting,
   studios,
 }) => {
@@ -35,23 +36,29 @@ const AdminTableFilters = ({
             }}
           />
           <Select
+            allowClear
             disabled={!getLevelTypes}
             size="large"
             style={{
               width: 120,
             }}
             options={getLevelTypes}
-            onChange={(value) => onLevelTypeChange(value)}
+            onChange={(value) =>
+              value ? onLevelTypeChange(value) : onFilterClear("levelType")
+            }
             placeholder="権限タイプ"
           />
           <Select
+            allowClear
             disabled={!studios}
             size="large"
             style={{
               width: 200,
             }}
             options={studios}
-            onChange={(value) => onStudioChange(value)}
+            onChange={(value) =>
+              value ? onStudioChange(value) : onFilterClear("studioId")
+            }
             placeholder="店舗"
           />
         </div>
