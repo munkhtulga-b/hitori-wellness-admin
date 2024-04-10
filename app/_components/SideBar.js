@@ -2,9 +2,11 @@ import Menus from "@/app/_resources/sidebar-menu.json";
 import Image from "next/image";
 import { Button } from "antd";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const SideBar = ({ setCollapsed, onLogOut }) => {
   const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleMenuClick = ({ route }) => {
     router.push(route);
@@ -54,23 +56,35 @@ const SideBar = ({ setCollapsed, onLogOut }) => {
             })}
           </ul>
           <Button
+            loading={isLoggingOut}
             size="large"
             type="primary"
-            onClick={onLogOut}
+            onClick={() => {
+              setIsLoggingOut(true);
+              setTimeout(() => {
+                onLogOut();
+              }, 1500);
+            }}
             className="tw-mb-20"
           >
-            <div className="tw-flex tw-justify-between tw-items-center">
+            {!isLoggingOut ? (
+              <div className="tw-flex tw-justify-between tw-items-center">
+                <span className="tw-text-white tw-tracking-[0.14px]">
+                  ログアウト
+                </span>
+                <Image
+                  src="/assets/sidebar/logout-icon.svg"
+                  alt="logout"
+                  width={0}
+                  height={0}
+                  style={{ height: "auto", width: "auto" }}
+                />
+              </div>
+            ) : (
               <span className="tw-text-white tw-tracking-[0.14px]">
                 ログアウト
               </span>
-              <Image
-                src="/assets/sidebar/logout-icon.svg"
-                alt="logout"
-                width={0}
-                height={0}
-                style={{ height: "auto", width: "auto" }}
-              />
-            </div>
+            )}
           </Button>
         </section>
       </div>

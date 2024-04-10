@@ -9,6 +9,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import AddModal from "@/app/_components/admins/AddModal";
 import _ from "lodash";
 import { toast } from "react-toastify";
+import PageHeader from "@/app/_components/PageHeader";
 
 const columns = [
   {
@@ -44,6 +45,7 @@ const UsersPage = () => {
   const [studios, setStudios] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
@@ -77,8 +79,8 @@ const UsersPage = () => {
     if (isOk) {
       await fetchAdmins();
       setIsModalOpen(false);
-      Modal.destroyAll();
-      toast.success("Created successfully");
+      setModalKey((prev) => prev + 1);
+      toast.success("管理ユーザーが招待されました。");
     }
     setIsRequesting(false);
   };
@@ -89,15 +91,9 @@ const UsersPage = () => {
     if (isOk) {
       setCheckedRows([]);
       await fetchAdmins();
-      toast.success("Deleted successfully");
+      toast.success("管理ユーザーが削除されました。");
     }
     setIsRequesting(false);
-  };
-
-  const onSearch = (value) => {
-    if (value?.length) {
-      fetchAdmins({ mailAddress: value });
-    }
   };
 
   const onDelete = () => {
@@ -124,17 +120,25 @@ const UsersPage = () => {
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
+        <PageHeader
+          title={`管理ユーザー`}
+          isExportable={true}
+          exportKey="admin"
+          data={admins}
+        />
         <AdminTableFilters
           studios={studios}
-          onSearch={onSearch}
           onDelete={onDelete}
           onAdd={() => setIsModalOpen(true)}
+          onSearch={(value) => onFilterChange({ mailAddress: value })}
           onLevelTypeChange={(value) => onFilterChange({ levelType: value })}
           onStudioChange={(value) => onFilterChange({ studioId: value })}
           onFilterClear={onFilterClear}
           isRequesting={isRequesting}
+          checkedRows={checkedRows}
         />
         <BaseTable
+          tableId="admin-table"
           columns={columns}
           data={admins}
           isLoading={isLoading}
@@ -167,6 +171,7 @@ const UsersPage = () => {
           studios={studios}
           isRequesting={isRequesting}
           onConfirm={registerAdmin}
+          modalKey={modalKey}
         />
       </Modal>
     </>

@@ -15,6 +15,7 @@ const AdminTableFilters = ({
   onFilterClear,
   isRequesting,
   studios,
+  checkedRows,
 }) => {
   const getLevelTypes = useAdminAccessStore((state) => state.getAccess());
   return (
@@ -31,7 +32,7 @@ const AdminTableFilters = ({
             onPressEnter={(e) => onSearch(e.target.value)}
             onChange={(e) => {
               if (!e.target.value.length) {
-                console.log("Empty");
+                onFilterClear("mailAddress");
               }
             }}
           />
@@ -70,6 +71,7 @@ const AdminTableFilters = ({
             </div>
           </Button>
           <Button
+            disabled={!checkedRows?.length}
             loading={isRequesting}
             size="large"
             type="primary"
@@ -78,7 +80,12 @@ const AdminTableFilters = ({
           >
             {!isRequesting ? (
               <div className="tw-flex tw-justify-start tw-items-center tw-gap-1">
-                <DeleteOutlined style={{ color: "white", fontSize: "18px" }} />
+                <DeleteOutlined
+                  style={{
+                    color: checkedRows?.length ? "white" : "#BABCC4",
+                    fontSize: "18px",
+                  }}
+                />
                 <span>削除</span>
               </div>
             ) : (

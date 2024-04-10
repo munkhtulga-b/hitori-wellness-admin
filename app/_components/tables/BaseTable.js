@@ -9,6 +9,7 @@ const baseTableCellStyle = "tw-px-6 tw-py-4";
 const baseTableRowStyle = "tw-border-b tw-border-divider";
 
 const BaseTable = ({
+  tableId,
   columns,
   data,
   isLoading,
@@ -85,7 +86,7 @@ const BaseTable = ({
     <>
       {columns ? (
         <>
-          <table className="tw-w-full">
+          <table id={tableId ? tableId : ""} className="tw-w-full">
             {columns ? (
               <thead>
                 <tr className="tw-border-b tw-border-tableHeader">
