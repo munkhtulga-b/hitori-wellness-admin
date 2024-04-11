@@ -1,0 +1,36 @@
+{
+    "admin": [
+        {
+            "label": "id",
+            "key": "id"
+        },
+        {
+            "label": "email",
+            "key": "mail_address"
+        },
+        {
+            "label": "levelType",
+            "key": "level_type"
+        },
+        {
+            "label": "studios",
+            "key": "studios"
+        },
+        {
+            "label": "createdUser",
+            "key": "created_user"
+        },
+        {
+            "label": "createdAt",
+            "key": "created_at"
+        },
+        {
+            "label": "updatedUser",
+            "key": "updated_user"
+        },
+        {
+            "label": "updatedAt",
+            "key": "updated_at"
+        }
+    ]
+}

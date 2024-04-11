@@ -1,9 +1,14 @@
 import { useAdminAccessStore } from "@/app/_store/admin-access";
 import { Form, Input, Select, Button } from "antd";
+import { useEffect } from "react";
 
-const AddModal = ({ studios, isRequesting, onConfirm }) => {
+const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
   const [form] = Form.useForm();
   const getLevelTypes = useAdminAccessStore((state) => state.getAccess());
+
+  useEffect(() => {
+    form.resetFields();
+  }, [modalKey]);
 
   return (
     <>
