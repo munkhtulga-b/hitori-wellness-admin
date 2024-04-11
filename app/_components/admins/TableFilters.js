@@ -20,8 +20,8 @@ const AdminTableFilters = ({
   const getLevelTypes = useAdminAccessStore((state) => state.getAccess());
   return (
     <>
-      <section className="tw-flex tw-justify-between tw-items-start">
-        <div className="tw-flex tw-justify-start tw-items-center tw-gap-3">
+      <section className="tw-flex tw-flex-col tw-items-end xl:tw-flex-row xl:tw-justify-between xl:tw-items-start tw-gap-10">
+        <div className="tw-self-start tw-flex tw-justify-start tw-items-center tw-gap-3">
           <Input
             placeholder="検索"
             prefix={<SearchOutlined style={{ fontSize: "18px" }} />}

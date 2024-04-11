@@ -1,35 +1,35 @@
 {
     "admin": [
         {
-            "label": "id",
+            "label": "ID",
             "key": "id"
         },
         {
-            "label": "email",
+            "label": "メールアドレス",
             "key": "mail_address"
         },
         {
-            "label": "levelType",
+            "label": "権限タイプ",
             "key": "level_type"
         },
         {
-            "label": "studios",
+            "label": "店舗",
             "key": "studios"
         },
         {
-            "label": "createdUser",
+            "label": "作成者",
             "key": "created_user"
         },
         {
-            "label": "createdAt",
+            "label": "作成日時",
             "key": "created_at"
         },
         {
-            "label": "updatedUser",
+            "label": "更新者",
             "key": "updated_user"
         },
         {
-            "label": "updatedAt",
+            "label": "更新日時",
             "key": "updated_at"
         }
     ]
