@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { Checkbox } from "antd";
 import { nullSafety } from "@/app/_utils/helpers";
 import NoData from "../custom/NoData";
+import Image from "next/image";
 
 const baseTableCellStyle = "tw-px-6 tw-py-4";
 const baseTableRowStyle = "tw-border-b tw-border-divider";
@@ -37,7 +38,7 @@ const BaseTable = ({
   const formatDataIndex = (item, column) => {
     let result = nullSafety(item[column.dataIndex]);
     if (column.type === "date") {
-      result = dayjs(result).format("YYYY-MM-DD HH:mm");
+      result = dayjs.utc(result).format("YYYY-MM-DD HH:mm");
     }
     if (column.type === "levelType") {
       result = `タイプ${result}`;
@@ -48,12 +49,57 @@ const BaseTable = ({
           {item[column.dataIndex].map((tag) => (
             <span
               key={tag.id}
-              className="tw-px-[10px] tw-py-[6px] tw-rounded-full tw-bg-bgTag"
+              className="tw-px-[10px] tw-py-[6px] tw-rounded-full tw-bg-bgTag tw-whitespace-nowrap"
             >
               {nullSafety(tag.name)}
             </span>
           ))}
         </div>
+      );
+    }
+    if (column.type === "stackedList" && Array.isArray(column.dataIndex)) {
+      result = (
+        <div className="tw-flex tw-justify-start tw-items-center tw-gap-3">
+          <section className="tw-min-w-[40px] tw-max-w-[40px] tw-rounded tw-overflow-hidden">
+            <Image
+              priority
+              src={`https://${process.env.BASE_IMAGE_URL}${
+                item[column.imageIndex]
+              }`}
+              alt="thumbnail"
+              width={0}
+              height={0}
+              style={{ objectFit: "contain", height: "auto", width: "100%" }}
+              unoptimized
+            />
+          </section>
+          <ul className="tw-flex tw-flex-col">
+            {column.dataIndex.map((stackItem, idx) => (
+              <li key={stackItem} className={column.styles[idx]}>
+                {nullSafety(item[stackItem])}
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+    if (column.type === "timePeriod") {
+      result =
+        item[column.dataIndex][0].end_hour -
+          item[column.dataIndex][0].start_hour ==
+        24
+          ? "24時間以上"
+          : `${item[column.dataIndex][0].start_hour} - ${
+              item[column.dataIndex][0].end_hour
+            }`;
+    }
+    if (column.type === "status") {
+      result = (
+        <span
+          className={`tw-py-[6px] tw-px-[10px] tw-rounded-full tw-bg-gray-200`}
+        >
+          {nullSafety(item[column.dataIndex])}
+        </span>
       );
     }
     return result;

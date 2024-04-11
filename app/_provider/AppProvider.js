@@ -5,9 +5,11 @@ import "dayjs/locale/ja";
 import locale from "antd/locale/ja_JP";
 import dayjs from "dayjs";
 import updateLocale from "dayjs/plugin/updateLocale";
+import utc from "dayjs/plugin/utc";
 
 dayjs.locale("ja");
 dayjs.extend(updateLocale);
+dayjs.extend(utc);
 dayjs.updateLocale("ja", {
   weekStart: 0,
 });
@@ -93,6 +95,9 @@ const AppProvider = ({ children, fontFamily }) => {
             headerBg: colors.headerBg,
             siderBg: colors.headerBg,
             screenLG: 1024,
+          },
+          Tabs: {
+            horizontalItemPadding: "8px 16px",
           },
         },
       }}

@@ -2,15 +2,31 @@ import { Button } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 import csvHeaders from "@/app/_resources/csv-export-headers.json";
+import dayjs from "dayjs";
+import { nullSafety } from "../_utils/helpers";
 
 const PageHeader = ({ title, isExportable, exportKey, data }) => {
-  const convertExportableData = () => {
-    const result = [];
-    csvHeaders[exportKey].forEach((header) => {
-      console.log(header);
-      //TODO: Compute export data
+  /**
+   * Generate CSV data from the provided 'data' array by mapping each item to a CSV row.
+   *
+   * @param None
+   * @return {Array} Array of objects representing CSV rows
+   */
+  const exportTableToCSV = () => {
+    const csvData = data.map((item) => {
+      const row = {};
+      csvHeaders.admin.forEach(({ key }) => {
+        if (key === "studios") {
+          row[key] = item.studios.map(({ name }) => name).join(", ");
+        } else if (key === "created_at" || key === "updated_at") {
+          row[key] = dayjs.utc(item[key]).format("YYYY-MM-DD HH:mm");
+        } else {
+          row[key] = nullSafety(item[key]);
+        }
+      });
+      return row;
     });
-    return result;
+    return csvData;
   };
 
   return (
@@ -19,8 +35,11 @@ const PageHeader = ({ title, isExportable, exportKey, data }) => {
         <span className="tw-text-xxl tw-font-medium">{title ?? ""}</span>
         {isExportable && data?.length ? (
           <CSVLink
-            data={convertExportableData()}
+            data={exportTableToCSV()}
             headers={csvHeaders[exportKey]}
+            filename={`hitori-wellness-${exportKey}-table-${dayjs().format(
+              "YYYY-MM-DD"
+            )}.csv`}
           >
             <Button
               type="primary"

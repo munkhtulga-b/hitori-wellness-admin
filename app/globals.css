@@ -30,3 +30,11 @@ u {
   font-weight: 500 !important;
   line-height: 30px !important;
 }
+
+.ant-tabs-tab {
+  margin-left: 0 !important;
+}
+
+.ant-tabs-nav {
+  margin-bottom: 24px !important;
+}

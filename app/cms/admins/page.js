@@ -13,7 +13,7 @@ import PageHeader from "@/app/_components/PageHeader";
 
 const columns = [
   {
-    title: "管理ユーザーID",
+    title: "メールアドレス",
     dataIndex: "mail_address",
     customStyle: "",
     type: null,
