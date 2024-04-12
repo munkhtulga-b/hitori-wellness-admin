@@ -96,11 +96,26 @@ const BaseTable = ({
     if (column.type === "status") {
       result = (
         <span
-          className={`tw-py-[6px] tw-px-[10px] tw-rounded-full tw-bg-gray-200`}
+          className={`tw-py-[6px] tw-px-[10px] tw-rounded-full ${
+            getStatusData(column, item[column.dataIndex]).style
+          }`}
         >
-          {nullSafety(item[column.dataIndex])}
+          {getStatusData(column, item[column.dataIndex]).text}
         </span>
       );
+    }
+    return result;
+  };
+
+  const getStatusData = (column, status) => {
+    let result = {
+      style: "tw-bg-gray-200",
+      text: status,
+    };
+    const matched = column.enum.find((item) => item.id === status);
+    if (matched) {
+      result.style = matched.style;
+      result.text = matched.text;
     }
     return result;
   };
