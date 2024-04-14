@@ -15,9 +15,23 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
   const [form] = Form.useForm();
   const [activeKey, setActiveKey] = useState(1);
 
+  const [requestBody, setRequestBody] = useState({});
+
   useEffect(() => {
     form.resetFields();
   }, [modalKey]);
+
+  useEffect(() => {
+    console.log(requestBody, "request body");
+  }, [requestBody]);
+
+  const formatRequestBody = (params) => {
+    setRequestBody((prev) => ({
+      ...prev,
+      ...params,
+    }));
+    setActiveKey((prev) => prev + 1);
+  };
 
   const FormOne = () => {
     return (
@@ -25,16 +39,17 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
         layout="vertical"
         form={form}
         name="form-one"
-        onFinish={(params) => console.log(params)}
+        onFinish={(params) => formatRequestBody(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
       >
         <Form.Item
+          name="thumbnailCode"
           valuePropName="fileList"
           getValueFromEvent={normFile}
           rules={[{ required: true, message: "Please upload studio image" }]}
         >
-          <Upload action="/upload.do" listType="picture-card" maxCount={1}>
+          <Upload action="" listType="picture-card" maxCount={1}>
             <button
               style={{
                 border: 0,
@@ -101,17 +116,17 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
           layout="vertical"
           form={form}
           name="form-two"
-          onFinish={(params) => console.log(params)}
+          onFinish={(params) => formatRequestBody(params)}
           requiredMark={false}
           validateTrigger="onSubmit"
         >
           <Form.Item
-            name="prefecture"
+            name="categoryName"
             label="エリア"
             rules={[
               {
                 required: true,
-                message: "Please input prefecture",
+                message: "Please input categoryName",
               },
             ]}
           >
@@ -149,7 +164,7 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
             </section>
           </section>
           <Form.Item
-            name="address1"
+            name="prefecture"
             label="都道府県"
             rules={[
               {
@@ -161,7 +176,7 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
             <Input placeholder="code" />
           </Form.Item>
           <Form.Item
-            name="address2"
+            name="address1"
             label="市区町村"
             rules={[
               {
@@ -173,7 +188,7 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
             <Input placeholder="code" />
           </Form.Item>
           <Form.Item
-            name="address3"
+            name="address2"
             label="町名・番地"
             rules={[
               {
@@ -185,7 +200,7 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
             <Input placeholder="code" />
           </Form.Item>
           <Form.Item
-            name="address4"
+            name="address3"
             label="番号"
             rules={[
               {
@@ -218,7 +233,7 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
           layout="vertical"
           form={form}
           name="form-three"
-          onFinish={(params) => console.log(params)}
+          onFinish={(params) => formatRequestBody(params)}
           requiredMark={false}
           validateTrigger="onSubmit"
         >
@@ -236,8 +251,9 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
                     message: "Please input prefecture",
                   },
                 ]}
+                style={{ flex: 1 }}
               >
-                <TimePicker format="HH:mm" />
+                <TimePicker format="HH:mm" className="tw-w-full" />
               </Form.Item>
               <Form.Item
                 name="endHour"
@@ -248,13 +264,14 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
                     message: "Please input prefecture",
                   },
                 ]}
+                style={{ flex: 1 }}
               >
-                <TimePicker format="HH:mm" />
+                <TimePicker format="HH:mm" className="tw-w-full" />
               </Form.Item>
             </div>
           </section>
           <Form.Item
-            name="startHour"
+            name="isTwentyFourHours"
             rules={[
               {
                 required: true,
@@ -264,13 +281,42 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
           >
             <Radio>24時間営業</Radio>
           </Form.Item>
+          <Form.Item
+            name="gmapUrl"
+            label="Google map URL"
+            rules={[
+              {
+                required: true,
+                message: "Please input prefecture",
+              },
+            ]}
+          >
+            <Input placeholder="URL" />
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="店舗説明"
+            rules={[
+              {
+                required: true,
+                message: "Please input prefecture",
+              },
+            ]}
+          >
+            <Input placeholder="Description" />
+          </Form.Item>
           <Form.Item>
             <div className="tw-flex tw-justify-end tw-items-start tw-gap-2 tw-mt-6">
               <Button size="large" onClick={() => onCancel()}>
                 戻る
               </Button>
-              <Button type="primary" htmlType="submit" size="large">
-                次へ
+              <Button
+                type="primary"
+                htmlType="submit"
+                size="large"
+                loading={isRequesting}
+              >
+                保存
               </Button>
             </div>
           </Form.Item>

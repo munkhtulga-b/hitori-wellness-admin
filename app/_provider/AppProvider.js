@@ -60,7 +60,6 @@ const AppProvider = ({ children, fontFamily }) => {
             primaryColor: "#FFF",
           },
           Radio: {
-            colorPrimary: colors.textSecondary,
             radioSize: 20,
             dotSize: 10,
           },
@@ -90,6 +89,8 @@ const AppProvider = ({ children, fontFamily }) => {
             controlHeight: 46,
             colorBgContainer: colors.formInputBackground,
             colorTextPlaceholder: colors.inputPlaceholder,
+            timeColumnWidth: 80,
+            controlItemBgActive: colors.optionSelected,
           },
           Layout: {
             headerBg: colors.headerBg,

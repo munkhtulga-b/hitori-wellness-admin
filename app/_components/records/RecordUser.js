@@ -61,7 +61,7 @@ const columns = [
   },
 ];
 
-const RecordStudio = () => {
+const RecordUser = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
@@ -72,11 +72,20 @@ const RecordStudio = () => {
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
+    fetchUsers();
     fetchStudios();
   }, []);
 
-  const fetchStudios = async () => {
+  const fetchUsers = async () => {
     setIsLoading(true);
+    const { isOk, data } = await $api.admin.user.getMany();
+    if (isOk) {
+      setList(data);
+    }
+    setIsLoading(false);
+  };
+
+  const fetchStudios = async () => {
     const { isOk, data } = await $api.admin.studio.getMany();
     if (isOk) {
       const sorted = _.map(data, ({ id: value, name: label }) => ({
@@ -84,21 +93,7 @@ const RecordStudio = () => {
         label,
       }));
       setStudios(sorted);
-      setList(data);
     }
-    setIsLoading(false);
-  };
-
-  const createStudio = async (body) => {
-    setIsRequesting(true);
-    const { isOk } = await $api.admin.studio.create(body);
-    if (isOk) {
-      await fetchStudios();
-      setIsModalOpen(false);
-      setModalKey((prev) => prev + 1);
-      toast.success("Studio Created Success");
-    }
-    setIsLoading(false);
   };
 
   return (
@@ -149,4 +144,4 @@ const RecordStudio = () => {
   );
 };
 
-export default RecordStudio;
+export default RecordUser;
