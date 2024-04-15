@@ -2,7 +2,7 @@
 
 import dayjs from "dayjs";
 import { Checkbox } from "antd";
-import { nullSafety } from "@/app/_utils/helpers";
+import { nullSafety, thousandSeparator } from "@/app/_utils/helpers";
 import NoData from "../custom/NoData";
 import Image from "next/image";
 
@@ -38,45 +38,86 @@ const BaseTable = ({
   const formatDataIndex = (item, column) => {
     let result = nullSafety(item[column.dataIndex]);
     if (column.type === "date") {
-      result = dayjs.utc(result).format("YYYY-MM-DD HH:mm");
+      result = dayjs(result).format("YYYY-MM-DD HH:mm");
     }
     if (column.type === "levelType") {
       result = `タイプ${result}`;
     }
     if (column.type === "tagList" && Array.isArray(item[column.dataIndex])) {
       result = (
-        <div className="tw-flex tw-flex-wrap tw-gap-3">
-          {item[column.dataIndex].map((tag) => (
-            <span
-              key={tag.id}
-              className="tw-px-[10px] tw-py-[6px] tw-rounded-full tw-bg-bgTag tw-whitespace-nowrap"
-            >
-              {nullSafety(tag.name)}
+        <>
+          {item[column.dataIndex].length === 0 ? (
+            <span className="tw-px-[10px] tw-py-[6px] tw-rounded-full tw-bg-bgTag tw-whitespace-nowrap">
+              All branch
             </span>
-          ))}
-        </div>
+          ) : (
+            <div className="tw-flex tw-flex-wrap tw-gap-3">
+              {item[column.dataIndex].map((tag) => (
+                <span
+                  key={tag.id}
+                  className="tw-px-[10px] tw-py-[6px] tw-rounded-full tw-bg-bgTag tw-whitespace-nowrap"
+                >
+                  {nullSafety(tag.name)}
+                </span>
+              ))}
+            </div>
+          )}
+        </>
       );
     }
     if (column.type === "stackedList" && Array.isArray(column.dataIndex)) {
       result = (
         <div className="tw-flex tw-justify-start tw-items-center tw-gap-3">
-          <section className="tw-min-w-[40px] tw-max-w-[40px] tw-rounded tw-overflow-hidden">
-            <Image
-              priority
-              src={`https://${process.env.BASE_IMAGE_URL}${
-                item[column.imageIndex]
-              }`}
-              alt="thumbnail"
-              width={0}
-              height={0}
-              style={{ objectFit: "contain", height: "auto", width: "100%" }}
-              unoptimized
-            />
-          </section>
+          {column.imageIndex ? (
+            <>
+              {column.imageIndex === "user" ? (
+                <Image
+                  src="/assets/table/member-male.svg"
+                  alt="user"
+                  width={0}
+                  height={0}
+                  style={{ width: "40px", height: "auto" }}
+                />
+              ) : (
+                <section className="tw-min-w-[40px] tw-max-w-[40px] tw-rounded tw-overflow-hidden">
+                  <Image
+                    priority
+                    src={`https://${process.env.BASE_IMAGE_URL}${
+                      item[column.imageIndex]
+                    }`}
+                    alt="thumbnail"
+                    width={0}
+                    height={0}
+                    style={{
+                      objectFit: "contain",
+                      height: "auto",
+                      width: "100%",
+                    }}
+                    unoptimized
+                  />
+                </section>
+              )}
+            </>
+          ) : null}
           <ul className="tw-flex tw-flex-col">
             {column.dataIndex.map((stackItem, idx) => (
-              <li key={stackItem} className={column.styles[idx]}>
-                {nullSafety(item[stackItem])}
+              <li
+                key={stackItem}
+                className={`${column.styles[idx]} ${
+                  Array.isArray(stackItem) ? "tw-flex tw-gap-2" : ""
+                }`}
+              >
+                {Array.isArray(stackItem) ? (
+                  <>
+                    {stackItem.map((i, i_index) => (
+                      <span key={i}>{`${nullSafety(item[i])}${
+                        i_index !== stackItem.length - 1 ? ", " : ""
+                      }`}</span>
+                    ))}
+                  </>
+                ) : (
+                  <>{nullSafety(item[stackItem])}</>
+                )}
               </li>
             ))}
           </ul>
@@ -96,11 +137,50 @@ const BaseTable = ({
     if (column.type === "status") {
       result = (
         <span
-          className={`tw-py-[6px] tw-px-[10px] tw-rounded-full tw-bg-gray-200`}
+          className={`tw-py-[6px] tw-px-[10px] tw-rounded-full ${
+            getStatusData(column, item[column.dataIndex]).style
+          }`}
         >
-          {nullSafety(item[column.dataIndex])}
+          {getStatusData(column, item[column.dataIndex]).text}
         </span>
       );
+    }
+    if (column.type === "price") {
+      result = <>￥{thousandSeparator(item[column.dataIndex])}</>;
+    }
+    if (
+      column.type === "nestedListItem" &&
+      Array.isArray(item[column.dataIndex])
+    ) {
+      result = (
+        <>
+          {column.nestType === "price" ? (
+            <>
+              ￥
+              {thousandSeparator(
+                item[column.dataIndex][0][column.nestedDataIndex]
+              )}
+            </>
+          ) : (
+            <>{nullSafety(item[column.dataIndex][0][column.nestedDataIndex])}</>
+          )}
+        </>
+      );
+    }
+    return result;
+  };
+
+  const getStatusData = (column, status) => {
+    let result = {
+      style: "tw-bg-gray-200",
+      text: status,
+    };
+    const matched = column.enum.find((item) => item.id === status);
+    if (matched) {
+      result.style = matched.style;
+      result.text = matched.text;
+    } else {
+      result.text = nullSafety(status);
     }
     return result;
   };

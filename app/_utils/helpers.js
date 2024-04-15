@@ -1,3 +1,21 @@
+export const uploadImage = async (file) => {
+  const formData = new FormData();
+  formData.append("image", file);
+  const resp = await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? process.env.NEXT_PUBLIC_DEV_BASE_URL
+        : process.env.NEXT_PUBLIC_PROD_BASE_URL
+    }/upload`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+  const data = await resp.json();
+  return { isOk: resp.ok, data };
+};
+
 /**
  * Check if the value is null or undefined and return a default value if so.
  *
@@ -31,4 +49,12 @@ export const createQueryString = (queryObject) => {
   });
 
   return queryString;
+};
+
+export const thousandSeparator = (value) => {
+  let result = "0";
+  if (value !== null && value !== undefined) {
+    result = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  return result;
 };

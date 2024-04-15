@@ -161,11 +161,7 @@ const UsersPage = () => {
             padding: 40,
           },
         }}
-        closeIcon={
-          <CloseOutlined
-            style={{ position: "absolute", right: 30, top: 30, fontSize: 24 }}
-          />
-        }
+        closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
         <AddModal
           studios={studios}

@@ -7,15 +7,13 @@ import RecordTableFilters from "./RecordTableFilters";
 import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
-import { toast } from "react-toastify";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
-import CreateStudioModal from "./studio/CreateStudioModal";
 
 const columns = [
   {
     title: "名称",
     dataIndex: ["name", "code"],
-    imageIndex: "thumbnail_code",
+    imageIndex: "user",
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
@@ -42,16 +40,10 @@ const columns = [
     type: "status",
   },
   {
-    title: "エリア",
-    dataIndex: "category_name",
+    title: "登録店舗",
+    dataIndex: "studio_ids",
     customStyle: "",
-    type: null,
-  },
-  {
-    title: "営業時間 ",
-    dataIndex: "timeperiod_details",
-    customStyle: "",
-    type: "timePeriod",
+    type: "tagList",
   },
   {
     title: "更新日時",
@@ -61,24 +53,24 @@ const columns = [
   },
 ];
 
-const RecordStudio = () => {
+const RecordStaff = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isRequesting, setIsRequesting] = useState(false);
+  // const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [studioCategoryNames, setStudioCategoryNames] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalKey, setModalKey] = useState(0);
+  // const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
-    fetchStudios();
+    fetchStaff();
     fetchFilterOptions();
   }, []);
 
-  const fetchStudios = async (filters) => {
+  const fetchStaff = async (filters) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.studio.getMany(filters);
+    const { isOk, data } = await $api.admin.staff.getMany(filters);
     if (isOk) {
       setList(data);
     }
@@ -100,42 +92,17 @@ const RecordStudio = () => {
     }
   };
 
-  const createStudio = async (body) => {
-    setIsRequesting(true);
-    const { isOk } = await $api.admin.studio.create(body);
-    if (isOk) {
-      await fetchStudios();
-      setIsModalOpen(false);
-      setModalKey((prev) => prev + 1);
-      toast.success("Studio Created Success");
-    }
-    setIsRequesting(false);
-  };
-
-  const deleteStudios = async () => {
-    setIsRequesting(true);
-    const { isOk } = await $api.admin.studio.deleteMany({
-      ids: _.map(checkedRows, "id"),
-    });
-    if (isOk) {
-      setCheckedRows([]);
-      await fetchStudios();
-      toast.success("Studio Deleted Success");
-    }
-    setIsRequesting(false);
-  };
-
   const onFilterChange = (filter) => {
     const shallow = _.merge(filters, filter);
     setFilters(shallow);
-    fetchStudios(shallow);
+    fetchStaff(shallow);
   };
 
   const onFilterClear = (filterKey) => {
     if (filters) {
       const shallow = _.omit(filters, filterKey);
       setFilters(shallow);
-      fetchStudios(shallow);
+      fetchStaff(shallow);
     }
   };
 
@@ -144,11 +111,7 @@ const RecordStudio = () => {
       <div className="tw-flex tw-flex-col tw-gap-6">
         <RecordTableFilters
           onAdd={() => setIsModalOpen(true)}
-          onSearch={(value) => onFilterChange({ name: value })}
-          onSearchClear={() => onFilterClear("name")}
-          onDelete={deleteStudios}
-          checkedRows={checkedRows}
-          isRequesting={isRequesting}
+          onSearch={(filter) => onFilterChange(filter)}
         >
           <>
             <Select
@@ -158,11 +121,6 @@ const RecordStudio = () => {
                 width: 120,
               }}
               options={studioCategoryNames}
-              onChange={(value) => {
-                value
-                  ? onFilterChange({ categoryName: value })
-                  : onFilterClear("categoryName");
-              }}
               placeholder="エリア "
             />
             <Select
@@ -216,15 +174,10 @@ const RecordStudio = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        <CreateStudioModal
-          isRequesting={isRequesting}
-          modalKey={modalKey}
-          onConfirm={(params) => createStudio(params)}
-          onCancel={() => setIsModalOpen(false)}
-        />
+        Create Staff Modal
       </Modal>
     </>
   );
 };
 
-export default RecordStudio;
+export default RecordStaff;

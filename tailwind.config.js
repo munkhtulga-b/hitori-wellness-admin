@@ -19,6 +19,7 @@ module.exports = {
         bgForm: "#FAFAFA",
         bgLayout: "#EBEBEB",
         bgTag: "#ECEDF0",
+        bgActive: "#C1E6CF",
       },
       textColor: {
         primary: "#121316",
@@ -28,6 +29,8 @@ module.exports = {
         disabled: "#1C20243D",
         grayLight: "#505050",
         tableHeader: "#3F4145",
+        statusActive: "#0A4E22",
+        statusInactive: "#1F2126",
       },
       borderColor: {
         primary: "#BABCC4",

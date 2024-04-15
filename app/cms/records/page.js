@@ -4,6 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import { Tabs } from "antd";
 import PageHeader from "@/app/_components/PageHeader";
 import RecordStudio from "@/app/_components/records/RecordStudio";
+import RecordPlan from "@/app/_components/records/RecordPlan";
+import RecordReservation from "@/app/_components/records/RecordReservation";
+import RecordProgram from "@/app/_components/records/RecordProgram";
+import RecordTicket from "@/app/_components/records/RecordTicket";
+import RecordUser from "@/app/_components/records/RecordUser";
+import RecordStaff from "@/app/_components/records/RecordStaff";
+import RecordItem from "@/app/_components/records/RecordItem";
+import RecordCoupon from "@/app/_components/records/RecordCoupon";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const tabItems = [
@@ -15,42 +23,42 @@ const tabItems = [
   {
     key: "users",
     label: "メンバー",
-    children: <></>,
+    children: <RecordUser />,
   },
   {
     key: "programs",
     label: "プログラム",
-    children: <></>,
+    children: <RecordProgram />,
   },
   {
     key: "staff",
     label: "スタッフ",
-    children: <></>,
+    children: <RecordStaff />,
   },
   {
     key: "items",
     label: "商品",
-    children: <></>,
+    children: <RecordItem />,
   },
   {
     key: "plans",
     label: "プラン",
-    children: <></>,
+    children: <RecordPlan />,
   },
   {
     key: "tickets",
     label: "チケット",
-    children: <></>,
+    children: <RecordTicket />,
   },
   {
     key: "coupons",
     label: "クーポン",
-    children: <></>,
+    children: <RecordCoupon />,
   },
   {
     key: "reservations",
     label: "予約",
-    children: <></>,
+    children: <RecordReservation />,
   },
 ];
 
