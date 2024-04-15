@@ -11,15 +11,21 @@ import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 
 const columns = [
   {
-    title: "氏名",
-    dataIndex: [["last_name", "first_name"], "id"],
-    imageIndex: "user",
+    title: "名称",
+    dataIndex: ["name", "code"],
+    imageIndex: null,
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
     ],
     customStyle: "",
     type: "stackedList",
+  },
+  {
+    title: "カテゴリー",
+    dataIndex: "category_name",
+    customStyle: "",
+    type: null,
   },
   {
     title: "ステータス",
@@ -40,22 +46,12 @@ const columns = [
     type: "status",
   },
   {
-    title: "登録店舗",
-    dataIndex: "prefecture",
+    title: "金額（税込）",
+    dataIndex: "prices",
+    nestedDataIndex: "price",
     customStyle: "",
-    type: null,
-  },
-  {
-    title: "ブラン",
-    dataIndex: "",
-    customStyle: "",
-    type: "",
-  },
-  {
-    title: "メールアドレス",
-    dataIndex: "mail_address",
-    customStyle: "",
-    type: null,
+    type: "nestedListItem",
+    nestType: "price",
   },
   {
     title: "更新日時",
@@ -65,24 +61,24 @@ const columns = [
   },
 ];
 
-const RecordUser = () => {
+const RecordItem = () => {
   const [isLoading, setIsLoading] = useState(false);
-  // const [isRequesting, setIsRequesting] = useState(false);
+  //   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [studios, setStudios] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [modalKey, setModalKey] = useState(0);
-  // const [filters, setFilters] = useState(null);
+  //   const [modalKey, setModalKey] = useState(0);
+  //   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
-    fetchUsers();
+    fetchItems();
     fetchStudios();
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchItems = async () => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.user.getMany();
+    const { isOk, data } = await $api.admin.item.getMany();
     if (isOk) {
       setList(data);
     }
@@ -133,10 +129,10 @@ const RecordUser = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        Create User Modal
+        Create Item Modal
       </Modal>
     </>
   );
 };
 
-export default RecordUser;
+export default RecordItem;

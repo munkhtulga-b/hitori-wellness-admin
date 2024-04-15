@@ -7,15 +7,13 @@ import RecordTableFilters from "./RecordTableFilters";
 import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
-import { toast } from "react-toastify";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
-import CreateStudioModal from "./studio/CreateStudioModal";
 
 const columns = [
   {
     title: "名称",
     dataIndex: ["name", "code"],
-    imageIndex: "thumbnail_code",
+    imageIndex: "user",
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
@@ -42,16 +40,10 @@ const columns = [
     type: "status",
   },
   {
-    title: "エリア",
-    dataIndex: "category_name",
+    title: "登録店舗",
+    dataIndex: "studio_ids",
     customStyle: "",
-    type: null,
-  },
-  {
-    title: "営業時間 ",
-    dataIndex: "",
-    customStyle: "",
-    type: "",
+    type: "tagList",
   },
   {
     title: "更新日時",
@@ -63,12 +55,12 @@ const columns = [
 
 const RecordStaff = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isRequesting, setIsRequesting] = useState(false);
+  // const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [studioCategoryNames, setStudioCategoryNames] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalKey, setModalKey] = useState(0);
+  // const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
@@ -180,17 +172,9 @@ const RecordStaff = () => {
             padding: 40,
           },
         }}
-        closeIcon={
-          <CloseOutlined
-            style={{ position: "absolute", right: 30, top: 30, fontSize: 24 }}
-          />
-        }
+        closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        <CreateStudioModal
-          isRequesting={isRequesting}
-          modalKey={modalKey}
-          onCancel={() => setIsModalOpen(false)}
-        />
+        Create Staff Modal
       </Modal>
     </>
   );

@@ -7,15 +7,13 @@ import RecordTableFilters from "./RecordTableFilters";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
-import { toast } from "react-toastify";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
-import CreateStudioModal from "./studio/CreateStudioModal";
 
 const columns = [
   {
     title: "名称",
     dataIndex: ["name", "code"],
-    imageIndex: "thumbnail_code",
+    imageIndex: null,
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
@@ -42,18 +40,6 @@ const columns = [
     type: "status",
   },
   {
-    title: "エリア",
-    dataIndex: "prefecture",
-    customStyle: "",
-    type: null,
-  },
-  {
-    title: "営業時間 ",
-    dataIndex: "timeperiod_details",
-    customStyle: "",
-    type: "timePeriod",
-  },
-  {
     title: "更新日時",
     dataIndex: "updated_at",
     customStyle: "",
@@ -63,13 +49,13 @@ const columns = [
 
 const RecordCoupon = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isRequesting, setIsRequesting] = useState(false);
+  // const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [studios, setStudios] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalKey, setModalKey] = useState(0);
-  const [filters, setFilters] = useState(null);
+  // const [modalKey, setModalKey] = useState(0);
+  // const [filters, setFilters] = useState(null);
 
   useEffect(() => {
     fetchCoupons();
@@ -127,17 +113,9 @@ const RecordCoupon = () => {
             padding: 40,
           },
         }}
-        closeIcon={
-          <CloseOutlined
-            style={{ position: "absolute", right: 30, top: 30, fontSize: 24 }}
-          />
-        }
+        closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        <CreateStudioModal
-          isRequesting={isRequesting}
-          modalKey={modalKey}
-          onCancel={() => setIsModalOpen(false)}
-        />
+        Create Coupon Modal
       </Modal>
     </>
   );

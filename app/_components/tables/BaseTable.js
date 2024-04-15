@@ -45,35 +45,59 @@ const BaseTable = ({
     }
     if (column.type === "tagList" && Array.isArray(item[column.dataIndex])) {
       result = (
-        <div className="tw-flex tw-flex-wrap tw-gap-3">
-          {item[column.dataIndex].map((tag) => (
-            <span
-              key={tag.id}
-              className="tw-px-[10px] tw-py-[6px] tw-rounded-full tw-bg-bgTag tw-whitespace-nowrap"
-            >
-              {nullSafety(tag.name)}
+        <>
+          {item[column.dataIndex].length === 0 ? (
+            <span className="tw-px-[10px] tw-py-[6px] tw-rounded-full tw-bg-bgTag tw-whitespace-nowrap">
+              All branch
             </span>
-          ))}
-        </div>
+          ) : (
+            <div className="tw-flex tw-flex-wrap tw-gap-3">
+              {item[column.dataIndex].map((tag) => (
+                <span
+                  key={tag.id}
+                  className="tw-px-[10px] tw-py-[6px] tw-rounded-full tw-bg-bgTag tw-whitespace-nowrap"
+                >
+                  {nullSafety(tag.name)}
+                </span>
+              ))}
+            </div>
+          )}
+        </>
       );
     }
     if (column.type === "stackedList" && Array.isArray(column.dataIndex)) {
       result = (
         <div className="tw-flex tw-justify-start tw-items-center tw-gap-3">
           {column.imageIndex ? (
-            <section className="tw-min-w-[40px] tw-max-w-[40px] tw-rounded tw-overflow-hidden">
-              <Image
-                priority
-                src={`https://${process.env.BASE_IMAGE_URL}${
-                  item[column.imageIndex]
-                }`}
-                alt="thumbnail"
-                width={0}
-                height={0}
-                style={{ objectFit: "contain", height: "auto", width: "100%" }}
-                unoptimized
-              />
-            </section>
+            <>
+              {column.imageIndex === "user" ? (
+                <Image
+                  src="/assets/table/member-male.svg"
+                  alt="user"
+                  width={0}
+                  height={0}
+                  style={{ width: "40px", height: "auto" }}
+                />
+              ) : (
+                <section className="tw-min-w-[40px] tw-max-w-[40px] tw-rounded tw-overflow-hidden">
+                  <Image
+                    priority
+                    src={`https://${process.env.BASE_IMAGE_URL}${
+                      item[column.imageIndex]
+                    }`}
+                    alt="thumbnail"
+                    width={0}
+                    height={0}
+                    style={{
+                      objectFit: "contain",
+                      height: "auto",
+                      width: "100%",
+                    }}
+                    unoptimized
+                  />
+                </section>
+              )}
+            </>
           ) : null}
           <ul className="tw-flex tw-flex-col">
             {column.dataIndex.map((stackItem, idx) => (
@@ -124,6 +148,25 @@ const BaseTable = ({
     if (column.type === "price") {
       result = <>￥{thousandSeparator(item[column.dataIndex])}</>;
     }
+    if (
+      column.type === "nestedListItem" &&
+      Array.isArray(item[column.dataIndex])
+    ) {
+      result = (
+        <>
+          {column.nestType === "price" ? (
+            <>
+              ￥
+              {thousandSeparator(
+                item[column.dataIndex][0][column.nestedDataIndex]
+              )}
+            </>
+          ) : (
+            <>{nullSafety(item[column.dataIndex][0][column.nestedDataIndex])}</>
+          )}
+        </>
+      );
+    }
     return result;
   };
 
@@ -136,6 +179,8 @@ const BaseTable = ({
     if (matched) {
       result.style = matched.style;
       result.text = matched.text;
+    } else {
+      result.text = nullSafety(status);
     }
     return result;
   };

@@ -38,3 +38,8 @@ u {
 .ant-tabs-nav {
   margin-bottom: 24px !important;
 }
+
+.ant-modal-close {
+  top: 40px !important;
+  right: 40px !important;
+}

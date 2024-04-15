@@ -7,9 +7,7 @@ import RecordTableFilters from "./RecordTableFilters";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
-import { toast } from "react-toastify";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
-import CreateStudioModal from "./studio/CreateStudioModal";
 
 const columns = [
   {
@@ -62,13 +60,13 @@ const columns = [
 
 const RecordPlan = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isRequesting, setIsRequesting] = useState(false);
+  // const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [studios, setStudios] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalKey, setModalKey] = useState(0);
-  const [filters, setFilters] = useState(null);
+  // const [modalKey, setModalKey] = useState(0);
+  // const [filters, setFilters] = useState(null);
 
   useEffect(() => {
     fetchPlans();
@@ -126,18 +124,9 @@ const RecordPlan = () => {
             padding: 40,
           },
         }}
-        closeIcon={
-          <CloseOutlined
-            style={{ position: "absolute", right: 30, top: 30, fontSize: 24 }}
-          />
-        }
+        closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        <CreateStudioModal
-          isRequesting={isRequesting}
-          modalKey={modalKey}
-          onConfirm={(params) => createStudio(params)}
-          onCancel={() => setIsModalOpen(false)}
-        />
+        Create Plan Modal
       </Modal>
     </>
   );

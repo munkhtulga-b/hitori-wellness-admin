@@ -10,6 +10,8 @@ import RecordProgram from "@/app/_components/records/RecordProgram";
 import RecordTicket from "@/app/_components/records/RecordTicket";
 import RecordUser from "@/app/_components/records/RecordUser";
 import RecordStaff from "@/app/_components/records/RecordStaff";
+import RecordItem from "@/app/_components/records/RecordItem";
+import RecordCoupon from "@/app/_components/records/RecordCoupon";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const tabItems = [
@@ -36,7 +38,7 @@ const tabItems = [
   {
     key: "items",
     label: "商品",
-    children: <></>,
+    children: <RecordItem />,
   },
   {
     key: "plans",
@@ -51,7 +53,7 @@ const tabItems = [
   {
     key: "coupons",
     label: "クーポン",
-    children: <></>,
+    children: <RecordCoupon />,
   },
   {
     key: "reservations",
