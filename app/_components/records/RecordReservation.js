@@ -13,7 +13,7 @@ import CreateStudioModal from "./studio/CreateStudioModal";
 
 const columns = [
   {
-    title: "名称",
+    title: "氏名",
     dataIndex: ["name", "code"],
     imageIndex: "thumbnail_code",
     styles: [
@@ -136,7 +136,6 @@ const RecordReservation = () => {
         <CreateStudioModal
           isRequesting={isRequesting}
           modalKey={modalKey}
-          onConfirm={(params) => createStudio(params)}
           onCancel={() => setIsModalOpen(false)}
         />
       </Modal>

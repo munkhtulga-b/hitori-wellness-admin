@@ -2,7 +2,7 @@
 
 import dayjs from "dayjs";
 import { Checkbox } from "antd";
-import { nullSafety } from "@/app/_utils/helpers";
+import { nullSafety, thousandSeparator } from "@/app/_utils/helpers";
 import NoData from "../custom/NoData";
 import Image from "next/image";
 
@@ -38,7 +38,7 @@ const BaseTable = ({
   const formatDataIndex = (item, column) => {
     let result = nullSafety(item[column.dataIndex]);
     if (column.type === "date") {
-      result = dayjs.utc(result).format("YYYY-MM-DD HH:mm");
+      result = dayjs(result).format("YYYY-MM-DD HH:mm");
     }
     if (column.type === "levelType") {
       result = `タイプ${result}`;
@@ -60,23 +60,40 @@ const BaseTable = ({
     if (column.type === "stackedList" && Array.isArray(column.dataIndex)) {
       result = (
         <div className="tw-flex tw-justify-start tw-items-center tw-gap-3">
-          <section className="tw-min-w-[40px] tw-max-w-[40px] tw-rounded tw-overflow-hidden">
-            <Image
-              priority
-              src={`https://${process.env.BASE_IMAGE_URL}${
-                item[column.imageIndex]
-              }`}
-              alt="thumbnail"
-              width={0}
-              height={0}
-              style={{ objectFit: "contain", height: "auto", width: "100%" }}
-              unoptimized
-            />
-          </section>
+          {column.imageIndex ? (
+            <section className="tw-min-w-[40px] tw-max-w-[40px] tw-rounded tw-overflow-hidden">
+              <Image
+                priority
+                src={`https://${process.env.BASE_IMAGE_URL}${
+                  item[column.imageIndex]
+                }`}
+                alt="thumbnail"
+                width={0}
+                height={0}
+                style={{ objectFit: "contain", height: "auto", width: "100%" }}
+                unoptimized
+              />
+            </section>
+          ) : null}
           <ul className="tw-flex tw-flex-col">
             {column.dataIndex.map((stackItem, idx) => (
-              <li key={stackItem} className={column.styles[idx]}>
-                {nullSafety(item[stackItem])}
+              <li
+                key={stackItem}
+                className={`${column.styles[idx]} ${
+                  Array.isArray(stackItem) ? "tw-flex tw-gap-2" : ""
+                }`}
+              >
+                {Array.isArray(stackItem) ? (
+                  <>
+                    {stackItem.map((i, i_index) => (
+                      <span key={i}>{`${nullSafety(item[i])}${
+                        i_index !== stackItem.length - 1 ? ", " : ""
+                      }`}</span>
+                    ))}
+                  </>
+                ) : (
+                  <>{nullSafety(item[stackItem])}</>
+                )}
               </li>
             ))}
           </ul>
@@ -103,6 +120,9 @@ const BaseTable = ({
           {getStatusData(column, item[column.dataIndex]).text}
         </span>
       );
+    }
+    if (column.type === "price") {
+      result = <>￥{thousandSeparator(item[column.dataIndex])}</>;
     }
     return result;
   };

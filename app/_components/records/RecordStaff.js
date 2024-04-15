@@ -4,7 +4,7 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal } from "antd";
+import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
 import { toast } from "react-toastify";
@@ -13,9 +13,9 @@ import CreateStudioModal from "./studio/CreateStudioModal";
 
 const columns = [
   {
-    title: "氏名",
-    dataIndex: [["last_name", "first_name"], "code"],
-    imageIndex: "user",
+    title: "名称",
+    dataIndex: ["name", "code"],
+    imageIndex: "thumbnail_code",
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
@@ -42,22 +42,16 @@ const columns = [
     type: "status",
   },
   {
-    title: "登録店舗",
-    dataIndex: "prefecture",
+    title: "エリア",
+    dataIndex: "category_name",
     customStyle: "",
     type: null,
   },
   {
-    title: "ブラン",
+    title: "営業時間 ",
     dataIndex: "",
     customStyle: "",
     type: "",
-  },
-  {
-    title: "メールアドレス",
-    dataIndex: "mail_address",
-    customStyle: "",
-    type: null,
   },
   {
     title: "更新日時",
@@ -67,38 +61,56 @@ const columns = [
   },
 ];
 
-const RecordUser = () => {
+const RecordStaff = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
-  const [studios, setStudios] = useState(null);
+  const [studioCategoryNames, setStudioCategoryNames] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
-    fetchUsers();
-    fetchStudios();
+    fetchStaff();
+    fetchFilterOptions();
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchStaff = async (filters) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.user.getMany();
+    const { isOk, data } = await $api.admin.staff.getMany(filters);
     if (isOk) {
       setList(data);
     }
     setIsLoading(false);
   };
 
-  const fetchStudios = async () => {
+  const fetchFilterOptions = async () => {
     const { isOk, data } = await $api.admin.studio.getMany();
-    if (isOk) {
-      const sorted = _.map(data, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setStudios(sorted);
+    if (isOk && data?.length) {
+      const categoryNames = _.map(
+        data,
+        ({ category_name: value, category_name: label }) => ({
+          value,
+          label,
+        })
+      );
+      const categoryNamesSorted = _.uniqBy(categoryNames, "value");
+      setStudioCategoryNames(categoryNamesSorted);
+    }
+  };
+
+  const onFilterChange = (filter) => {
+    const shallow = _.merge(filters, filter);
+    setFilters(shallow);
+    fetchStaff(shallow);
+  };
+
+  const onFilterClear = (filterKey) => {
+    if (filters) {
+      const shallow = _.omit(filters, filterKey);
+      setFilters(shallow);
+      fetchStaff(shallow);
     }
   };
 
@@ -107,8 +119,43 @@ const RecordUser = () => {
       <div className="tw-flex tw-flex-col tw-gap-6">
         <RecordTableFilters
           onAdd={() => setIsModalOpen(true)}
-          studios={studios}
-        />
+          onSearch={(filter) => onFilterChange(filter)}
+        >
+          <>
+            <Select
+              allowClear
+              size="large"
+              style={{
+                width: 120,
+              }}
+              options={studioCategoryNames}
+              placeholder="エリア "
+            />
+            <Select
+              allowClear
+              size="large"
+              style={{
+                width: 200,
+              }}
+              options={[
+                {
+                  value: EEnumStudioStatus.ACTIVE,
+                  label: "ACTIVE",
+                },
+                {
+                  value: EEnumStudioStatus.INACTIVE,
+                  label: "INACTIVE",
+                },
+              ]}
+              onChange={(value) =>
+                value
+                  ? onFilterChange({ status: value })
+                  : onFilterClear("status")
+              }
+              placeholder="ステータス"
+            />
+          </>
+        </RecordTableFilters>
         <BaseTable
           tableId="admin-table"
           columns={columns}
@@ -142,7 +189,6 @@ const RecordUser = () => {
         <CreateStudioModal
           isRequesting={isRequesting}
           modalKey={modalKey}
-          onConfirm={(params) => createStudio(params)}
           onCancel={() => setIsModalOpen(false)}
         />
       </Modal>
@@ -150,4 +196,4 @@ const RecordUser = () => {
   );
 };
 
-export default RecordUser;
+export default RecordStaff;

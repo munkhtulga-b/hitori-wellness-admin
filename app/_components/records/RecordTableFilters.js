@@ -1,23 +1,19 @@
-import { Input, Button, Select } from "antd";
+import { Input, Button } from "antd";
 import {
   PlusOutlined,
   DeleteOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { useAdminAccessStore } from "@/app/_store/admin-access";
 
 const RecordTableFilters = ({
+  children,
   onSearch,
+  onSearchClear,
   onDelete,
   onAdd,
-  onLevelTypeChange,
-  onStudioChange,
-  onFilterClear,
   isRequesting,
-  studios,
   checkedRows,
 }) => {
-  const getLevelTypes = useAdminAccessStore((state) => state.getAccess());
   return (
     <>
       <section className="tw-flex tw-flex-col tw-items-end xl:tw-flex-row xl:tw-justify-between xl:tw-items-start tw-gap-10">
@@ -32,36 +28,11 @@ const RecordTableFilters = ({
             onPressEnter={(e) => onSearch(e.target.value)}
             onChange={(e) => {
               if (!e.target.value.length) {
-                onFilterClear("mailAddress");
+                onSearchClear();
               }
             }}
           />
-          <Select
-            allowClear
-            disabled={!getLevelTypes}
-            size="large"
-            style={{
-              width: 120,
-            }}
-            options={getLevelTypes}
-            onChange={(value) =>
-              value ? onLevelTypeChange(value) : onFilterClear("levelType")
-            }
-            placeholder="権限タイプ"
-          />
-          <Select
-            allowClear
-            disabled={!studios}
-            size="large"
-            style={{
-              width: 200,
-            }}
-            options={studios}
-            onChange={(value) =>
-              value ? onStudioChange(value) : onFilterClear("studioId")
-            }
-            placeholder="店舗"
-          />
+          {children}
         </div>
         <div className="tw-flex tw-justify-start tw-gap-3">
           <Button size="large" type="primary" onClick={() => onAdd()}>

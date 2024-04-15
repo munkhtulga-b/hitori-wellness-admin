@@ -10,6 +10,9 @@ import * as program from "./cms/ProgramController";
 import * as reservation from "./cms/ReservationController";
 import * as item from "./cms/ItemController";
 import * as plan from "./cms/PlanController";
+import * as coupon from "./cms/CouponController";
+import * as staff from "./cms/StaffController";
+import * as file from "./cms/FileUploadController";
 
 const $api = {
   auth: {
@@ -24,6 +27,9 @@ const $api = {
     reservation,
     item,
     plan,
+    coupon,
+    staff,
+    file,
   },
 };
 

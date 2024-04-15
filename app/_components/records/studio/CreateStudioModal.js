@@ -1,354 +1,101 @@
-import {
-  Form,
-  Input,
-  Button,
-  Tabs,
-  Switch,
-  Upload,
-  TimePicker,
-  Radio,
-} from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Tabs } from "antd";
 import { useEffect, useState } from "react";
+import { uploadImage } from "@/app/_utils/helpers";
+import StudioFormOne from "./FormOne";
+import StudioFormTwo from "./FormTwo";
+import StudioFormThree from "./FormThree";
+import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 
 const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
-  const [form] = Form.useForm();
   const [activeKey, setActiveKey] = useState(1);
 
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadFile, setUploadFile] = useState(null);
   const [requestBody, setRequestBody] = useState({});
 
   useEffect(() => {
-    form.resetFields();
+    resetBody();
   }, [modalKey]);
 
-  useEffect(() => {
-    console.log(requestBody, "request body");
-  }, [requestBody]);
+  const handleFormOne = async (params) => {
+    setIsUploading(true);
+    const { isOk, data } = await uploadImage(uploadFile);
+    if (isOk) {
+      params.thumbnailCode = data.url;
+      params.status =
+        params.status === false
+          ? EEnumStudioStatus.INACTIVE
+          : EEnumStudioStatus.ACTIVE;
+      formatRequestBody(params);
+    }
+    setIsUploading(false);
+  };
+
+  const handleFormTwo = async (params) => {
+    formatRequestBody(params);
+  };
+
+  const handleFormThree = async (params) => {
+    formatRequestBody(params);
+  };
 
   const formatRequestBody = (params) => {
     setRequestBody((prev) => ({
       ...prev,
       ...params,
     }));
-    setActiveKey((prev) => prev + 1);
+    if (activeKey === 3) {
+      onConfirm({ ...requestBody, ...params });
+    } else {
+      setActiveKey((prev) => prev + 1);
+    }
   };
 
-  const FormOne = () => {
-    return (
-      <Form
-        layout="vertical"
-        form={form}
-        name="form-one"
-        onFinish={(params) => formatRequestBody(params)}
-        requiredMark={false}
-        validateTrigger="onSubmit"
-      >
-        <Form.Item
-          name="thumbnailCode"
-          valuePropName="fileList"
-          getValueFromEvent={normFile}
-          rules={[{ required: true, message: "Please upload studio image" }]}
-        >
-          <Upload action="" listType="picture-card" maxCount={1}>
-            <button
-              style={{
-                border: 0,
-                background: "none",
-              }}
-              type="button"
-            >
-              <PlusOutlined />
-              <div
-                style={{
-                  marginTop: 8,
-                }}
-              >
-                アップロード
-              </div>
-            </button>
-          </Upload>
-        </Form.Item>
-        <Form.Item
-          name="code"
-          label="コード"
-          rules={[
-            {
-              required: true,
-              message: "Please input studio code",
-            },
-          ]}
-        >
-          <Input placeholder="code" />
-        </Form.Item>
-        <Form.Item
-          name="name"
-          label="名称"
-          rules={[
-            {
-              required: true,
-              message: "Please input studio name",
-            },
-          ]}
-        >
-          <Input placeholder="name" />
-        </Form.Item>
-        <Form.Item name="status" label="ステータス" valuePropName="checked">
-          <Switch />
-        </Form.Item>
-        <Form.Item>
-          <div className="tw-flex tw-justify-end tw-items-start tw-gap-2">
-            <Button size="large" onClick={() => onCancel()}>
-              キャンセル
-            </Button>
-            <Button type="primary" htmlType="submit" size="large">
-              次へ
-            </Button>
-          </div>
-        </Form.Item>
-      </Form>
-    );
-  };
-
-  const FormTwo = () => {
-    return (
-      <>
-        <Form
-          layout="vertical"
-          form={form}
-          name="form-two"
-          onFinish={(params) => formatRequestBody(params)}
-          requiredMark={false}
-          validateTrigger="onSubmit"
-        >
-          <Form.Item
-            name="categoryName"
-            label="エリア"
-            rules={[
-              {
-                required: true,
-                message: "Please input categoryName",
-              },
-            ]}
-          >
-            <Input placeholder="code" />
-          </Form.Item>
-          <section className="tw-flex tw-flex-col">
-            <label className="tw-leading-[22px] tw-tracking-[0.14px]">
-              郵便番号１
-            </label>
-            <section className="tw-flex tw-justify-start tw-gap-2">
-              <Form.Item
-                name="zipCode1"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input studio name",
-                  },
-                ]}
-                style={{ flex: 1 }}
-              >
-                <Input placeholder="name" />
-              </Form.Item>
-              <Form.Item
-                name="zipCode2"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input studio name",
-                  },
-                ]}
-                style={{ flex: 3 }}
-              >
-                <Input placeholder="name" />
-              </Form.Item>
-            </section>
-          </section>
-          <Form.Item
-            name="prefecture"
-            label="都道府県"
-            rules={[
-              {
-                required: true,
-                message: "Please input prefecture",
-              },
-            ]}
-          >
-            <Input placeholder="code" />
-          </Form.Item>
-          <Form.Item
-            name="address1"
-            label="市区町村"
-            rules={[
-              {
-                required: true,
-                message: "Please input prefecture",
-              },
-            ]}
-          >
-            <Input placeholder="code" />
-          </Form.Item>
-          <Form.Item
-            name="address2"
-            label="町名・番地"
-            rules={[
-              {
-                required: true,
-                message: "Please input prefecture",
-              },
-            ]}
-          >
-            <Input placeholder="code" />
-          </Form.Item>
-          <Form.Item
-            name="address3"
-            label="番号"
-            rules={[
-              {
-                required: true,
-                message: "Please input prefecture",
-              },
-            ]}
-          >
-            <Input placeholder="code" />
-          </Form.Item>
-          <Form.Item>
-            <div className="tw-flex tw-justify-end tw-items-start tw-gap-2 tw-mt-6">
-              <Button size="large" onClick={() => onCancel()}>
-                戻る
-              </Button>
-              <Button type="primary" htmlType="submit" size="large">
-                次へ
-              </Button>
-            </div>
-          </Form.Item>
-        </Form>
-      </>
-    );
-  };
-
-  const FormThree = () => {
-    return (
-      <>
-        <Form
-          layout="vertical"
-          form={form}
-          name="form-three"
-          onFinish={(params) => formatRequestBody(params)}
-          requiredMark={false}
-          validateTrigger="onSubmit"
-        >
-          <section className="tw-flex tw-flex-col tw-gap-4">
-            <div className="tw-leading-[22px] tw-tracking-[0.14px]">
-              営業時間
-            </div>
-            <div className="tw-flex tw-justify-start tw-gap-2">
-              <Form.Item
-                name="startHour"
-                label="開店時間"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input prefecture",
-                  },
-                ]}
-                style={{ flex: 1 }}
-              >
-                <TimePicker format="HH:mm" className="tw-w-full" />
-              </Form.Item>
-              <Form.Item
-                name="endHour"
-                label="閉店時間"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input prefecture",
-                  },
-                ]}
-                style={{ flex: 1 }}
-              >
-                <TimePicker format="HH:mm" className="tw-w-full" />
-              </Form.Item>
-            </div>
-          </section>
-          <Form.Item
-            name="isTwentyFourHours"
-            rules={[
-              {
-                required: true,
-                message: "Please input prefecture",
-              },
-            ]}
-          >
-            <Radio>24時間営業</Radio>
-          </Form.Item>
-          <Form.Item
-            name="gmapUrl"
-            label="Google map URL"
-            rules={[
-              {
-                required: true,
-                message: "Please input prefecture",
-              },
-            ]}
-          >
-            <Input placeholder="URL" />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="店舗説明"
-            rules={[
-              {
-                required: true,
-                message: "Please input prefecture",
-              },
-            ]}
-          >
-            <Input placeholder="Description" />
-          </Form.Item>
-          <Form.Item>
-            <div className="tw-flex tw-justify-end tw-items-start tw-gap-2 tw-mt-6">
-              <Button size="large" onClick={() => onCancel()}>
-                戻る
-              </Button>
-              <Button
-                type="primary"
-                htmlType="submit"
-                size="large"
-                loading={isRequesting}
-              >
-                保存
-              </Button>
-            </div>
-          </Form.Item>
-        </Form>
-      </>
-    );
+  const resetBody = () => {
+    setRequestBody({});
+    setUploadFile(null);
+    setActiveKey(1);
   };
 
   const items = [
     {
       key: 1,
       label: "基本情報",
-      children: <FormOne />,
+      children: (
+        <StudioFormOne
+          onComplete={handleFormOne}
+          onBack={() => onCancel()}
+          uploadFile={uploadFile}
+          setUploadFile={setUploadFile}
+          isUploading={isUploading}
+          modalKey={modalKey}
+        />
+      ),
     },
     {
       key: 2,
       label: "住所",
-      children: <FormTwo />,
+      children: (
+        <StudioFormTwo
+          onComplete={handleFormTwo}
+          onBack={() => setActiveKey(1)}
+          modalKey={modalKey}
+        />
+      ),
     },
     {
       key: 3,
       label: "営業設定",
-      children: <FormThree />,
+      children: (
+        <StudioFormThree
+          onComplete={handleFormThree}
+          onBack={() => setActiveKey(2)}
+          isRequesting={isRequesting}
+          modalKey={modalKey}
+        />
+      ),
     },
   ];
-
-  const normFile = (e) => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e?.fileList;
-  };
 
   const onTabChange = (key) => {
     setActiveKey(key);

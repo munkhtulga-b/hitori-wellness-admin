@@ -4,7 +4,7 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal } from "antd";
+import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
 import { toast } from "react-toastify";
@@ -43,7 +43,7 @@ const columns = [
   },
   {
     title: "エリア",
-    dataIndex: "prefecture",
+    dataIndex: "category_name",
     customStyle: "",
     type: null,
   },
@@ -65,7 +65,7 @@ const RecordStudio = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
-  const [studios, setStudios] = useState(null);
+  const [studioCategoryNames, setStudioCategoryNames] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
@@ -73,20 +73,31 @@ const RecordStudio = () => {
 
   useEffect(() => {
     fetchStudios();
+    fetchFilterOptions();
   }, []);
 
-  const fetchStudios = async () => {
+  const fetchStudios = async (filters) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.studio.getMany();
+    const { isOk, data } = await $api.admin.studio.getMany(filters);
     if (isOk) {
-      const sorted = _.map(data, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setStudios(sorted);
       setList(data);
     }
     setIsLoading(false);
+  };
+
+  const fetchFilterOptions = async () => {
+    const { isOk, data } = await $api.admin.studio.getMany();
+    if (isOk && data?.length) {
+      const categoryNames = _.map(
+        data,
+        ({ category_name: value, category_name: label }) => ({
+          value,
+          label,
+        })
+      );
+      const categoryNamesSorted = _.uniqBy(categoryNames, "value");
+      setStudioCategoryNames(categoryNamesSorted);
+    }
   };
 
   const createStudio = async (body) => {
@@ -98,7 +109,34 @@ const RecordStudio = () => {
       setModalKey((prev) => prev + 1);
       toast.success("Studio Created Success");
     }
-    setIsLoading(false);
+    setIsRequesting(false);
+  };
+
+  const deleteStudios = async () => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.studio.deleteMany({
+      ids: _.map(checkedRows, "id"),
+    });
+    if (isOk) {
+      setCheckedRows([]);
+      await fetchStudios();
+      toast.success("Studio Deleted Success");
+    }
+    setIsRequesting(false);
+  };
+
+  const onFilterChange = (filter) => {
+    const shallow = _.merge(filters, filter);
+    setFilters(shallow);
+    fetchStudios(shallow);
+  };
+
+  const onFilterClear = (filterKey) => {
+    if (filters) {
+      const shallow = _.omit(filters, filterKey);
+      setFilters(shallow);
+      fetchStudios(shallow);
+    }
   };
 
   return (
@@ -106,8 +144,52 @@ const RecordStudio = () => {
       <div className="tw-flex tw-flex-col tw-gap-6">
         <RecordTableFilters
           onAdd={() => setIsModalOpen(true)}
-          studios={studios}
-        />
+          onSearch={(value) => onFilterChange({ name: value })}
+          onSearchClear={() => onFilterClear("name")}
+          onDelete={deleteStudios}
+          checkedRows={checkedRows}
+          isRequesting={isRequesting}
+        >
+          <>
+            <Select
+              allowClear
+              size="large"
+              style={{
+                width: 120,
+              }}
+              options={studioCategoryNames}
+              onChange={(value) => {
+                value
+                  ? onFilterChange({ categoryName: value })
+                  : onFilterClear("categoryName");
+              }}
+              placeholder="エリア "
+            />
+            <Select
+              allowClear
+              size="large"
+              style={{
+                width: 200,
+              }}
+              options={[
+                {
+                  value: EEnumStudioStatus.ACTIVE,
+                  label: "ACTIVE",
+                },
+                {
+                  value: EEnumStudioStatus.INACTIVE,
+                  label: "INACTIVE",
+                },
+              ]}
+              onChange={(value) =>
+                value
+                  ? onFilterChange({ status: value })
+                  : onFilterClear("status")
+              }
+              placeholder="ステータス"
+            />
+          </>
+        </RecordTableFilters>
         <BaseTable
           tableId="admin-table"
           columns={columns}

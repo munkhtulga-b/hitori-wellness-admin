@@ -1,0 +1,129 @@
+import { Form, Input, Button } from "antd";
+import { useEffect } from "react";
+
+const StudioFormTwo = ({ onComplete, onBack, modalKey }) => {
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.resetFields();
+  }, [modalKey]);
+
+  return (
+    <>
+      <Form
+        layout="vertical"
+        form={form}
+        name="form-two"
+        onFinish={(params) => onComplete(params)}
+        requiredMark={false}
+        validateTrigger="onSubmit"
+      >
+        <Form.Item
+          name="categoryName"
+          label="エリア"
+          rules={[
+            {
+              required: true,
+              message: "Please input categoryName",
+            },
+          ]}
+        >
+          <Input placeholder="code" />
+        </Form.Item>
+        <section className="tw-flex tw-flex-col">
+          <label className="tw-leading-[22px] tw-tracking-[0.14px]">
+            郵便番号１
+          </label>
+          <section className="tw-flex tw-justify-start tw-gap-2">
+            <Form.Item
+              name="zipCode1"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input studio name",
+                  whitespace: false,
+                },
+              ]}
+              style={{ flex: 1 }}
+            >
+              <Input placeholder="000" type="number" maxLength={3} />
+            </Form.Item>
+            <Form.Item
+              name="zipCode2"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input studio name",
+                  whitespace: false,
+                },
+              ]}
+              style={{ flex: 3 }}
+            >
+              <Input placeholder="0000" type="number" maxLength={4} />
+            </Form.Item>
+          </section>
+        </section>
+        <Form.Item
+          name="prefecture"
+          label="都道府県"
+          rules={[
+            {
+              required: true,
+              message: "Please input prefecture",
+            },
+          ]}
+        >
+          <Input placeholder="code" />
+        </Form.Item>
+        <Form.Item
+          name="address1"
+          label="市区町村"
+          rules={[
+            {
+              required: true,
+              message: "Please input prefecture",
+            },
+          ]}
+        >
+          <Input placeholder="code" />
+        </Form.Item>
+        <Form.Item
+          name="address2"
+          label="町名・番地"
+          rules={[
+            {
+              required: true,
+              message: "Please input prefecture",
+            },
+          ]}
+        >
+          <Input placeholder="code" />
+        </Form.Item>
+        <Form.Item
+          name="address3"
+          label="番号"
+          rules={[
+            {
+              required: true,
+              message: "Please input prefecture",
+            },
+          ]}
+        >
+          <Input placeholder="code" />
+        </Form.Item>
+        <Form.Item>
+          <div className="tw-flex tw-justify-end tw-items-start tw-gap-2 tw-mt-6">
+            <Button size="large" onClick={() => onBack()}>
+              戻る
+            </Button>
+            <Button type="primary" htmlType="submit" size="large">
+              次へ
+            </Button>
+          </div>
+        </Form.Item>
+      </Form>
+    </>
+  );
+};
+
+export default StudioFormTwo;

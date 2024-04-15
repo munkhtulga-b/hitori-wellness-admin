@@ -14,8 +14,7 @@ import CreateStudioModal from "./studio/CreateStudioModal";
 const columns = [
   {
     title: "氏名",
-    dataIndex: [["last_name", "first_name"], "code"],
-    imageIndex: "user",
+    dataIndex: ["name", "code"],
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
@@ -42,22 +41,16 @@ const columns = [
     type: "status",
   },
   {
-    title: "登録店舗",
-    dataIndex: "prefecture",
+    title: "初月会費（税込）",
+    dataIndex: "first_month_price",
     customStyle: "",
-    type: null,
+    type: "price",
   },
   {
-    title: "ブラン",
-    dataIndex: "",
+    title: "月会費（税込）",
+    dataIndex: "monthly_price",
     customStyle: "",
-    type: "",
-  },
-  {
-    title: "メールアドレス",
-    dataIndex: "mail_address",
-    customStyle: "",
-    type: null,
+    type: "price",
   },
   {
     title: "更新日時",
@@ -67,7 +60,7 @@ const columns = [
   },
 ];
 
-const RecordUser = () => {
+const RecordPlan = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
@@ -78,13 +71,13 @@ const RecordUser = () => {
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
-    fetchUsers();
+    fetchPlans();
     fetchStudios();
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchPlans = async () => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.user.getMany();
+    const { isOk, data } = await $api.admin.plan.getMany();
     if (isOk) {
       setList(data);
     }
@@ -150,4 +143,4 @@ const RecordUser = () => {
   );
 };
 
-export default RecordUser;
+export default RecordPlan;

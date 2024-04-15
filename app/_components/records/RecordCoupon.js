@@ -13,9 +13,9 @@ import CreateStudioModal from "./studio/CreateStudioModal";
 
 const columns = [
   {
-    title: "氏名",
-    dataIndex: [["last_name", "first_name"], "code"],
-    imageIndex: "user",
+    title: "名称",
+    dataIndex: ["name", "code"],
+    imageIndex: "thumbnail_code",
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
@@ -42,22 +42,16 @@ const columns = [
     type: "status",
   },
   {
-    title: "登録店舗",
+    title: "エリア",
     dataIndex: "prefecture",
     customStyle: "",
     type: null,
   },
   {
-    title: "ブラン",
-    dataIndex: "",
+    title: "営業時間 ",
+    dataIndex: "timeperiod_details",
     customStyle: "",
-    type: "",
-  },
-  {
-    title: "メールアドレス",
-    dataIndex: "mail_address",
-    customStyle: "",
-    type: null,
+    type: "timePeriod",
   },
   {
     title: "更新日時",
@@ -67,7 +61,7 @@ const columns = [
   },
 ];
 
-const RecordUser = () => {
+const RecordCoupon = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
@@ -78,13 +72,13 @@ const RecordUser = () => {
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
-    fetchUsers();
+    fetchCoupons();
     fetchStudios();
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchCoupons = async () => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.user.getMany();
+    const { isOk, data } = await $api.admin.coupon.getMany();
     if (isOk) {
       setList(data);
     }
@@ -142,7 +136,6 @@ const RecordUser = () => {
         <CreateStudioModal
           isRequesting={isRequesting}
           modalKey={modalKey}
-          onConfirm={(params) => createStudio(params)}
           onCancel={() => setIsModalOpen(false)}
         />
       </Modal>
@@ -150,4 +143,4 @@ const RecordUser = () => {
   );
 };
 
-export default RecordUser;
+export default RecordCoupon;
