@@ -38,7 +38,13 @@ const BaseTable = ({
   const formatDataIndex = (item, column) => {
     let result = nullSafety(item[column.dataIndex]);
     if (column.type === "date") {
-      result = dayjs(result).format("YYYY-MM-DD HH:mm");
+      if (Array.isArray(column.dataIndex)) {
+        result = `${dayjs(item[column.dataIndex[0]]).format(
+          "YYYY-MM-DD HH:mm"
+        )} - ${dayjs(item[column.dataIndex[1]]).format("YYYY-MM-DD HH:mm")}`;
+      } else {
+        result = dayjs(result).format("YYYY-MM-DD HH:mm");
+      }
     }
     if (column.type === "levelType") {
       result = `タイプ${result}`;
@@ -107,12 +113,18 @@ const BaseTable = ({
                   Array.isArray(stackItem) ? "tw-flex tw-gap-2" : ""
                 }`}
               >
-                {Array.isArray(stackItem) ? (
+                {Array.isArray(stackItem) && !column.nestedDataIndex ? (
                   <>
-                    {stackItem.map((i, i_index) => (
-                      <span key={i}>{`${nullSafety(item[i])}${
-                        i_index !== stackItem.length - 1 ? ", " : ""
-                      }`}</span>
+                    {stackItem.map((i) => (
+                      <span key={i}>{`${nullSafety(item[i])}`}</span>
+                    ))}
+                  </>
+                ) : Array.isArray(stackItem) && column.nestedDataIndex ? (
+                  <>
+                    {stackItem.map((i) => (
+                      <span key={i}>{`${nullSafety(
+                        item[column.nestedDataIndex][i]
+                      )}`}</span>
                     ))}
                   </>
                 ) : (
@@ -137,7 +149,7 @@ const BaseTable = ({
     if (column.type === "status") {
       result = (
         <span
-          className={`tw-py-[6px] tw-px-[10px] tw-rounded-full ${
+          className={`tw-py-[6px] tw-px-[10px] tw-rounded-full tw-whitespace-nowrap ${
             getStatusData(column, item[column.dataIndex]).style
           }`}
         >
@@ -163,6 +175,28 @@ const BaseTable = ({
             </>
           ) : (
             <>{nullSafety(item[column.dataIndex][0][column.nestedDataIndex])}</>
+          )}
+        </>
+      );
+    }
+    if (column.type === "nestedObjectItem") {
+      result = (
+        <>{nullSafety(item[column.dataIndex][column.nestedDataIndex])}</>
+      );
+    }
+    if (column.type === "singleListObjectItem") {
+      result = (
+        <>
+          {item[column.dataIndex]?.length ? (
+            <>
+              {nullSafety(
+                item[column.dataIndex][0][column.nestedObject][
+                  column.nestedDataIndex
+                ]
+              )}
+            </>
+          ) : (
+            <>-</>
           )}
         </>
       );

@@ -6,14 +6,14 @@ import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import _ from "lodash";
-import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import EEnumReservationStatus from "@/app/_enums/EEnumReservationStatus";
 
 const columns = [
   {
     title: "氏名",
-    dataIndex: ["name", "code"],
-    imageIndex: "thumbnail_code",
+    dataIndex: [["last_name", "first_name"], "id"],
+    nestedDataIndex: "member",
+    imageIndex: null,
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
@@ -22,40 +22,63 @@ const columns = [
     type: "stackedList",
   },
   {
+    title: "登録店舗",
+    dataIndex: "m_studio",
+    nestedDataIndex: "name",
+    customStyle: "",
+    type: "nestedObjectItem",
+  },
+  {
+    title: "プログラム",
+    dataIndex: "m_program",
+    nestedDataIndex: "name",
+    customStyle: "",
+    type: "nestedObjectItem",
+  },
+  {
+    title: "営業時間 ",
+    dataIndex: "created_at",
+    customStyle: "",
+    type: "date",
+  },
+  {
+    title: "予約タイムスロット",
+    dataIndex: ["start_at", "end_at"],
+    customStyle: "",
+    type: "date",
+  },
+  {
     title: "ステータス",
     dataIndex: "status",
     enum: [
       {
-        id: EEnumStudioStatus.ACTIVE,
-        text: "有効",
+        id: EEnumReservationStatus.ACTIVE,
+        text: "予約中",
+        style: "tw-bg-aquaLight tw-text-aquaMedium",
+      },
+      {
+        id: EEnumReservationStatus.CANCELLED,
+        text: "キャンセル済み",
+        style: "tw-bg-bgTag tw-text-grayMedium",
+      },
+      {
+        id: EEnumReservationStatus.AUTOMATIC_CANCELLATION,
+        text: "無断キャンセル",
+        style: "tw-bg-bgCancelled tw-text-cancelled",
+      },
+      {
+        id: EEnumReservationStatus.CHECK_IN,
+        text: "チェックイン",
         style: "tw-bg-bgActive tw-text-statusActive",
       },
       {
-        id: EEnumStudioStatus.INACTIVE,
-        text: "無効",
-        style: "tw-bg-bgTag tw-text-statusInactive",
+        id: EEnumReservationStatus.CHECK_OUT,
+        text: "チェックアウト",
+        style: "tw-bg-bgActive tw-text-statusActive",
       },
     ],
     customStyle: "",
     type: "status",
-  },
-  {
-    title: "エリア",
-    dataIndex: "prefecture",
-    customStyle: "",
-    type: null,
-  },
-  {
-    title: "営業時間 ",
-    dataIndex: "",
-    customStyle: "",
-    type: "",
-  },
-  {
-    title: "更新日時",
-    dataIndex: "updated_at",
-    customStyle: "",
-    type: "date",
   },
 ];
 
@@ -63,15 +86,18 @@ const RecordReservation = () => {
   const [isLoading, setIsLoading] = useState(false);
   // const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
-  const [studios, setStudios] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
-  // const [filters, setFilters] = useState(null);
+  // const [filters, setFilters] = useState({});
+  // const [pagination, setPagination] = useState({
+  //   page: 1,
+  //   count: 10
+  // })
+  // const [queries, setQueries] = useState({});
 
   useEffect(() => {
     fetchReservations();
-    fetchStudios();
   }, []);
 
   const fetchReservations = async () => {
@@ -83,24 +109,10 @@ const RecordReservation = () => {
     setIsLoading(false);
   };
 
-  const fetchStudios = async () => {
-    const { isOk, data } = await $api.admin.studio.getMany();
-    if (isOk) {
-      const sorted = _.map(data, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setStudios(sorted);
-    }
-  };
-
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
-        <RecordTableFilters
-          onAdd={() => setIsModalOpen(true)}
-          studios={studios}
-        />
+        <RecordTableFilters onAdd={() => setIsModalOpen(true)} />
         <BaseTable
           tableId="admin-table"
           columns={columns}

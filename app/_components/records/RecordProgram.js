@@ -40,12 +40,6 @@ const columns = [
     type: "status",
   },
   {
-    title: "ブランド",
-    dataIndex: "studio_name",
-    customStyle: "",
-    type: null,
-  },
-  {
     title: "更新日時",
     dataIndex: "updated_at",
     customStyle: "",
