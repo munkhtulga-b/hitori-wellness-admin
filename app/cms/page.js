@@ -1,7 +1,9 @@
 const CalendarPage = () => {
   return (
     <>
-      <div>Calendar page</div>
+      <div className="tw-flex tw-flex-col">
+        <h1>Calendar Page</h1>
+      </div>
     </>
   );
 };

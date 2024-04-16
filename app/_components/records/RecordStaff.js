@@ -89,6 +89,19 @@ const RecordStaff = ({ studios }) => {
     setIsRequesting(false);
   };
 
+  const deleteStaff = async () => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.staff.deleteMany({
+      ids: _.map(checkedRows, "id"),
+    });
+    if (isOk) {
+      setCheckedRows([]);
+      await fetchStaff();
+      toast.success("Staff deleted successfully");
+    }
+    setIsRequesting(false);
+  };
+
   const onFilterChange = (filter) => {
     const shallow = _.merge(filters, filter);
     setFilters(shallow);
@@ -109,6 +122,8 @@ const RecordStaff = ({ studios }) => {
         <RecordTableFilters
           onAdd={() => setIsModalOpen(true)}
           studios={studios}
+          checkedRows={checkedRows}
+          onDelete={deleteStaff}
         >
           <>
             <Select

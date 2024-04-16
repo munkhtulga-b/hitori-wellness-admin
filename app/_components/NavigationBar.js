@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { useWindowWidth } from "../_utils/custom-hooks";
+import { useRouter } from "next/navigation";
 
 const NavigationBar = ({ collapsed, setCollapsed }) => {
+  const router = useRouter();
   const windowWidth = useWindowWidth();
 
   const isTogglerVisible = () => {
@@ -26,7 +28,7 @@ const NavigationBar = ({ collapsed, setCollapsed }) => {
               />
             </li>
           )}
-          <li>
+          <li onClick={() => router.push("/cms")} className="tw-cursor-pointer">
             <Image
               priority
               src="/assets/logo-white.png"

@@ -23,6 +23,7 @@ const RecordsPage = () => {
 
   const [activeKey, setActiveKey] = useState("studios");
   const [studioOptions, setStudioOptions] = useState([]);
+  const [studioCategoryNames, setStudioCategoryNames] = useState([]);
 
   useEffect(() => {
     const tabKey = searchParams.get("tab");
@@ -49,6 +50,15 @@ const RecordsPage = () => {
         value,
         label,
       }));
+      const categoryNames = _.map(
+        data,
+        ({ category_name: value, category_name: label }) => ({
+          value,
+          label,
+        })
+      );
+      const categoryNamesSorted = _.uniqBy(categoryNames, "value");
+      setStudioCategoryNames(categoryNamesSorted);
       setStudioOptions(studios);
     }
   };
@@ -67,7 +77,7 @@ const RecordsPage = () => {
     {
       key: "studios",
       label: "店舗",
-      children: <RecordStudio />,
+      children: <RecordStudio studioCategoryNames={studioCategoryNames} />,
     },
     {
       key: "users",
