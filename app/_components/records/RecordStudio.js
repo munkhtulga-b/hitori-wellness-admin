@@ -61,11 +61,10 @@ const columns = [
   },
 ];
 
-const RecordStudio = () => {
+const RecordStudio = ({ studioCategoryNames }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
-  const [studioCategoryNames, setStudioCategoryNames] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
@@ -73,7 +72,6 @@ const RecordStudio = () => {
 
   useEffect(() => {
     fetchStudios();
-    fetchFilterOptions();
   }, []);
 
   const fetchStudios = async (filters) => {
@@ -83,21 +81,6 @@ const RecordStudio = () => {
       setList(data);
     }
     setIsLoading(false);
-  };
-
-  const fetchFilterOptions = async () => {
-    const { isOk, data } = await $api.admin.studio.getMany();
-    if (isOk && data?.length) {
-      const categoryNames = _.map(
-        data,
-        ({ category_name: value, category_name: label }) => ({
-          value,
-          label,
-        })
-      );
-      const categoryNamesSorted = _.uniqBy(categoryNames, "value");
-      setStudioCategoryNames(categoryNamesSorted);
-    }
   };
 
   const createStudio = async (body) => {
