@@ -270,7 +270,7 @@ const BaseTable = ({
                       {data.map((item) => (
                         <tr key={item.id} className={`${baseTableRowStyle}`}>
                           {isCheckable ? (
-                            <td className={`${baseTableCellStyle}`}>
+                            <td className={`tw-py-4`}>
                               <Checkbox
                                 checked={isRowChecked(item)}
                                 onChange={(e) =>

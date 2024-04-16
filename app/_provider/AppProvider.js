@@ -44,8 +44,8 @@ const AppProvider = ({ children, fontFamily }) => {
           Button: {
             defaultActiveBorderColor: colors.primary,
             defaultHoverBorderColor: colors.primary,
-            defaultHoverColor: colors.textSecondary,
-            defaultActiveColor: colors.textSecondary,
+            defaultHoverColor: colors.primary,
+            defaultActiveColor: colors.primary,
             colorBgContainerDisabled: colors.primaryDisabled,
             colorTextDisabled: "#BABCC4",
             lineHeightLG: 26,
