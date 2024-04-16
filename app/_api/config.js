@@ -11,13 +11,13 @@ const fetchData = async (endpoint, method, body, serverToken) => {
   const token = Cookies.get("token") ? Cookies.get("token") : serverToken;
 
   try {
-    const headers = {
+    const requestHeaders = {
       "Content-Type": "application/json",
     };
 
     const init = {
       method: method,
-      headers: headers,
+      headers: requestHeaders,
       cache: "no-store",
       next: {
         revalidate: 0,
@@ -29,7 +29,7 @@ const fetchData = async (endpoint, method, body, serverToken) => {
     }
 
     if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
+      requestHeaders["Authorization"] = `Bearer ${token}`;
     }
 
     const response = await fetch(`${baseURL}/${endpoint}`, init);
@@ -37,6 +37,7 @@ const fetchData = async (endpoint, method, body, serverToken) => {
     const isOk = response.ok;
     const status = response.status;
     const data = await response.json();
+    const range = response.headers.get("Content-Range");
 
     if (!isOk) {
       toast.error(data?.error?.message || "An error occured");
@@ -52,6 +53,7 @@ const fetchData = async (endpoint, method, body, serverToken) => {
       isOk,
       status,
       data,
+      range,
     };
   } catch (error) {
     return error;

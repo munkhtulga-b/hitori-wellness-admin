@@ -4,7 +4,7 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal } from "antd";
+import { Modal, Pagination } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import EEnumReservationStatus from "@/app/_enums/EEnumReservationStatus";
 
@@ -90,23 +90,40 @@ const RecordReservation = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
   // const [filters, setFilters] = useState({});
-  // const [pagination, setPagination] = useState({
-  //   page: 1,
-  //   count: 10
-  // })
-  // const [queries, setQueries] = useState({});
+  const [pagination, setPagination] = useState({
+    current: 1,
+    count: 10,
+    total: 0,
+  });
 
   useEffect(() => {
     fetchReservations();
   }, []);
 
-  const fetchReservations = async () => {
+  const fetchReservations = async (queries) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.reservation.getMany();
+    const { isOk, data, range } = await $api.admin.reservation.getMany(
+      queries
+        ? queries
+        : { page: pagination.current - 1, limit: pagination.count }
+    );
     if (isOk) {
       setList(data);
+      setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
     }
     setIsLoading(false);
+  };
+
+  const onPaginationChange = (page, pageSize) => {
+    if (pagination.count == pageSize) {
+      setPagination((prev) => ({ ...prev, current: page }));
+    } else {
+      setPagination((prev) => ({ ...prev, current: 0, count: pageSize }));
+    }
+    fetchReservations({
+      page: pagination.count == pageSize ? page - 1 : 0,
+      limit: pageSize,
+    });
   };
 
   return (
@@ -122,6 +139,14 @@ const RecordReservation = () => {
           checkedRows={checkedRows}
           onRowCheck={(rows) => setCheckedRows(rows)}
         />
+        <section className="tw-flex tw-justify-center">
+          <Pagination
+            current={pagination.current}
+            pageSize={pagination.count}
+            total={pagination.total}
+            onChange={(page, pageSize) => onPaginationChange(page, pageSize)}
+          />
+        </section>
       </div>
 
       <Modal

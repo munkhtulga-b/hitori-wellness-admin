@@ -109,7 +109,7 @@ const AdminLayout = ({ children }) => {
                     opacity: 1,
                   }}
                   transition={{ duration: 0.5 }}
-                  className="tw-h-full tw-p-6 tw-bg-white tw-rounded-[14px] tw-shadow tw-overflow-x-auto"
+                  className="tw-p-6 tw-bg-white tw-rounded-[14px] tw-shadow tw-overflow-x-auto"
                 >
                   <Suspense fallback={<></>}>{children}</Suspense>
                 </motion.div>

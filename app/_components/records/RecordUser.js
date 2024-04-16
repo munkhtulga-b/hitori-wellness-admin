@@ -4,7 +4,7 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal, Select } from "antd";
+import { Modal, Select, Pagination } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 import _ from "lodash";
@@ -77,16 +77,29 @@ const RecordUser = ({ studios }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    count: 10,
+    total: 0,
+  });
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (queries) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.user.getMany();
+    const { isOk, data, range } = await $api.admin.user.getMany(
+      queries
+        ? queries
+        : {
+            page: pagination.current,
+            limit: pagination.count,
+          }
+    );
     if (isOk) {
       setList(data);
+      setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
     }
     setIsLoading(false);
   };
@@ -105,9 +118,21 @@ const RecordUser = ({ studios }) => {
     }
   };
 
+  const onPaginationChange = (page, pageSize) => {
+    if (pagination.count == pageSize) {
+      setPagination((prev) => ({ ...prev, current: page }));
+    } else {
+      setPagination((prev) => ({ ...prev, current: 0, count: pageSize }));
+    }
+    fetchUsers({
+      page: pagination.count == pageSize ? page - 1 : 0,
+      limit: pageSize,
+    });
+  };
+
   return (
     <>
-      <div className="tw-flex tw-flex-col tw-gap-6">
+      <div className="tw-flex tw-flex-col tw-gap-6 tw-h-full">
         <RecordTableFilters
           onAdd={() => setIsModalOpen(true)}
           studios={studios}
@@ -162,6 +187,14 @@ const RecordUser = ({ studios }) => {
           checkedRows={checkedRows}
           onRowCheck={(rows) => setCheckedRows(rows)}
         />
+        <section className="tw-justify-self-end tw-flex tw-justify-center">
+          <Pagination
+            current={pagination.current}
+            pageSize={pagination.count}
+            total={pagination.total}
+            onChange={(page, pageSize) => onPaginationChange(page, pageSize)}
+          />
+        </section>
       </div>
 
       <Modal
