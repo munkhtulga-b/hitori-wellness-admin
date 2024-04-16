@@ -7,7 +7,9 @@ import RecordTableFilters from "./RecordTableFilters";
 import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
+import { toast } from "react-toastify";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import CreateStaffModal from "./staff/CreateStaffModal";
 
 const columns = [
   {
@@ -55,11 +57,11 @@ const columns = [
 
 const RecordStaff = ({ studios }) => {
   const [isLoading, setIsLoading] = useState(false);
-  // const [isRequesting, setIsRequesting] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [modalKey, setModalKey] = useState(0);
+  const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
@@ -73,6 +75,18 @@ const RecordStaff = ({ studios }) => {
       setList(data);
     }
     setIsLoading(false);
+  };
+
+  const createStaff = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.staff.create(body);
+    if (isOk) {
+      await fetchStaff();
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("Staff created successfully");
+    }
+    setIsRequesting(false);
   };
 
   const onFilterChange = (filter) => {
@@ -163,7 +177,13 @@ const RecordStaff = ({ studios }) => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        Create Staff Modal
+        <CreateStaffModal
+          modalKey={modalKey}
+          onCancel={() => setIsModalOpen(false)}
+          studios={studios}
+          isRequesting={isRequesting}
+          onConfirm={(body) => createStaff(body)}
+        />
       </Modal>
     </>
   );
