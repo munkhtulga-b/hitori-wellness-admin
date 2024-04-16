@@ -4,7 +4,7 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal } from "antd";
+import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
@@ -62,15 +62,13 @@ const RecordPlan = () => {
   const [isLoading, setIsLoading] = useState(false);
   // const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
-  const [studios, setStudios] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
-  // const [filters, setFilters] = useState(null);
+  const [filters, setFilters] = useState(null);
 
   useEffect(() => {
     fetchPlans();
-    fetchStudios();
   }, []);
 
   const fetchPlans = async () => {
@@ -82,24 +80,50 @@ const RecordPlan = () => {
     setIsLoading(false);
   };
 
-  const fetchStudios = async () => {
-    const { isOk, data } = await $api.admin.studio.getMany();
-    if (isOk) {
-      const sorted = _.map(data, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setStudios(sorted);
+  const onFilterChange = (filter) => {
+    const shallow = _.merge(filters, filter);
+    setFilters(shallow);
+    fetchPlans(shallow);
+  };
+
+  const onFilterClear = (filterKey) => {
+    if (filters) {
+      const shallow = _.omit(filters, filterKey);
+      setFilters(shallow);
+      fetchPlans(shallow);
     }
   };
 
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
-        <RecordTableFilters
-          onAdd={() => setIsModalOpen(true)}
-          studios={studios}
-        />
+        <RecordTableFilters onAdd={() => setIsModalOpen(true)}>
+          <>
+            <Select
+              allowClear
+              size="large"
+              style={{
+                width: 200,
+              }}
+              options={[
+                {
+                  value: EEnumStudioStatus.ACTIVE,
+                  label: "ACTIVE",
+                },
+                {
+                  value: EEnumStudioStatus.INACTIVE,
+                  label: "INACTIVE",
+                },
+              ]}
+              onChange={(value) =>
+                value
+                  ? onFilterChange({ status: value })
+                  : onFilterClear("status")
+              }
+              placeholder="ステータス"
+            />
+          </>
+        </RecordTableFilters>
         <BaseTable
           tableId="admin-table"
           columns={columns}

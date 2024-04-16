@@ -6,8 +6,6 @@ import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import _ from "lodash";
-import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 
 const columns = [
   {
@@ -22,24 +20,6 @@ const columns = [
     type: "stackedList",
   },
   {
-    title: "ステータス",
-    dataIndex: "status",
-    enum: [
-      {
-        id: EEnumStudioStatus.ACTIVE,
-        text: "有効",
-        style: "tw-bg-bgActive tw-text-statusActive",
-      },
-      {
-        id: EEnumStudioStatus.INACTIVE,
-        text: "無効",
-        style: "tw-bg-bgTag tw-text-statusInactive",
-      },
-    ],
-    customStyle: "",
-    type: "status",
-  },
-  {
     title: "更新日時",
     dataIndex: "updated_at",
     customStyle: "",
@@ -51,7 +31,6 @@ const RecordCoupon = () => {
   const [isLoading, setIsLoading] = useState(false);
   // const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
-  const [studios, setStudios] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
@@ -59,7 +38,6 @@ const RecordCoupon = () => {
 
   useEffect(() => {
     fetchCoupons();
-    fetchStudios();
   }, []);
 
   const fetchCoupons = async () => {
@@ -71,24 +49,10 @@ const RecordCoupon = () => {
     setIsLoading(false);
   };
 
-  const fetchStudios = async () => {
-    const { isOk, data } = await $api.admin.studio.getMany();
-    if (isOk) {
-      const sorted = _.map(data, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setStudios(sorted);
-    }
-  };
-
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
-        <RecordTableFilters
-          onAdd={() => setIsModalOpen(true)}
-          studios={studios}
-        />
+        <RecordTableFilters onAdd={() => setIsModalOpen(true)} />
         <BaseTable
           tableId="admin-table"
           columns={columns}

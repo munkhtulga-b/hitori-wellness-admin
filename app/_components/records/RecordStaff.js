@@ -53,11 +53,10 @@ const columns = [
   },
 ];
 
-const RecordStaff = () => {
+const RecordStaff = ({ studios }) => {
   const [isLoading, setIsLoading] = useState(false);
   // const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
-  const [studioCategoryNames, setStudioCategoryNames] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
@@ -65,7 +64,6 @@ const RecordStaff = () => {
 
   useEffect(() => {
     fetchStaff();
-    fetchFilterOptions();
   }, []);
 
   const fetchStaff = async (filters) => {
@@ -75,21 +73,6 @@ const RecordStaff = () => {
       setList(data);
     }
     setIsLoading(false);
-  };
-
-  const fetchFilterOptions = async () => {
-    const { isOk, data } = await $api.admin.studio.getMany();
-    if (isOk && data?.length) {
-      const categoryNames = _.map(
-        data,
-        ({ category_name: value, category_name: label }) => ({
-          value,
-          label,
-        })
-      );
-      const categoryNamesSorted = _.uniqBy(categoryNames, "value");
-      setStudioCategoryNames(categoryNamesSorted);
-    }
   };
 
   const onFilterChange = (filter) => {
@@ -111,16 +94,22 @@ const RecordStaff = () => {
       <div className="tw-flex tw-flex-col tw-gap-6">
         <RecordTableFilters
           onAdd={() => setIsModalOpen(true)}
-          onSearch={(filter) => onFilterChange(filter)}
+          studios={studios}
         >
           <>
             <Select
+              disabled={!studios}
               allowClear
               size="large"
               style={{
                 width: 120,
               }}
-              options={studioCategoryNames}
+              options={studios}
+              onChange={(value) => {
+                value
+                  ? onFilterChange({ studioId: value })
+                  : onFilterClear("studioId");
+              }}
               placeholder="エリア "
             />
             <Select

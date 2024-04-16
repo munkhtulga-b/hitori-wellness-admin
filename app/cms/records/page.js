@@ -13,54 +13,8 @@ import RecordStaff from "@/app/_components/records/RecordStaff";
 import RecordItem from "@/app/_components/records/RecordItem";
 import RecordCoupon from "@/app/_components/records/RecordCoupon";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-
-const tabItems = [
-  {
-    key: "studios",
-    label: "店舗",
-    children: <RecordStudio />,
-  },
-  {
-    key: "users",
-    label: "メンバー",
-    children: <RecordUser />,
-  },
-  {
-    key: "programs",
-    label: "プログラム",
-    children: <RecordProgram />,
-  },
-  {
-    key: "staff",
-    label: "スタッフ",
-    children: <RecordStaff />,
-  },
-  {
-    key: "items",
-    label: "商品",
-    children: <RecordItem />,
-  },
-  {
-    key: "plans",
-    label: "プラン",
-    children: <RecordPlan />,
-  },
-  {
-    key: "tickets",
-    label: "チケット",
-    children: <RecordTicket />,
-  },
-  {
-    key: "coupons",
-    label: "クーポン",
-    children: <RecordCoupon />,
-  },
-  {
-    key: "reservations",
-    label: "予約",
-    children: <RecordReservation />,
-  },
-];
+import $api from "@/app/_api";
+import _ from "lodash";
 
 const RecordsPage = () => {
   const router = useRouter();
@@ -68,6 +22,7 @@ const RecordsPage = () => {
   const pathname = usePathname();
 
   const [activeKey, setActiveKey] = useState("studios");
+  const [studioOptions, setStudioOptions] = useState([]);
 
   useEffect(() => {
     const tabKey = searchParams.get("tab");
@@ -78,9 +33,24 @@ const RecordsPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    fetchStudioOptions();
+  }, []);
+
   const onTabChange = (key) => {
     setActiveKey(key);
     router.push(pathname + "?" + createQueryString("tab", `${key}`));
+  };
+
+  const fetchStudioOptions = async () => {
+    const { isOk, data } = await $api.admin.studio.getMany();
+    if (isOk && data?.length) {
+      const studios = _.map(data, ({ id: value, name: label }) => ({
+        value,
+        label,
+      }));
+      setStudioOptions(studios);
+    }
   };
 
   const createQueryString = useCallback(
@@ -92,6 +62,54 @@ const RecordsPage = () => {
     },
     [searchParams]
   );
+
+  const tabItems = [
+    {
+      key: "studios",
+      label: "店舗",
+      children: <RecordStudio />,
+    },
+    {
+      key: "users",
+      label: "メンバー",
+      children: <RecordUser studios={studioOptions} />,
+    },
+    {
+      key: "programs",
+      label: "プログラム",
+      children: <RecordProgram />,
+    },
+    {
+      key: "staff",
+      label: "スタッフ",
+      children: <RecordStaff studios={studioOptions} />,
+    },
+    {
+      key: "items",
+      label: "商品",
+      children: <RecordItem />,
+    },
+    {
+      key: "plans",
+      label: "プラン",
+      children: <RecordPlan />,
+    },
+    {
+      key: "tickets",
+      label: "チケット",
+      children: <RecordTicket />,
+    },
+    {
+      key: "coupons",
+      label: "クーポン",
+      children: <RecordCoupon />,
+    },
+    {
+      key: "reservations",
+      label: "予約",
+      children: <RecordReservation />,
+    },
+  ];
 
   return (
     <>

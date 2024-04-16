@@ -4,10 +4,10 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal } from "antd";
+import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import _ from "lodash";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import _ from "lodash";
 
 const columns = [
   {
@@ -41,15 +41,19 @@ const columns = [
   },
   {
     title: "登録店舗",
-    dataIndex: "prefecture",
+    dataIndex: "t_member_plan",
+    nestedObject: "studio",
+    nestedDataIndex: "name",
     customStyle: "",
-    type: null,
+    type: "singleListObjectItem",
   },
   {
     title: "ブラン",
-    dataIndex: "",
+    dataIndex: "t_member_plan",
+    nestedObject: "plan",
+    nestedDataIndex: "name",
     customStyle: "",
-    type: "",
+    type: "singleListObjectItem",
   },
   {
     title: "メールアドレス",
@@ -65,19 +69,17 @@ const columns = [
   },
 ];
 
-const RecordUser = () => {
+const RecordUser = ({ studios }) => {
   const [isLoading, setIsLoading] = useState(false);
   // const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
-  const [studios, setStudios] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
-  // const [filters, setFilters] = useState(null);
+  const [filters, setFilters] = useState(null);
 
   useEffect(() => {
     fetchUsers();
-    fetchStudios();
   }, []);
 
   const fetchUsers = async () => {
@@ -89,14 +91,17 @@ const RecordUser = () => {
     setIsLoading(false);
   };
 
-  const fetchStudios = async () => {
-    const { isOk, data } = await $api.admin.studio.getMany();
-    if (isOk) {
-      const sorted = _.map(data, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setStudios(sorted);
+  const onFilterChange = (filter) => {
+    const shallow = _.merge(filters, filter);
+    setFilters(shallow);
+    fetchUsers(shallow);
+  };
+
+  const onFilterClear = (filterKey) => {
+    if (filters) {
+      const shallow = _.omit(filters, filterKey);
+      setFilters(shallow);
+      fetchUsers(shallow);
     }
   };
 
@@ -106,7 +111,48 @@ const RecordUser = () => {
         <RecordTableFilters
           onAdd={() => setIsModalOpen(true)}
           studios={studios}
-        />
+        >
+          <>
+            <Select
+              disabled={!studios}
+              allowClear
+              size="large"
+              style={{
+                width: 120,
+              }}
+              options={studios}
+              onChange={(value) => {
+                value
+                  ? onFilterChange({ studioId: value })
+                  : onFilterClear("studioId");
+              }}
+              placeholder="エリア "
+            />
+            <Select
+              allowClear
+              size="large"
+              style={{
+                width: 200,
+              }}
+              options={[
+                {
+                  value: EEnumStudioStatus.ACTIVE,
+                  label: "ACTIVE",
+                },
+                {
+                  value: EEnumStudioStatus.INACTIVE,
+                  label: "INACTIVE",
+                },
+              ]}
+              onChange={(value) =>
+                value
+                  ? onFilterChange({ status: value })
+                  : onFilterClear("status")
+              }
+              placeholder="ステータス"
+            />
+          </>
+        </RecordTableFilters>
         <BaseTable
           tableId="admin-table"
           columns={columns}

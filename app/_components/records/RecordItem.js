@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import _ from "lodash";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 
 const columns = [
@@ -65,7 +64,6 @@ const RecordItem = () => {
   const [isLoading, setIsLoading] = useState(false);
   //   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
-  const [studios, setStudios] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   //   const [modalKey, setModalKey] = useState(0);
@@ -73,7 +71,6 @@ const RecordItem = () => {
 
   useEffect(() => {
     fetchItems();
-    fetchStudios();
   }, []);
 
   const fetchItems = async () => {
@@ -85,24 +82,10 @@ const RecordItem = () => {
     setIsLoading(false);
   };
 
-  const fetchStudios = async () => {
-    const { isOk, data } = await $api.admin.studio.getMany();
-    if (isOk) {
-      const sorted = _.map(data, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setStudios(sorted);
-    }
-  };
-
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
-        <RecordTableFilters
-          onAdd={() => setIsModalOpen(true)}
-          studios={studios}
-        />
+        <RecordTableFilters onAdd={() => setIsModalOpen(true)} />
         <BaseTable
           tableId="admin-table"
           columns={columns}
