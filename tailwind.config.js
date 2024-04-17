@@ -48,6 +48,7 @@ module.exports = {
       },
       ringColor: {
         active: "#B7DDFF",
+        divider: "#ECEDF0",
       },
       placeholderColor: {
         primary: "#838795",

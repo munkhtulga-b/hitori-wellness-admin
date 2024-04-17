@@ -1,6 +1,7 @@
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 import { Form, Input, Select, Button, Switch } from "antd";
 import { useEffect, useState } from "react";
+import EEnumGender from "@/app/_enums/EEnumGender";
 
 const CreateStaffModal = ({
   studios,
@@ -78,16 +79,16 @@ const CreateStaffModal = ({
         >
           <section className="tw-flex tw-justify-start tw-gap-4">
             <Button
-              type={gender === 1 ? "primary" : "default"}
+              type={gender === EEnumGender.MALE ? "primary" : "default"}
               size="large"
-              onClick={() => onGenderSelect(1)}
+              onClick={() => onGenderSelect(EEnumGender.MALE)}
             >
               男性
             </Button>
             <Button
-              type={gender === 2 ? "primary" : "default"}
+              type={gender === EEnumGender.FEMALE ? "primary" : "default"}
               size="large"
-              onClick={() => onGenderSelect(2)}
+              onClick={() => onGenderSelect(EEnumGender.FEMALE)}
             >
               女性
             </Button>
