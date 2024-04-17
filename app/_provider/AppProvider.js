@@ -62,6 +62,7 @@ const AppProvider = ({ children, fontFamily }) => {
           Radio: {
             radioSize: 20,
             dotSize: 10,
+            controlHeightLG: 46,
           },
           Form: {
             labelHeight: 22,

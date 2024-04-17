@@ -14,7 +14,7 @@ const nextConfig = {
   ],
   env: {
     APP_VERSION: "1.0.0",
-    BASE_META_TITLE: "Hitori Wellness | Admin",
+    BASE_META_TITLE: "HITORI WELLNESS | ADMIN",
     BASE_META_DESCRIPTION: "Hitori Wellness Admin Dashboard",
     BASE_IMAGE_URL: "storage.googleapis.com/gym-reservation/",
   },
