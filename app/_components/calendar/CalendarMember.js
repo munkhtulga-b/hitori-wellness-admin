@@ -1,4 +1,4 @@
-const CalendarMember = ({ dateType }) => {
+const CalendarMember = () => {
   return (
     <>
       <h1>CalendarMember</h1>

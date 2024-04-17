@@ -21,6 +21,7 @@ module.exports = {
         bgTag: "#ECEDF0",
         bgActive: "#C1E6CF",
         bgCancelled: "#F0ACB0",
+        bgCalendarBlue: "rgba(183, 221, 255, 0.30)",
       },
       textColor: {
         primary: "#121316",
