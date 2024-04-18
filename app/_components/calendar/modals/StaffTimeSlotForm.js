@@ -135,7 +135,7 @@ const StaffTimeSlotForm = ({ closeModal }) => {
         >
           <TimePicker
             format={"HH:mm"}
-            minuteStep={60}
+            minuteStep={30}
             needConfirm={false}
             showNow={false}
             className="tw-w-full"
@@ -155,7 +155,7 @@ const StaffTimeSlotForm = ({ closeModal }) => {
         >
           <TimePicker
             format={"HH:mm"}
-            minuteStep={60}
+            minuteStep={30}
             needConfirm={false}
             showNow={false}
             className="tw-w-full"

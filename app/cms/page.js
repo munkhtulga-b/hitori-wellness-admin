@@ -14,16 +14,31 @@ import $api from "../_api";
 
 const CalendarPage = () => {
   const [studios, setStudios] = useState(null);
+  const [studioOptions, setStudioOptions] = useState();
+  const [slotList, setSlotList] = useState(null);
 
   const [calendarType, setCalendarType] = useState("member");
   const [dateType, setDateType] = useState("week");
 
+  const [isFetching, setIsFetching] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSettingsOption, setSelectedSettingsOption] = useState(null);
+  const [selectedStudioOption, setSelectedStudioOption] = useState(null);
+  const [selectedStudio, setSelectedStudio] = useState(null);
 
   useEffect(() => {
+    fetchStaffTimeSlots();
     fetchStudios();
   }, []);
+
+  const fetchStaffTimeSlots = async () => {
+    setIsFetching(true);
+    const { isOk, data } = await $api.admin.staffSlot.getMany();
+    if (isOk) {
+      setSlotList(data);
+    }
+    setIsFetching(false);
+  };
 
   const fetchStudios = async () => {
     const { isOk, data } = await $api.admin.studio.getMany();
@@ -32,7 +47,17 @@ const CalendarPage = () => {
         value,
         label,
       }));
-      setStudios(sorted);
+      setStudioOptions(sorted);
+      setStudios(data);
+      setSelectedStudioOption(sorted[0]);
+      setSelectedStudio(data[0]);
+    }
+  };
+
+  const onStudioChange = (studioId) => {
+    if (studioId) {
+      const matched = _.find(studios, { id: studioId });
+      setSelectedStudio(matched);
     }
   };
 
@@ -42,18 +67,28 @@ const CalendarPage = () => {
         <PageHeader title={"カレンダー"} />
         <div className="tw-bg-bgTag tw-my-5 tw-h-[1px]"></div>
         <CalendarFilters
-          studios={studios}
+          studios={studioOptions}
           calendarType={calendarType}
           setCalendarType={setCalendarType}
           dateType={dateType}
           setDateType={setDateType}
           setIsModalOpen={setIsModalOpen}
+          selectedStudioOption={selectedStudioOption}
+          onStudioChange={(studioId) => {
+            onStudioChange(studioId);
+            setSelectedStudioOption(studioId);
+          }}
         />
         <div className="tw-mt-6">
           {calendarType === "member" ? (
             <CalendarMember dateType={dateType} />
           ) : (
-            <CalendarStaff dateType={dateType} />
+            <CalendarStaff
+              isFetching={isFetching}
+              slotList={slotList}
+              selectedStudio={selectedStudio}
+              dateType={dateType}
+            />
           )}
         </div>
       </div>
