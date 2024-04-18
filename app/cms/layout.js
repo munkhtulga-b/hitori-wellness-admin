@@ -2,7 +2,7 @@
 
 import Cookies from "js-cookie";
 import NavigationBar from "@/app/_components/NavigationBar";
-import { useLayoutEffect, useState, Suspense } from "react";
+import { useLayoutEffect, useEffect, useState, Suspense } from "react";
 import { usePathname, redirect, useRouter } from "next/navigation";
 import { Layout } from "antd";
 import { useUserStore } from "../_store/user";
@@ -12,6 +12,15 @@ import { useWindowWidth } from "../_utils/custom-hooks";
 import { useAdminAccessStore } from "../_store/admin-access";
 
 const { Header, Content, Sider } = Layout;
+
+const handleScroll = (e) => {
+  if (e.ctrlKey) {
+    e.preventDefault();
+    const delta = e.deltaY || e.detail || e.wheelDelta;
+    const element = e.currentTarget;
+    element.scrollLeft += delta;
+  }
+};
 
 const AdminLayout = ({ children }) => {
   const pathName = usePathname();
@@ -29,6 +38,22 @@ const AdminLayout = ({ children }) => {
     }
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    let element;
+    if (isMounted) {
+      element = document.querySelector("#scrollable-container");
+      if (element) {
+        element.addEventListener("wheel", handleScroll, { passive: false });
+      }
+    }
+
+    return () => {
+      if (element) {
+        element.removeEventListener("wheel", handleScroll);
+      }
+    };
+  }, [isMounted]);
 
   const logOut = () => {
     clearUser();
@@ -101,6 +126,7 @@ const AdminLayout = ({ children }) => {
                   ></div>
                 )}
                 <motion.div
+                  id="scrollable-container"
                   key={pathName}
                   initial={{
                     opacity: 0,

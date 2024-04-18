@@ -20,8 +20,12 @@ const StudioFormThree = ({ onComplete, onBack, isRequesting, modalKey }) => {
   const beforeComplete = (params) => {
     params.timeperiodDetails = [
       {
-        start_hour: isTwentyFourHour ? 0 : params.startHour,
-        end_hour: isTwentyFourHour ? 24 : params.endHour,
+        start_hour: isTwentyFourHour
+          ? "00:00"
+          : dayjs(params.startHour).format("HH:mm"),
+        end_hour: isTwentyFourHour
+          ? "23:59"
+          : dayjs(params.endHour).format("HH:mm"),
         timeperiod: "FULLTIME",
       },
     ];
@@ -55,7 +59,13 @@ const StudioFormThree = ({ onComplete, onBack, isRequesting, modalKey }) => {
               ]}
               style={{ flex: 1 }}
             >
-              <TimePicker format="HH:mm" className="tw-w-full" />
+              <TimePicker
+                format="HH:mm"
+                showNow={false}
+                needConfirm={false}
+                minuteStep={30}
+                className="tw-w-full"
+              />
             </Form.Item>
             <Form.Item
               name="endHour"
@@ -69,7 +79,13 @@ const StudioFormThree = ({ onComplete, onBack, isRequesting, modalKey }) => {
               ]}
               style={{ flex: 1 }}
             >
-              <TimePicker format="HH:mm" className="tw-w-full" />
+              <TimePicker
+                format="HH:mm"
+                showNow={false}
+                needConfirm={false}
+                minuteStep={30}
+                className="tw-w-full"
+              />
             </Form.Item>
           </div>
         </section>
