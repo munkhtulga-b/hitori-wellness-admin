@@ -11,7 +11,7 @@ import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 
 const columns = [
   {
-    title: "氏名",
+    title: "名称",
     dataIndex: ["name", "code"],
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
@@ -108,11 +108,11 @@ const RecordPlan = () => {
               options={[
                 {
                   value: EEnumStudioStatus.ACTIVE,
-                  label: "ACTIVE",
+                  label: "有効",
                 },
                 {
                   value: EEnumStudioStatus.INACTIVE,
-                  label: "INACTIVE",
+                  label: "無効",
                 },
               ]}
               onChange={(value) =>

@@ -13,9 +13,9 @@ import CreateStaffModal from "./staff/CreateStaffModal";
 
 const columns = [
   {
-    title: "名称",
+    title: "氏名",
     dataIndex: ["name", "code"],
-    imageIndex: "user",
+    imageIndex: null,
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
@@ -139,7 +139,7 @@ const RecordStaff = ({ studios }) => {
                   ? onFilterChange({ studioId: value })
                   : onFilterClear("studioId");
               }}
-              placeholder="エリア "
+              placeholder="登録店舗"
             />
             <Select
               allowClear
@@ -150,11 +150,11 @@ const RecordStaff = ({ studios }) => {
               options={[
                 {
                   value: EEnumStudioStatus.ACTIVE,
-                  label: "ACTIVE",
+                  label: "有効",
                 },
                 {
                   value: EEnumStudioStatus.INACTIVE,
-                  label: "INACTIVE",
+                  label: "無効",
                 },
               ]}
               onChange={(value) =>

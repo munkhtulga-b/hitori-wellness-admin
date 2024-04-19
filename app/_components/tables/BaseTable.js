@@ -54,7 +54,7 @@ const BaseTable = ({
         <>
           {item[column.dataIndex].length === 0 ? (
             <span className="tw-px-[10px] tw-py-[6px] tw-rounded-full tw-bg-bgTag tw-whitespace-nowrap">
-              All branch
+              全店舗
             </span>
           ) : (
             <div className="tw-flex tw-flex-wrap tw-gap-3">
@@ -141,7 +141,7 @@ const BaseTable = ({
         item[column.dataIndex][0].end_hour -
           item[column.dataIndex][0].start_hour ==
         24
-          ? "24時間以上"
+          ? "24時間"
           : `${item[column.dataIndex][0].start_hour} - ${
               item[column.dataIndex][0].end_hour
             }`;

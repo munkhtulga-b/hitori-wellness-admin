@@ -1,5 +1,7 @@
 import Image from "next/image";
 import StaffTimeSlotForm from "./modals/StaffTimeSlotForm";
+import StudioBusinessHourModal from "./modals/StudioBusinessHourModal";
+import StudioShiftSlotModal from "./modals/StudioShiftSlotModal";
 
 const SettingsOptionsList = [
   {
@@ -29,6 +31,7 @@ const CalendarSettingsModal = ({
   closeModal,
   selectedSettingsOption,
   setSelectedSettingsOption,
+  fetchStudios,
 }) => {
   const SettingsOptions = () => {
     return (
@@ -77,9 +80,19 @@ const CalendarSettingsModal = ({
       ) : (
         <>
           {selectedSettingsOption === 1 ? (
-            <>1</>
+            <>
+              <StudioBusinessHourModal
+                closeModal={closeModal}
+                fetchStudios={fetchStudios}
+              />
+            </>
           ) : selectedSettingsOption === 2 ? (
-            <>2</>
+            <>
+              <StudioShiftSlotModal
+                closeModal={closeModal}
+                fetchStudios={fetchStudios}
+              />
+            </>
           ) : (
             <>
               <StaffTimeSlotForm closeModal={closeModal} />

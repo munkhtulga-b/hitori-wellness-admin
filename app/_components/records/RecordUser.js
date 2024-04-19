@@ -13,7 +13,7 @@ const columns = [
   {
     title: "氏名",
     dataIndex: [["last_name", "first_name"], "id"],
-    imageIndex: "user",
+    imageIndex: null,
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
@@ -162,11 +162,11 @@ const RecordUser = ({ studios }) => {
               options={[
                 {
                   value: EEnumStudioStatus.ACTIVE,
-                  label: "ACTIVE",
+                  label: "有効",
                 },
                 {
                   value: EEnumStudioStatus.INACTIVE,
-                  label: "INACTIVE",
+                  label: "無効",
                 },
               ]}
               onChange={(value) =>

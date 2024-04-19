@@ -14,6 +14,7 @@ import * as coupon from "./cms/CouponController";
 import * as staff from "./cms/StaffController";
 import * as file from "./cms/FileUploadController";
 import * as staffSlot from "./cms/InstructorSlotController";
+import * as shiftSlot from "./cms/ShiftSlotController";
 
 const $api = {
   auth: {
@@ -32,6 +33,7 @@ const $api = {
     staff,
     file,
     staffSlot,
+    shiftSlot,
   },
 };
 
