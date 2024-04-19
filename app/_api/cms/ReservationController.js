@@ -5,3 +5,8 @@ export const getMany = (queries) => {
   const queryString = createQueryString(queries);
   return fetchData(`reservations${queryString}`, "GET");
 };
+
+export const getAllTimeSlots = (studioId, queries) => {
+  const queryString = createQueryString(queries);
+  return fetchData(`timeslots/${studioId}${queryString}`, "GET");
+};

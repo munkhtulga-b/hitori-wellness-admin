@@ -3,13 +3,13 @@ import fetchData from "../config";
 
 export const getMany = (queries) => {
   const queryString = createQueryString(queries);
-  return fetchData(`instructorSlots/timeslots${queryString}`, "GET");
+  return fetchData(`shiftSlots${queryString}`, "GET");
 };
 
 export const create = (body) => {
-  return fetchData(`instructorSlots`, "POST", body);
+  return fetchData(`shiftSlots`, "POST", body);
 };
 
 export const update = (id, body) => {
-  return fetchData(`instructorSlots/${id}`, "PATCH", body);
+  return fetchData(`shiftSlots/${id}`, "PATCH", body);
 };

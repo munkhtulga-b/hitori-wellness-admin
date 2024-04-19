@@ -40,7 +40,7 @@ const SideBar = ({ setCollapsed, onLogOut }) => {
               return (
                 <li
                   key={menu.text}
-                  className="tw-py-2 tw-flex tw-justify-start tw-items-center tw-gap-4 tw-whitespace-nowrap tw-cursor-pointer"
+                  className="tw-py-2 tw-flex tw-justify-start tw-items-center tw-gap-4 tw-whitespace-nowrap tw-cursor-pointer hover:tw-bg-grayLight tw-transition-all tw-duration-200"
                   onClick={() => handleMenuClick(menu)}
                 >
                   <Image

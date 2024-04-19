@@ -157,11 +157,11 @@ const RecordStudio = ({ studioCategoryNames }) => {
               options={[
                 {
                   value: EEnumStudioStatus.ACTIVE,
-                  label: "ACTIVE",
+                  label: "有効",
                 },
                 {
                   value: EEnumStudioStatus.INACTIVE,
-                  label: "INACTIVE",
+                  label: "無効",
                 },
               ]}
               onChange={(value) =>

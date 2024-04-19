@@ -22,6 +22,7 @@ module.exports = {
         bgActive: "#C1E6CF",
         bgCancelled: "#F0ACB0",
         bgCalendarBlue: "rgba(183, 221, 255, 0.30)",
+        bgCalendarGreen: "rgba(193, 230, 207, 0.30)",
       },
       textColor: {
         primary: "#121316",
@@ -46,6 +47,7 @@ module.exports = {
         warning: "#F0ACB0",
         divider: "#ECEDF0",
         tableHeader: "#D6D8DB",
+        calendarGreen: "#18BA51",
       },
       ringColor: {
         active: "#B7DDFF",

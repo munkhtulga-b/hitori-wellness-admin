@@ -45,7 +45,6 @@ const StudioFormThree = ({ onComplete, onBack, isRequesting, modalKey }) => {
         validateTrigger="onSubmit"
       >
         <section className="tw-flex tw-flex-col tw-gap-4">
-          <div className="tw-leading-[22px] tw-tracking-[0.14px]">営業時間</div>
           <div className="tw-flex tw-justify-start tw-gap-2">
             <Form.Item
               name="startHour"

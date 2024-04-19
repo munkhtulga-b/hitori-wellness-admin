@@ -1,103 +1,39 @@
-import {
-  Form,
-  Input,
-  Select,
-  Button,
-  DatePicker,
-  TimePicker,
-  Radio,
-} from "antd";
-import { useCalendarStore } from "@/app/_store/calendar";
-import { useEffect, useState } from "react";
-import dayjs from "dayjs";
 import $api from "@/app/_api";
-import _ from "lodash";
-import { toast } from "react-toastify";
+import { useCalendarStore } from "@/app/_store/calendar";
+import { Form, Button, TimePicker, DatePicker, Radio } from "antd";
+import dayjs from "dayjs";
+import { useState } from "react";
 
-const StaffTimeSlotForm = ({ closeModal, data }) => {
+const StudioShiftSlotModal = ({ closeModal, fetchStudios }) => {
   const [form] = Form.useForm();
   const calendarStore = useCalendarStore((state) => state.body);
-
-  const [staff, setStaff] = useState(null);
-  const [isRepeat, setIsRepeat] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRepeat, setIsRepeat] = useState(false);
 
-  useEffect(() => {
-    fetchStaff();
-  }, []);
-
-  useEffect(() => {
-    if (data) {
-      form.setFieldsValue({
-        instructorId: data?.instructor?.id,
-        date: dayjs.utc(data?.start_at),
-        startHour: dayjs.utc(data?.start_at),
-        endHour: dayjs.utc(data?.end_at),
-        description: data?.description,
-        isRepeat: data?.is_repeat,
-      });
-    }
-  }, [data]);
-
-  useEffect(() => {
-    form.setFieldValue("isRepeat", isRepeat);
-  }, [isRepeat]);
-
-  const createStaffTimeSlot = async (body) => {
+  const createShiftSlot = async (body) => {
     setIsLoading(true);
-    const { isOk } = await $api.admin.staffSlot.create(body);
+    const { isOk } = await $api.admin.shiftSlot.create(body);
     if (isOk) {
-      resetForm();
+      await fetchStudios();
+      form.resetFields();
       closeModal();
-      toast.success("Time slot created successfully");
     }
     setIsLoading(false);
-  };
-
-  const updateStaffTimeSlot = async (body) => {
-    setIsLoading(true);
-    const { isOk } = await $api.admin.staffSlot.update(data?.id, body);
-    if (isOk) {
-      resetForm();
-      closeModal();
-      toast.success("Time slot updated successfully");
-    }
-    setIsLoading(false);
-  };
-
-  const fetchStaff = async () => {
-    const { isOk, data } = await $api.admin.staff.getMany();
-    if (isOk) {
-      const sorted = _.map(data, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setStaff(sorted);
-    }
   };
 
   const beforeComplete = (params) => {
     const body = {
       studioId: calendarStore.studioId,
-      instructorId: params.instructorId,
-      startTime: `${dayjs(params.date).format("YYYY-MM-DD")} ${dayjs(
+      // "title": "Cleaning",
+      startAt: `${dayjs(params.date).format("YYYY-MM-DD")} ${dayjs(
         params.startHour
       ).format("HH:mm")}`,
-      endTime: `${dayjs(params.date).format("YYYY-MM-DD")} ${dayjs(
+      endAt: `${dayjs(params.date).format("YYYY-MM-DD")} ${dayjs(
         params.endHour
       ).format("HH:mm")}`,
       isRepeat: params.isRepeat,
     };
-    if (data) {
-      updateStaffTimeSlot(body);
-    } else {
-      createStaffTimeSlot(body);
-    }
-  };
-
-  const resetForm = () => {
-    form.resetFields();
-    setIsRepeat(false);
+    createShiftSlot(body);
   };
 
   return (
@@ -110,29 +46,16 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
         requiredMark={false}
         validateTrigger="onSubmit"
       >
-        <Form.Item
-          name="instructorId"
-          label="スタッフ名"
-          rules={[
-            {
-              required: true,
-              message: "Please select instructor",
-            },
-          ]}
-        >
-          <Select
-            disabled={!staff}
-            size="large"
-            style={{
-              width: "100%",
-            }}
-            placeholder="select"
-            options={staff}
-          />
-        </Form.Item>
+        {/* <div className="tw-flex tw-flex-col tw-gap-1">
+          <span className="tw-leading-[22px] tw-tracking-[0.14px] tw-text-secondary">
+            現在の設定
+          </span>
+          <span className="tw-text-lg tw-leading-[28px] tw-tracking-[0.16px]">{`${startHour} - ${endHour}`}</span>
+        </div> */}
+
         <Form.Item
           name="date"
-          label="指定の日程"
+          label="開始時間"
           rules={[
             {
               type: "object",
@@ -142,11 +65,11 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
           ]}
         >
           <DatePicker
+            className="tw-w-full"
             format={"YYYY/MM/DD"}
             disabledDate={(current) =>
-              current < dayjs().subtract(1, "day").endOf("day")
+              current < dayjs().startOf("day").subtract(1, "day")
             }
-            className="tw-w-full"
           />
         </Form.Item>
 
@@ -188,19 +111,6 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
             showNow={false}
             className="tw-w-full"
           />
-        </Form.Item>
-
-        <Form.Item
-          name="description"
-          label="説明"
-          rules={[
-            {
-              required: true,
-              message: "Please input your E-mail!",
-            },
-          ]}
-        >
-          <Input placeholder="清掃" />
         </Form.Item>
 
         <Form.Item
@@ -250,4 +160,4 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
   );
 };
 
-export default StaffTimeSlotForm;
+export default StudioShiftSlotModal;

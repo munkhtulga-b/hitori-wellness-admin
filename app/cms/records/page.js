@@ -121,10 +121,32 @@ const RecordsPage = () => {
     },
   ];
 
+  const pageTitle = () => {
+    let result = "店舗";
+    if (activeKey === "users") {
+      result = "メンバー";
+    } else if (activeKey === "programs") {
+      result = "プログラム";
+    } else if (activeKey === "staff") {
+      result = "スタッフ";
+    } else if (activeKey === "items") {
+      result = "商品";
+    } else if (activeKey === "plans") {
+      result = "プラン";
+    } else if (activeKey === "tickets") {
+      result = "チケット";
+    } else if (activeKey === "coupons") {
+      result = "クーポン";
+    } else if (activeKey === "reservations") {
+      result = "予約";
+    }
+    return result;
+  };
+
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
-        <PageHeader title={`店舗`} />
+        <PageHeader title={pageTitle()} />
         <Tabs activeKey={activeKey} items={tabItems} onChange={onTabChange} />
       </div>
     </>

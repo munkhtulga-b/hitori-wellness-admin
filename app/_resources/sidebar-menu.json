@@ -4,13 +4,13 @@
         "text": "カレンダー ",
         "icon": "/assets/sidebar/sidebar-calendar-icon.svg",
         "alt": "calendar",
-        "route": "/"
+        "route": "/cms"
       },
       {
         "text": "データベース",
         "icon": "/assets/sidebar/sidebar-database-icon.svg",
         "alt": "user",
-        "route": "/"
+        "route": "/cms/records"
       },
       {
         "text": "購入履歴",
@@ -20,19 +20,19 @@
       },
       {
         "text": "入退館履歴",
-        "icon": "/assets/sidebar/sidebar-user-icon.svg",
-        "alt": "member-id",
-        "route": "/"
-      },
-      {
-        "text": "管理ユーザー",
         "icon": "/assets/sidebar/sidebar-admin-icon.svg",
         "alt": "member-id",
         "route": "/"
       },
       {
+        "text": "管理ユーザー",
+        "icon": "/assets/sidebar/sidebar-user-icon.svg",
+        "alt": "member-id",
+        "route": "/cms/admins"
+      },
+      {
         "text": "ログ",
-        "icon": "/assets/sidebar/sidebar-log-icon.svg",
+        "icon": "/assets/sidebar/sidebar-log-icon.svg", 
         "alt": "member-id",
         "route": "/"
       }
