@@ -9,7 +9,7 @@ const CalendarMember = ({
   dateType,
   selectedDay,
   selectedWeek,
-  onActiveSlotSelect,
+  // onActiveSlotSelect,
 }) => {
   const generateHoursInDay = () => {
     const hours = [];
@@ -67,8 +67,10 @@ const CalendarMember = ({
           slot.reserved.forEach((reserved, reservedIndex) => {
             const matched = _.find(hours, { hour: reserved.start });
             if (matched) {
-              matched.data.push(reserved);
-              matched.index = reservedIndex;
+              reserved.details.forEach((detail) => {
+                matched.data.push(detail);
+                matched.index = reservedIndex;
+              });
             }
           });
         }
@@ -88,6 +90,21 @@ const CalendarMember = ({
       currentDay = currentDay.add(1, "day");
     }
     return days;
+  };
+
+  const getReservationDetails = (item) => {
+    let result = "-";
+    if (item.detailed?.member) {
+      result = `${item.detailed.member.last_name} ${item.detailed.member.first_name}`;
+    }
+    if (item.detailed?.shift) {
+      result = `${item.detailed.shift?.title}`;
+    }
+    return result;
+  };
+
+  const handleSlotClick = (item) => {
+    console.log(item);
   };
 
   return (
@@ -170,10 +187,10 @@ const CalendarMember = ({
                                       52
                                     }px`,
                                   }}
-                                  onClick={() => onActiveSlotSelect(item)}
+                                  onClick={() => handleSlotClick(item)}
                                 >
                                   <span className="tw-text-sm tw-tracking-[0.12px] tw-whitespace-nowrap">
-                                    {item.instructor?.name}
+                                    {getReservationDetails(item)}
                                   </span>
                                 </section>
                               ))}
@@ -264,7 +281,7 @@ const CalendarMember = ({
                                   }}
                                 >
                                   <span className="tw-text-sm tw-tracking-[0.12px] tw-whitespace-nowrap">
-                                    {item.instructor?.name}
+                                    {getReservationDetails(item)}
                                   </span>
                                 </section>
                               ))}

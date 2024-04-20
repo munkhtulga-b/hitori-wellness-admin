@@ -96,7 +96,7 @@ const AdminLayout = ({ children }) => {
                 style={{
                   padding: 0,
                   height: 84,
-                  position: "fixed",
+                  position: "sticky",
                   top: 0,
                   left: 0,
                   right: 0,
@@ -111,7 +111,6 @@ const AdminLayout = ({ children }) => {
               <Content
                 style={{
                   padding: "24px",
-                  marginTop: "84px",
                   marginLeft: windowWidth < 1024 || collapsed ? 0 : 275,
                   overflow: "hidden",
                   backgroundColor: "#EBEBEB",
@@ -135,7 +134,7 @@ const AdminLayout = ({ children }) => {
                     opacity: 1,
                   }}
                   transition={{ duration: 0.5 }}
-                  className="tw-p-6 tw-bg-white tw-rounded-[14px] tw-shadow tw-overflow-x-auto"
+                  className="tw-p-6 tw-bg-white tw-rounded-[14px] tw-shadow tw-overflow-auto"
                 >
                   <Suspense fallback={<></>}>{children}</Suspense>
                 </motion.div>
