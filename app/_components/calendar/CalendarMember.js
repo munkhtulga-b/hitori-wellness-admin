@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import ReservationSlotModal from "./modals/ReservationSlotModal";
+import StudioShiftSlotModal from "./modals/StudioShiftSlotModal";
 
 const CalendarMember = ({
   isFetching,
@@ -16,6 +17,7 @@ const CalendarMember = ({
   // onActiveSlotSelect,
   fetchList,
 }) => {
+  const [modalType, setModalType] = useState("member");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
 
@@ -112,6 +114,7 @@ const CalendarMember = ({
   };
 
   const handleSlotClick = (item) => {
+    item.details?.member ? setModalType("member") : setModalType("shift");
     setSelectedSlot(item);
     setIsModalOpen(true);
   };
@@ -309,7 +312,7 @@ const CalendarMember = ({
         <PartialLoading />
       )}
       <Modal
-        title={`シフト管理`}
+        title={`予約詳細`}
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}
@@ -323,11 +326,19 @@ const CalendarMember = ({
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        <ReservationSlotModal
-          data={selectedSlot}
-          closeModal={() => setIsModalOpen(false)}
-          fetchList={fetchList}
-        />
+        {modalType === "member" ? (
+          <ReservationSlotModal
+            data={selectedSlot}
+            closeModal={() => setIsModalOpen(false)}
+            fetchList={fetchList}
+          />
+        ) : (
+          <StudioShiftSlotModal
+            data={selectedSlot}
+            closeModal={() => setIsModalOpen(false)}
+            fetchStudios={fetchList}
+          />
+        )}
       </Modal>
     </>
   );
