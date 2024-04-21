@@ -1,6 +1,10 @@
 import dayjs from "dayjs";
 import _ from "lodash";
 import PartialLoading from "../PartialLoading";
+import { useState } from "react";
+import { Modal } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
+import ReservationSlotModal from "./modals/ReservationSlotModal";
 
 const CalendarMember = ({
   isFetching,
@@ -10,7 +14,11 @@ const CalendarMember = ({
   selectedDay,
   selectedWeek,
   // onActiveSlotSelect,
+  fetchList,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+
   const generateHoursInDay = () => {
     const hours = [];
     const currentDay = dayjs();
@@ -104,7 +112,8 @@ const CalendarMember = ({
   };
 
   const handleSlotClick = (item) => {
-    console.log(item);
+    setSelectedSlot(item);
+    setIsModalOpen(true);
   };
 
   return (
@@ -299,6 +308,27 @@ const CalendarMember = ({
       ) : (
         <PartialLoading />
       )}
+      <Modal
+        title={`シフト管理`}
+        open={isModalOpen}
+        footer={null}
+        onCancel={() => setIsModalOpen(false)}
+        styles={{
+          header: {
+            marginBottom: 24,
+          },
+          content: {
+            padding: 40,
+          },
+        }}
+        closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
+      >
+        <ReservationSlotModal
+          data={selectedSlot}
+          closeModal={() => setIsModalOpen(false)}
+          fetchList={fetchList}
+        />
+      </Modal>
     </>
   );
 };
