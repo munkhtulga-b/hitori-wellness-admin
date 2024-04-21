@@ -2,17 +2,42 @@ import $api from "@/app/_api";
 import { useCalendarStore } from "@/app/_store/calendar";
 import { Form, Button, TimePicker, DatePicker, Radio } from "antd";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const StudioShiftSlotModal = ({ closeModal, fetchStudios }) => {
+const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
   const [form] = Form.useForm();
   const calendarStore = useCalendarStore((state) => state.body);
   const [isLoading, setIsLoading] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
 
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        date: dayjs.utc(data.detailed?.shift?.start_at),
+        startHour: dayjs.utc(data.detailed?.shift?.start_at),
+        endHour: dayjs.utc(data.detailed?.shift?.end_at),
+        isRepeat: data.detailed?.shift?.is_repeat,
+      });
+    }
+  }, [data]);
+
   const createShiftSlot = async (body) => {
     setIsLoading(true);
     const { isOk } = await $api.admin.shiftSlot.create(body);
+    if (isOk) {
+      await fetchStudios();
+      form.resetFields();
+      closeModal();
+    }
+    setIsLoading(false);
+  };
+
+  const updateShiftSlot = async (body) => {
+    setIsLoading(true);
+    const { isOk } = await $api.admin.shiftSlot.update(
+      data.detailed?.shift.id,
+      body
+    );
     if (isOk) {
       await fetchStudios();
       form.resetFields();
@@ -33,7 +58,8 @@ const StudioShiftSlotModal = ({ closeModal, fetchStudios }) => {
       ).format("HH:mm")}`,
       isRepeat: params.isRepeat,
     };
-    createShiftSlot(body);
+
+    data ? updateShiftSlot(body) : createShiftSlot(body);
   };
 
   return (
@@ -41,7 +67,7 @@ const StudioShiftSlotModal = ({ closeModal, fetchStudios }) => {
       <Form
         layout="vertical"
         form={form}
-        name="create-staff-form"
+        name="shift-slot-form"
         onFinish={(params) => beforeComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"

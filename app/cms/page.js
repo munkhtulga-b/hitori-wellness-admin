@@ -159,6 +159,7 @@ const CalendarPage = () => {
                 setSelectedActiveSlot(data);
                 setIsActiveSlotModalOpen(true);
               }}
+              fetchList={fetchMemberTimeSlots}
             />
           ) : (
             <CalendarStaff

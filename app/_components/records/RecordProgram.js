@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import _ from "lodash";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import CreateProgramModal from "./program/CreateProgramModal";
 
 const columns = [
   {
@@ -47,19 +47,17 @@ const columns = [
   },
 ];
 
-const RecordProgram = () => {
+const RecordProgram = ({ studios }) => {
   const [isLoading, setIsLoading] = useState(false);
-  // const [isRequesting, setIsRequesting] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
-  const [studios, setStudios] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [modalKey, setModalKey] = useState(0);
+  const [modalKey, setModalKey] = useState(0);
   // const [filters, setFilters] = useState(null);
 
   useEffect(() => {
     fetchPrograms();
-    fetchStudios();
   }, []);
 
   const fetchPrograms = async () => {
@@ -71,15 +69,15 @@ const RecordProgram = () => {
     setIsLoading(false);
   };
 
-  const fetchStudios = async () => {
-    const { isOk, data } = await $api.admin.studio.getMany();
+  const createProgram = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.program.create(body);
     if (isOk) {
-      const sorted = _.map(data, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setStudios(sorted);
+      await fetchPrograms();
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
     }
+    setIsRequesting(false);
   };
 
   return (
@@ -115,7 +113,12 @@ const RecordProgram = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        Create Program Modal
+        <CreateProgramModal
+          modalKey={modalKey}
+          isRequesting={isRequesting}
+          onCancel={() => setIsModalOpen(false)}
+          onConfirm={createProgram}
+        />
       </Modal>
     </>
   );

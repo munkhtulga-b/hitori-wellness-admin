@@ -8,6 +8,7 @@ import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import CreatePlanModal from "./plan/CreatePlanModal";
 
 const columns = [
   {
@@ -136,7 +137,7 @@ const RecordPlan = () => {
       </div>
 
       <Modal
-        title="店舗新規登録"
+        title="プラン新規登録"
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}
@@ -150,7 +151,7 @@ const RecordPlan = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        Create Plan Modal
+        <CreatePlanModal />
       </Modal>
     </>
   );

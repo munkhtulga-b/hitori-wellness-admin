@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const uploadImage = async (file) => {
   const formData = new FormData();
   formData.append("image", file);
@@ -14,6 +16,25 @@ export const uploadImage = async (file) => {
   );
   const data = await resp.json();
   return { isOk: resp.ok, data };
+};
+
+/**
+ * Gets the address from the postal code using the Postcode-JP API.
+ *
+ * @param {string} postCode - The postal code to look up.
+ * @return {Promise} A Promise that resolves to the JSON response from the API.
+ */
+export const getAddressFromPostalCode = async (postCode) => {
+  const resp = await fetch(
+    `https://apis.postcode-jp.com/api/v5/postcodes/${postCode}`,
+    {
+      headers: {
+        "X-API-KEY": process.env.NEXT_PUBLIC_POST_JP_API_KEY,
+      },
+    }
+  );
+
+  return resp.json();
 };
 
 /**
@@ -57,4 +78,56 @@ export const thousandSeparator = (value) => {
     result = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   return result;
+};
+
+/**
+ * Generates an array of objects representing years.
+ *
+ * @return {Array} An array of objects containing the value and label of each year.
+ */
+export const getYears = () => {
+  const years = [];
+  for (let i = 0; i < 100; i++) {
+    years.push({
+      value: dayjs().year() - i,
+      label: dayjs().year() - i,
+    });
+  }
+  return years;
+};
+
+/**
+ * Generates an array of objects representing months with formatted values and labels.
+ *
+ * @return {Array} An array of objects containing month values and labels
+ */
+export const getMonths = () => {
+  const months = [];
+  for (let month = 1; month <= 12; month++) {
+    months.push({
+      value: dayjs()
+        .month(month - 1)
+        .format("MM"),
+      label: dayjs()
+        .month(month - 1)
+        .format("MM"),
+    });
+  }
+  return months;
+};
+
+/**
+ * Generates an array of days with padded values from 01 to 31.
+ *
+ * @return {Array} An array of objects containing 'value' and 'label' properties.
+ */
+export const getDays = () => {
+  const days = [];
+  for (let day = 1; day <= 31; day++) {
+    days.push({
+      value: day.toString().padStart(2, "0"),
+      label: day.toString().padStart(2, "0"),
+    });
+  }
+  return days;
 };

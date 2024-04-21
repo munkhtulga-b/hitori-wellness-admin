@@ -8,6 +8,7 @@ import { Modal, Select, Pagination } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 import _ from "lodash";
+import CreateUserModal from "./user/CreateUserModa";
 
 const columns = [
   {
@@ -198,7 +199,7 @@ const RecordUser = ({ studios }) => {
       </div>
 
       <Modal
-        title="店舗新規登録"
+        title="メンバー詳細"
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}
@@ -212,7 +213,7 @@ const RecordUser = ({ studios }) => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        Create User Modal
+        <CreateUserModal />
       </Modal>
     </>
   );

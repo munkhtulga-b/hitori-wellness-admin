@@ -6,6 +6,10 @@ export const getMany = (queries) => {
   return fetchData(`reservations${queryString}`, "GET");
 };
 
+export const cancel = (id) => {
+  return fetchData(`reservations/cancel/${id}`, "POST");
+};
+
 export const getAllTimeSlots = (studioId, queries) => {
   const queryString = createQueryString(queries);
   return fetchData(`timeslots/${studioId}${queryString}`, "GET");
