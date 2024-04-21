@@ -7,7 +7,7 @@ export const getMany = (queries) => {
 };
 
 export const cancel = (id) => {
-  return fetchData(`reservations/${id}`, "DELETE");
+  return fetchData(`reservations/cancel/${id}`, "POST");
 };
 
 export const getAllTimeSlots = (studioId, queries) => {

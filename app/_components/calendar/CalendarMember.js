@@ -114,7 +114,7 @@ const CalendarMember = ({
   };
 
   const handleSlotClick = (item) => {
-    item.details?.member ? setModalType("member") : setModalType("shift");
+    item.detailed?.member ? setModalType("member") : setModalType("shift");
     setSelectedSlot(item);
     setIsModalOpen(true);
   };

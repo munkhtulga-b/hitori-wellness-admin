@@ -87,7 +87,7 @@ const RecordsPage = () => {
     {
       key: "programs",
       label: "プログラム",
-      children: <RecordProgram />,
+      children: <RecordProgram studios={studioOptions} />,
     },
     {
       key: "staff",

@@ -7,6 +7,7 @@ import RecordTableFilters from "./RecordTableFilters";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import CreateItemModal from "./item/CreateItemModal";
 
 const columns = [
   {
@@ -98,7 +99,7 @@ const RecordItem = () => {
       </div>
 
       <Modal
-        title="店舗新規登録"
+        title="商品新規登録"
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}
@@ -112,7 +113,7 @@ const RecordItem = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        Create Item Modal
+        <CreateItemModal />
       </Modal>
     </>
   );
