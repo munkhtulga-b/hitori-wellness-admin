@@ -43,7 +43,14 @@ const CalendarPage = () => {
 
   const fetchStaffTimeSlots = async (queries) => {
     setIsFetching(true);
-    const { isOk, data } = await $api.admin.staffSlot.getMany(queries);
+    const { isOk, data } = await $api.admin.staffSlot.getMany(
+      queries
+        ? queries
+        : {
+            studioId: selectedStudio.id,
+            startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+          }
+    );
     if (isOk) {
       setSlotListStaff(data);
     }
@@ -53,8 +60,10 @@ const CalendarPage = () => {
   const fetchMemberTimeSlots = async (studioId, queries) => {
     setIsFetching(true);
     const { isOk, data } = await $api.admin.reservation.getAllTimeSlots(
-      studioId,
+      studioId ? studioId : selectedStudio.id,
       queries
+        ? queries
+        : { startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD") }
     );
     if (isOk) {
       setSlotListMember(data);
@@ -112,6 +121,26 @@ const CalendarPage = () => {
     }
   };
 
+  const onCalendarTypeChange = (type) => {
+    setCalendarType(type);
+    setSelectedWeek({
+      start: dayjs().startOf("week"),
+      end: dayjs().endOf("week"),
+    });
+    setDateType("week");
+    if (type === "member") {
+      fetchMemberTimeSlots(selectedStudio.id, {
+        startAt: dayjs().startOf("week").format("YYYY-MM-DD"),
+      });
+    }
+    if (type === "staff") {
+      fetchStaffTimeSlots({
+        studioId: selectedStudio.id,
+        startAt: dayjs().startOf("week").format("YYYY-MM-DD"),
+      });
+    }
+  };
+
   return (
     <>
       <div className="tw-flex tw-flex-col">
@@ -121,7 +150,7 @@ const CalendarPage = () => {
           studios={studios}
           selectedStudio={selectedStudio}
           calendarType={calendarType}
-          setCalendarType={setCalendarType}
+          setCalendarType={(type) => onCalendarTypeChange(type)}
           dateType={dateType}
           setDateType={setDateType}
           setIsSettingsModalOpen={setIsSettingsModalOpen}
