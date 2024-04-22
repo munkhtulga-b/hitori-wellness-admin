@@ -17,6 +17,7 @@ const BaseTable = ({
   isCheckable,
   checkedRows,
   onRowCheck,
+  onClickName,
 }) => {
   const handleRowCheck = (item, checked) => {
     const shallow = [...checkedRows];
@@ -73,7 +74,12 @@ const BaseTable = ({
     }
     if (column.type === "stackedList" && Array.isArray(column.dataIndex)) {
       result = (
-        <div className="tw-flex tw-justify-start tw-items-center tw-gap-3">
+        <div
+          onClick={() => (onClickName ? onClickName(item) : {})}
+          className={`tw-flex tw-justify-start tw-items-center tw-gap-3 ${
+            onClickName ? "tw-cursor-pointer" : ""
+          }`}
+        >
           {column.imageIndex ? (
             <>
               {column.imageIndex === "user" ? (

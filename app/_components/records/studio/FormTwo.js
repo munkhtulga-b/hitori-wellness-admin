@@ -1,12 +1,26 @@
 import { Form, Input, Button } from "antd";
 import { useEffect } from "react";
 
-const StudioFormTwo = ({ onComplete, onBack, modalKey }) => {
+const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
     form.resetFields();
   }, [modalKey]);
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        categoryName: data?.category_name,
+        prefecture: data?.prefecture,
+        zipCode1: data?.zip_code1,
+        zipCode2: data?.zip_code2,
+        address1: data?.address1,
+        address2: data?.address2,
+        address3: data?.address3,
+      });
+    }
+  }, [data]);
 
   return (
     <>

@@ -6,7 +6,13 @@ import StudioFormTwo from "./FormTwo";
 import StudioFormThree from "./FormThree";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 
-const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
+const CreateStudioModal = ({
+  modalKey,
+  isRequesting,
+  onConfirm,
+  onCancel,
+  data,
+}) => {
   const [activeKey, setActiveKey] = useState(1);
 
   const [isUploading, setIsUploading] = useState(false);
@@ -19,13 +25,20 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
 
   const handleFormOne = async (params) => {
     setIsUploading(true);
-    const { isOk, data } = await uploadImage(uploadFile);
-    if (isOk) {
-      params.thumbnailCode = data.url;
-      params.status =
-        params.status === false
-          ? EEnumStudioStatus.INACTIVE
-          : EEnumStudioStatus.ACTIVE;
+    if (!data) {
+      const { isOk, data } = await uploadImage(uploadFile);
+      if (isOk) {
+        params.thumbnailCode = data.url;
+        params.status =
+          params.status === false
+            ? EEnumStudioStatus.INACTIVE
+            : EEnumStudioStatus.ACTIVE;
+        formatRequestBody(params);
+      }
+    } else {
+      params.status === false
+        ? EEnumStudioStatus.INACTIVE
+        : EEnumStudioStatus.ACTIVE;
       formatRequestBody(params);
     }
     setIsUploading(false);
@@ -63,6 +76,7 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
       label: "基本情報",
       children: (
         <StudioFormOne
+          data={data}
           onComplete={handleFormOne}
           onBack={() => onCancel()}
           uploadFile={uploadFile}
@@ -77,6 +91,7 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
       label: "住所",
       children: (
         <StudioFormTwo
+          data={data}
           onComplete={handleFormTwo}
           onBack={() => setActiveKey(1)}
           modalKey={modalKey}
@@ -88,6 +103,7 @@ const CreateStudioModal = ({ modalKey, isRequesting, onConfirm, onCancel }) => {
       label: "営業設定",
       children: (
         <StudioFormThree
+          data={data}
           onComplete={handleFormThree}
           onBack={() => setActiveKey(2)}
           isRequesting={isRequesting}
