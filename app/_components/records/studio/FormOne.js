@@ -1,8 +1,10 @@
 import { Form, Input, Button, Switch } from "antd";
 import FileUploader from "../../custom/FileUploader";
 import { useEffect } from "react";
+import Image from "next/image";
 
 const StudioFormOne = ({
+  data,
   onComplete,
   onBack,
   uploadFile,
@@ -22,6 +24,17 @@ const StudioFormOne = ({
     }
   }, [uploadFile]);
 
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        thumbnailCode: data?.thumbnail_code,
+        code: data?.code,
+        name: data?.name,
+        status: data?.status,
+      });
+    }
+  }, [data]);
+
   return (
     <>
       <Form
@@ -37,11 +50,29 @@ const StudioFormOne = ({
           rules={[{ required: true, message: "Please upload studio image" }]}
         >
           <section className="tw-flex tw-justify-center">
-            <FileUploader
-              currentFile={uploadFile}
-              onFileChange={(file) => setUploadFile(file)}
-              modalKey={modalKey}
-            />
+            {!data?.thumbnail_code ? (
+              <FileUploader
+                currentFile={uploadFile}
+                onFileChange={(file) => setUploadFile(file)}
+                modalKey={modalKey}
+              />
+            ) : (
+              <div className="tw-w-[150px] tw-overflow-hidden tw-rounded-xl">
+                <Image
+                  priority
+                  src={`https://${process.env.BASE_IMAGE_URL}${data?.thumbnail_code}`}
+                  alt="thumbnail"
+                  width={0}
+                  height={0}
+                  style={{
+                    objectFit: "contain",
+                    height: "auto",
+                    width: "100%",
+                  }}
+                  unoptimized
+                />
+              </div>
+            )}
           </section>
         </Form.Item>
         <Form.Item

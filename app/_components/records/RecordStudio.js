@@ -66,6 +66,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
@@ -91,6 +92,18 @@ const RecordStudio = ({ studioCategoryNames }) => {
       setIsModalOpen(false);
       setModalKey((prev) => prev + 1);
       toast.success("Studio Created Success");
+    }
+    setIsRequesting(false);
+  };
+
+  const updateStudio = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.studio.update(selectedRow.id, body);
+    if (isOk) {
+      await fetchStudios();
+      setIsModalOpen(false);
+      setModalKey((prev) => prev + 1);
+      toast.success("Studio Updated Success");
     }
     setIsRequesting(false);
   };
@@ -181,6 +194,10 @@ const RecordStudio = ({ studioCategoryNames }) => {
           isCheckable={true}
           checkedRows={checkedRows}
           onRowCheck={(rows) => setCheckedRows(rows)}
+          onClickName={(row) => {
+            setSelectedRow(row);
+            setIsModalOpen(true);
+          }}
         />
       </div>
 
@@ -188,7 +205,10 @@ const RecordStudio = ({ studioCategoryNames }) => {
         title="店舗新規登録"
         open={isModalOpen}
         footer={null}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => {
+          setSelectedRow(null);
+          setIsModalOpen(false);
+        }}
         styles={{
           header: {
             marginBottom: 24,
@@ -200,10 +220,16 @@ const RecordStudio = ({ studioCategoryNames }) => {
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
         <CreateStudioModal
+          data={selectedRow}
           isRequesting={isRequesting}
           modalKey={modalKey}
-          onConfirm={(params) => createStudio(params)}
-          onCancel={() => setIsModalOpen(false)}
+          onConfirm={(params) =>
+            selectedRow ? updateStudio(params) : createStudio(params)
+          }
+          onCancel={() => {
+            setSelectedRow(null);
+            setIsModalOpen(false);
+          }}
         />
       </Modal>
     </>

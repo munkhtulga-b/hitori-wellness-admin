@@ -22,7 +22,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "audioadsmaker-bucket.s3.ap-northeast-1.amazonaws.com",
+        hostname: "storage.googleapis.com/gym-reservation/",
         port: "",
         pathname: "/gym/**",
       },

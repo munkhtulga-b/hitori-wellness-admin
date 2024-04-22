@@ -2,13 +2,36 @@ import { Form, Input, Button, TimePicker, Radio } from "antd";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 
-const StudioFormThree = ({ onComplete, onBack, isRequesting, modalKey }) => {
+const StudioFormThree = ({
+  data,
+  onComplete,
+  onBack,
+  isRequesting,
+  modalKey,
+}) => {
   const [form] = Form.useForm();
   const [isTwentyFourHour, setIsTwentyFourHour] = useState(false);
 
   useEffect(() => {
     form.resetFields();
   }, [modalKey]);
+
+  useEffect(() => {
+    if (data) {
+      const timeDifference = dayjs(
+        data?.timeperiod_details[0]?.end_hour,
+        "HH:mm"
+      ).diff(dayjs(data?.timeperiod_details[0]?.start_hour, "HH:mm"), "hour");
+      form.setFieldsValue({
+        startHour: dayjs(data?.timeperiod_details[0]?.start_hour, "HH:mm"),
+        endHour: dayjs(data?.timeperiod_details[0]?.end_hour, "HH:mm"),
+        gmapUrl: data?.gmap_url,
+        isTwentyFourHour: timeDifference >= 23,
+        businessHours: data?.business_hours,
+      });
+      setIsTwentyFourHour(timeDifference >= 23);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (isTwentyFourHour) {
