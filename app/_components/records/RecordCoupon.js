@@ -30,11 +30,11 @@ const columns = [
 
 const RecordCoupon = () => {
   const [isLoading, setIsLoading] = useState(false);
-  // const [isRequesting, setIsRequesting] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [modalKey, setModalKey] = useState(0);
+  const [modalKey, setModalKey] = useState(0);
   // const [filters, setFilters] = useState(null);
 
   useEffect(() => {
@@ -48,6 +48,17 @@ const RecordCoupon = () => {
       setList(data);
     }
     setIsLoading(false);
+  };
+
+  const createCoupon = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.coupon.create(body);
+    if (isOk) {
+      await fetchCoupons();
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+    }
+    setIsRequesting(false);
   };
 
   return (
@@ -80,7 +91,12 @@ const RecordCoupon = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        <CreateCouponModal />
+        <CreateCouponModal
+          onComplete={createCoupon}
+          onCancel={() => setIsModalOpen(false)}
+          modalKey={modalKey}
+          isRequesting={isRequesting}
+        />
       </Modal>
     </>
   );

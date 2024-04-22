@@ -8,7 +8,7 @@ import { Modal, Select, Pagination } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 import _ from "lodash";
-import CreateUserModal from "./user/CreateUserModa";
+import CreateUserModal from "./user/CreateUserModal";
 
 const columns = [
   {

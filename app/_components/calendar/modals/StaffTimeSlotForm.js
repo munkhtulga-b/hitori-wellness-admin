@@ -1,12 +1,4 @@
-import {
-  Form,
-  Input,
-  Select,
-  Button,
-  DatePicker,
-  TimePicker,
-  Radio,
-} from "antd";
+import { Form, Select, Button, DatePicker, TimePicker, Radio } from "antd";
 import { useCalendarStore } from "@/app/_store/calendar";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
@@ -190,7 +182,7 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
           />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           name="description"
           label="説明"
           rules={[
@@ -201,7 +193,7 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
           ]}
         >
           <Input placeholder="清掃" />
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item
           name="isRepeat"

@@ -1,8 +1,18 @@
 import { Button, Form, Input, Switch, Select, Radio, DatePicker } from "antd";
 import dayjs from "dayjs";
+import { useEffect } from "react";
 
-const CreateCouponModal = () => {
+const CreateCouponModal = ({
+  onComplete,
+  onCancel,
+  modalKey,
+  isRequesting,
+}) => {
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.resetFields();
+  }, [modalKey]);
 
   return (
     <>
@@ -10,7 +20,7 @@ const CreateCouponModal = () => {
         requiredMark={false}
         form={form}
         name="signupStepOne"
-        onFinish={(params) => console.log(params)}
+        onFinish={(params) => onComplete(params)}
         layout="vertical"
       >
         <Form.Item
@@ -181,8 +191,15 @@ const CreateCouponModal = () => {
 
         <Form.Item>
           <div className="tw-flex tw-justify-end tw-gap-2">
-            <Button size="large">キャンセル</Button>
-            <Button size="large" type="primary" htmlType="submit">
+            <Button size="large" onClick={() => onCancel()}>
+              キャンセル
+            </Button>
+            <Button
+              loading={isRequesting}
+              size="large"
+              type="primary"
+              htmlType="submit"
+            >
               保存
             </Button>
           </div>

@@ -48,6 +48,7 @@ module.exports = {
         divider: "#ECEDF0",
         tableHeader: "#D6D8DB",
         calendarGreen: "#18BA51",
+        cancelled: "#732126",
       },
       ringColor: {
         active: "#B7DDFF",

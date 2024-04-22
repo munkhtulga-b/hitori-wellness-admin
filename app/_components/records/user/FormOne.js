@@ -8,7 +8,7 @@ import {
   getAddressFromPostalCode,
 } from "@/app/_utils/helpers";
 
-const UserFormOne = () => {
+const UserFormOne = ({ onComplete, onBack, modalKey, isRequesting }) => {
   const [form] = Form.useForm();
   const [genderValue, setGenderValue] = useState(null);
   const zipCode2 = Form.useWatch("zipCode2", form);
@@ -50,6 +50,10 @@ const UserFormOne = () => {
     }
   }, [address]);
 
+  useEffect(() => {
+    form.resetFields();
+  }, [modalKey]);
+
   const handleGenderSelect = (value) => {
     setGenderValue(value);
     form.setFieldValue("gender", value);
@@ -61,7 +65,7 @@ const UserFormOne = () => {
         requiredMark={false}
         form={form}
         name="signupStepOne"
-        onFinish={(params) => console.log(params)}
+        onFinish={(params) => onComplete(params)}
         layout="vertical"
       >
         <Form.Item
@@ -369,8 +373,15 @@ const UserFormOne = () => {
 
         <Form.Item>
           <div className="tw-flex tw-justify-end tw-gap-2">
-            <Button size="large">キャンセル</Button>
-            <Button size="large" type="primary" htmlType="submit">
+            <Button size="large" onClick={() => onBack()}>
+              戻す
+            </Button>
+            <Button
+              loading={isRequesting}
+              size="large"
+              type="primary"
+              htmlType="submit"
+            >
               次へ
             </Button>
           </div>
