@@ -11,6 +11,8 @@ const StudioFormThree = ({
 }) => {
   const [form] = Form.useForm();
   const [isTwentyFourHour, setIsTwentyFourHour] = useState(false);
+  const startHour = Form.useWatch("startHour", form);
+  const endHour = Form.useWatch("endHour", form);
 
   useEffect(() => {
     form.resetFields();
@@ -39,6 +41,16 @@ const StudioFormThree = ({
       form.setFieldValue("endHour", dayjs().hour(23).minute(59));
     }
   }, [isTwentyFourHour]);
+
+  useEffect(() => {
+    const timeDifference = dayjs(endHour, "HH:mm").diff(
+      dayjs(startHour, "HH:mm"),
+      "hour"
+    );
+    if (timeDifference <= 23) {
+      setIsTwentyFourHour(false);
+    }
+  }, [startHour, endHour]);
 
   const beforeComplete = (params) => {
     params.timeperiodDetails = [
