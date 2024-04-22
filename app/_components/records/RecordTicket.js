@@ -7,6 +7,7 @@ import RecordTableFilters from "./RecordTableFilters";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import CreateTicketModal from "./ticket/CreateTicketModal";
 
 const columns = [
   {
@@ -100,7 +101,7 @@ const RecordTicket = () => {
       </div>
 
       <Modal
-        title="店舗新規登録"
+        title="チケット新規登録"
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}
@@ -114,7 +115,7 @@ const RecordTicket = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        Create Ticket Modal
+        <CreateTicketModal />
       </Modal>
     </>
   );

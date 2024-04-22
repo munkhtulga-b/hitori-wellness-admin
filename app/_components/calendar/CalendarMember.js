@@ -119,6 +119,20 @@ const CalendarMember = ({
     setIsModalOpen(true);
   };
 
+  const getSlotStyle = (item, hourIndex) => {
+    let result = "";
+    if (item.detailed?.shift) {
+      result = "tw-bg-bgCancelled/30 tw-border-cancelled";
+    } else {
+      if (hourIndex % 2 === 0) {
+        result = "tw-bg-bgCalendarGreen tw-border-calendarGreen";
+      } else {
+        result = "tw-bg-bgCalendarBlue tw-border-available";
+      }
+    }
+    return result;
+  };
+
   return (
     <>
       {!isFetching && slotList && selectedStudio ? (
@@ -146,73 +160,74 @@ const CalendarMember = ({
                     </div>
                   ))}
                 </section>
-                {generateDaysInWeek().map(({ day, hours }, dayIndex) => (
-                  <section
-                    id={`week-day-${dayIndex}`}
-                    key={dayjs(day).format("ddd")}
-                    className={`tw-flex tw-flex-col tw-min-w-[200px] tw-max-w-[200px] tw-overflow-hidden ${
-                      dayIndex === 0 ? "tw-border-x" : "tw-border-r"
-                    } tw-border-divider`}
-                  >
-                    <div className="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-mb-2">
-                      <span className="tw-leading-[26px] tw-tracking-[0.14px]">
-                        {dayjs(day).format("DD")}
-                      </span>
-                      <span className="tw-leading-[26px] tw-tracking-[0.14px]">
-                        {dayjs(day).format("ddd")}
-                      </span>
-                    </div>
-                    {hours.map((hour, hourIndex) => (
-                      <div
-                        id={`hour-${hour.hour}`}
-                        key={hour.hour}
-                        className={`tw-bg-white tw-h-[26px] tw-w-full ${
-                          hourIndex === 0 ? "tw-border-t" : "tw-border-b"
-                        } ${
-                          hour.hour.split(":")[1] === "30" || hourIndex === 0
-                            ? "tw-border-divider"
-                            : "tw-border-transparent"
-                        } tw-relative`}
-                      >
-                        {hour.data?.length ? (
-                          <>
-                            <div
-                              className="tw-absolute tw-top-0 tw-left-0 tw-right-0 tw-flex tw-justify-start"
-                              style={{ zIndex: 10 + hour.index }}
-                            >
-                              {hour.data.map((item, itemIndex) => (
-                                <section
-                                  key={itemIndex}
-                                  className={`${
-                                    hourIndex % 2 === 0
-                                      ? "tw-bg-bgCalendarBlue"
-                                      : "tw-bg-bgCalendarGreen"
-                                  } tw-p-2 tw-rounded-xl tw-border tw-border-available tw-overflow-x-hidden tw-cursor-pointer`}
-                                  style={{
-                                    flex: 1,
-                                    height: `${
-                                      (dayjs(item.end_at).diff(
-                                        dayjs(item.start_at),
-                                        "minute"
-                                      ) /
-                                        60) *
-                                      52
-                                    }px`,
-                                  }}
-                                  onClick={() => handleSlotClick(item)}
-                                >
-                                  <span className="tw-text-sm tw-tracking-[0.12px] tw-whitespace-nowrap">
-                                    {getReservationDetails(item)}
-                                  </span>
-                                </section>
-                              ))}
-                            </div>
-                          </>
-                        ) : null}
+                <section className="tw-grow tw-flex tw-justify-start xl:tw-grid xl:tw-grid-cols-7 xl:tw-auto-rows-auto">
+                  {generateDaysInWeek().map(({ day, hours }, dayIndex) => (
+                    <div
+                      id={`week-day-${dayIndex}`}
+                      key={dayjs(day).format("ddd")}
+                      className={`tw-flex tw-flex-col tw-min-w-[200px] tw-max-w-[200px] xl:tw-min-w-[100%] xl:tw-max-w-[100%] tw-overflow-hidden ${
+                        dayIndex === 0 ? "tw-border-x" : "tw-border-r"
+                      } tw-border-divider`}
+                    >
+                      <div className="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-mb-2">
+                        <span className="tw-leading-[26px] tw-tracking-[0.14px]">
+                          {dayjs(day).format("DD")}
+                        </span>
+                        <span className="tw-leading-[26px] tw-tracking-[0.14px]">
+                          {dayjs(day).format("ddd")}
+                        </span>
                       </div>
-                    ))}
-                  </section>
-                ))}
+                      {hours.map((hour, hourIndex) => (
+                        <div
+                          id={`hour-${hour.hour}`}
+                          key={hour.hour}
+                          className={`tw-bg-white tw-h-[26px] tw-w-full ${
+                            hourIndex === 0 ? "tw-border-t" : "tw-border-b"
+                          } ${
+                            hour.hour.split(":")[1] === "30" || hourIndex === 0
+                              ? "tw-border-divider"
+                              : "tw-border-transparent"
+                          } tw-relative`}
+                        >
+                          {hour.data?.length ? (
+                            <>
+                              <div
+                                className="tw-absolute tw-top-0 tw-left-0 tw-right-0 tw-flex tw-justify-start"
+                                style={{ zIndex: 10 + hour.index }}
+                              >
+                                {hour.data.map((item, itemIndex) => (
+                                  <section
+                                    key={itemIndex}
+                                    className={`${getSlotStyle(
+                                      item,
+                                      hourIndex
+                                    )} tw-p-2 tw-rounded-xl tw-border tw-overflow-x-hidden tw-cursor-pointer`}
+                                    style={{
+                                      flex: 1,
+                                      height: `${
+                                        (dayjs(item.end_at).diff(
+                                          dayjs(item.start_at),
+                                          "minute"
+                                        ) /
+                                          60) *
+                                        52
+                                      }px`,
+                                    }}
+                                    onClick={() => handleSlotClick(item)}
+                                  >
+                                    <span className="tw-text-sm tw-tracking-[0.12px] tw-whitespace-nowrap">
+                                      {getReservationDetails(item)}
+                                    </span>
+                                  </section>
+                                ))}
+                              </div>
+                            </>
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </section>
               </div>
             </>
           ) : (

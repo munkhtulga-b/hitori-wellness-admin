@@ -1,6 +1,6 @@
 import $api from "@/app/_api";
 import { useCalendarStore } from "@/app/_store/calendar";
-import { Form, Button, TimePicker, DatePicker, Radio } from "antd";
+import { Form, Button, TimePicker, DatePicker, Radio, Input } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
@@ -49,7 +49,7 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
   const beforeComplete = (params) => {
     const body = {
       studioId: calendarStore.studioId,
-      // "title": "Cleaning",
+      title: params.title,
       startAt: `${dayjs(params.date).format("YYYY-MM-DD")} ${dayjs(
         params.startHour
       ).format("HH:mm")}`,
@@ -72,6 +72,19 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
         requiredMark={false}
         validateTrigger="onSubmit"
       >
+        <Form.Item
+          name="title"
+          label="説明"
+          rules={[
+            {
+              required: true,
+              message: "Please input your E-mail!",
+            },
+          ]}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+
         {/* <div className="tw-flex tw-flex-col tw-gap-1">
           <span className="tw-leading-[22px] tw-tracking-[0.14px] tw-text-secondary">
             現在の設定
