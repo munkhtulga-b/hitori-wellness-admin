@@ -23,7 +23,7 @@ const columns = [
   },
   {
     title: "カテゴリー",
-    dataIndex: "category_name",
+    dataIndex: "item_type",
     customStyle: "",
     type: null,
   },

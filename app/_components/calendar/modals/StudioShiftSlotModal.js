@@ -13,6 +13,7 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
   useEffect(() => {
     if (data) {
       form.setFieldsValue({
+        title: data.detailed?.shift?.title,
         date: dayjs.utc(data.detailed?.shift?.start_at),
         startHour: dayjs.utc(data.detailed?.shift?.start_at),
         endHour: dayjs.utc(data.detailed?.shift?.end_at),
