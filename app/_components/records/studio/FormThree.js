@@ -49,6 +49,8 @@ const StudioFormThree = ({
     );
     if (timeDifference <= 23) {
       setIsTwentyFourHour(false);
+    } else {
+      setIsTwentyFourHour(true);
     }
   }, [startHour, endHour]);
 
