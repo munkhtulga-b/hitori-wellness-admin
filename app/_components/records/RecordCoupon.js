@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
+import CreateCouponModal from "./coupon/CreateCouponModal";
 
 const columns = [
   {
@@ -65,7 +66,7 @@ const RecordCoupon = () => {
       </div>
 
       <Modal
-        title="店舗新規登録"
+        title="クーポン新規登録"
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}
@@ -79,7 +80,7 @@ const RecordCoupon = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        Create Coupon Modal
+        <CreateCouponModal />
       </Modal>
     </>
   );
