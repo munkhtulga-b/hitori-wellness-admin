@@ -7,5 +7,9 @@ export const getMany = (queries) => {
 };
 
 export const create = (body) => {
-  return fetchData(`users`, "POST", body);
+  return fetchData(`users/adminCreate`, "POST", body);
+};
+
+export const deleteMany = (body) => {
+  return fetchData(`users`, "DELETE", body);
 };

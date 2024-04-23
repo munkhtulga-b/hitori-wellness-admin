@@ -193,7 +193,8 @@ const BaseTable = ({
     if (column.type === "singleListObjectItem") {
       result = (
         <>
-          {item[column.dataIndex]?.length ? (
+          {item[column.dataIndex]?.length &&
+          item[column.dataIndex][0][column.nestedObject] ? (
             <>
               {nullSafety(
                 item[column.dataIndex][0][column.nestedObject][
