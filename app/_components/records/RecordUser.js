@@ -9,6 +9,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 import _ from "lodash";
 import CreateUserModal from "./user/CreateUserModal";
+import { toast } from "react-toastify";
 
 const columns = [
   {
@@ -72,11 +73,11 @@ const columns = [
 
 const RecordUser = ({ studios }) => {
   const [isLoading, setIsLoading] = useState(false);
-  // const [isRequesting, setIsRequesting] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [modalKey, setModalKey] = useState(0);
+  const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
   const [pagination, setPagination] = useState({
     current: 1,
@@ -105,10 +106,40 @@ const RecordUser = ({ studios }) => {
     setIsLoading(false);
   };
 
+  const createUser = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.user.create(body);
+    if (isOk) {
+      await fetchUsers();
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("User created");
+    }
+    setIsRequesting(false);
+  };
+
+  const deleteUsers = async () => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.user.deleteMany({
+      ids: _.map(checkedRows, "id"),
+    });
+    if (isOk) {
+      await fetchUsers(filters);
+      setCheckedRows([]);
+      toast.success("Users deleted");
+    }
+    setIsRequesting(false);
+  };
+
   const onFilterChange = (filter) => {
-    const shallow = _.merge(filters, filter);
-    setFilters(shallow);
-    fetchUsers(shallow);
+    const shallowFilters = _.merge(filters, filter);
+    const shallowPagination = {
+      limit: pagination.count,
+      page: pagination.current - 1,
+    };
+    const queries = _.merge(shallowFilters, shallowPagination);
+    setFilters(queries);
+    fetchUsers(queries);
   };
 
   const onFilterClear = (filterKey) => {
@@ -125,10 +156,8 @@ const RecordUser = ({ studios }) => {
     } else {
       setPagination((prev) => ({ ...prev, current: 0, count: pageSize }));
     }
-    fetchUsers({
-      page: pagination.count == pageSize ? page - 1 : 0,
-      limit: pageSize,
-    });
+    const queries = _.merge(filters, { page: page - 1, limit: pageSize });
+    fetchUsers(queries);
   };
 
   return (
@@ -136,7 +165,12 @@ const RecordUser = ({ studios }) => {
       <div className="tw-flex tw-flex-col tw-gap-6 tw-h-full">
         <RecordTableFilters
           onAdd={() => setIsModalOpen(true)}
+          onDelete={deleteUsers}
           studios={studios}
+          onSearch={(value) => onFilterChange({ name: value })}
+          onSearchClear={() => onFilterClear("name")}
+          checkedRows={checkedRows}
+          isRequesting={isRequesting}
         >
           <>
             <Select
@@ -152,7 +186,7 @@ const RecordUser = ({ studios }) => {
                   ? onFilterChange({ studioId: value })
                   : onFilterClear("studioId");
               }}
-              placeholder="エリア "
+              placeholder="登録店舗"
             />
             <Select
               allowClear
@@ -213,7 +247,12 @@ const RecordUser = ({ studios }) => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        <CreateUserModal />
+        <CreateUserModal
+          modalKey={modalKey}
+          onBack={() => setIsModalOpen(false)}
+          onComplete={createUser}
+          isRequesting={isRequesting}
+        />
       </Modal>
     </>
   );

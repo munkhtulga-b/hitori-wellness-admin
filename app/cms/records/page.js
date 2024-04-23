@@ -35,7 +35,7 @@ const RecordsPage = () => {
   }, []);
 
   useEffect(() => {
-    fetchStudioOptions();
+    fetchStudios();
   }, []);
 
   const onTabChange = (key) => {
@@ -43,7 +43,7 @@ const RecordsPage = () => {
     router.push(pathname + "?" + createQueryString("tab", `${key}`));
   };
 
-  const fetchStudioOptions = async () => {
+  const fetchStudios = async () => {
     const { isOk, data } = await $api.admin.studio.getMany();
     if (isOk && data?.length) {
       const studios = _.map(data, ({ id: value, name: label }) => ({
