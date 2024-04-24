@@ -69,7 +69,7 @@ const StudioBusinessHourModal = ({ closeModal, fetchStudios }) => {
 
         <Form.Item
           name="startHour"
-          label="開始時間"
+          label="開店時間"
           rules={[
             {
               type: "object",
@@ -93,7 +93,7 @@ const StudioBusinessHourModal = ({ closeModal, fetchStudios }) => {
 
         <Form.Item
           name="endHour"
-          label="終了時間"
+          label="閉店時間"
           rules={[
             {
               type: "object",

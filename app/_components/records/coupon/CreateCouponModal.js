@@ -19,7 +19,7 @@ const CreateCouponModal = ({
       <Form
         requiredMark={false}
         form={form}
-        name="signupStepOne"
+        name="create-coupon-form"
         onFinish={(params) => onComplete(params)}
         layout="vertical"
       >
@@ -29,7 +29,7 @@ const CreateCouponModal = ({
           rules={[
             {
               required: true,
-              message: "メールアドレスを入力してください。",
+              message: "コードを入力してください。",
             },
           ]}
         >
@@ -42,7 +42,7 @@ const CreateCouponModal = ({
           rules={[
             {
               required: true,
-              message: "メールアドレスを入力してください。",
+              message: "名称を入力してください。",
             },
           ]}
         >
@@ -50,12 +50,11 @@ const CreateCouponModal = ({
         </Form.Item>
 
         <Form.Item
-          name="name"
-          label="名称"
+          name="maxUseNum"
+          label="最大使用回数"
           rules={[
             {
-              required: true,
-              message: "メールアドレスを入力してください。",
+              required: false,
             },
           ]}
         >
@@ -70,7 +69,7 @@ const CreateCouponModal = ({
               {
                 type: "object",
                 required: true,
-                message: "メールアドレスを入力してください。",
+                message: "開始日程を選択してください。",
               },
             ]}
             style={{ flex: 1 }}
@@ -90,7 +89,7 @@ const CreateCouponModal = ({
               {
                 type: "object",
                 required: true,
-                message: "メールアドレスを入力してください。",
+                message: "終了日程を選択してください。",
               },
             ]}
             style={{ flex: 1 }}

@@ -42,10 +42,11 @@ const ProgramFormTwo = ({
 
   return (
     <>
+      {/* TODO: MAKE RADIO BUTTON A CHECKBOX (ONCE CHECKED, ALL PLANS AND TICKETS) */}
       <Form
         layout="vertical"
         form={form}
-        name="form-two"
+        name="program-form-two"
         onFinish={(params) => onComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
@@ -61,16 +62,16 @@ const ProgramFormTwo = ({
           valuePropName="checked"
         >
           <Radio checked={isTrial === false} onChange={() => setIsTrial(false)}>
-            会員
+            制限なし
           </Radio>
         </Form.Item>
         <Form.Item
           name="planReserveLimitDetails"
-          label="プラン"
+          label="プラン制限"
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "プランを選択してください。",
             },
           ]}
         >
@@ -88,11 +89,11 @@ const ProgramFormTwo = ({
 
         <Form.Item
           name="ticketReserveLimitDetails"
-          label="チケット"
+          label="チケット制限"
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "チケットを選択してください。",
             },
           ]}
         >
@@ -119,7 +120,7 @@ const ProgramFormTwo = ({
               htmlType="submit"
               size="large"
             >
-              次へ
+              保存
             </Button>
           </div>
         </Form.Item>

@@ -1,6 +1,9 @@
+"use client";
+
 import { Form, Input, Button, TimePicker, Radio } from "antd";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import TextEditor from "../../custom/TextEditor";
 
 const StudioFormThree = ({
   data,
@@ -13,6 +16,7 @@ const StudioFormThree = ({
   const [isTwentyFourHour, setIsTwentyFourHour] = useState(false);
   const startHour = Form.useWatch("startHour", form);
   const endHour = Form.useWatch("endHour", form);
+  const [businessHours, setBusinessHours] = useState("");
 
   useEffect(() => {
     form.resetFields();
@@ -54,6 +58,12 @@ const StudioFormThree = ({
     }
   }, [startHour, endHour]);
 
+  useEffect(() => {
+    if (businessHours) {
+      form.setFieldValue("businessHours", businessHours);
+    }
+  }, [businessHours]);
+
   const beforeComplete = (params) => {
     params.timeperiodDetails = [
       {
@@ -76,7 +86,7 @@ const StudioFormThree = ({
       <Form
         layout="vertical"
         form={form}
-        name="form-three"
+        name="studio-form-three"
         onFinish={(params) => beforeComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
@@ -146,7 +156,7 @@ const StudioFormThree = ({
           rules={[
             {
               required: true,
-              message: "Please input prefecture",
+              message: "Google Map URLを入力してください。",
             },
           ]}
         >
@@ -158,11 +168,11 @@ const StudioFormThree = ({
           rules={[
             {
               required: true,
-              message: "Please input prefecture",
+              message: "店舗説明を入力してください。",
             },
           ]}
         >
-          <Input placeholder="Description" />
+          <TextEditor value={businessHours} onChange={setBusinessHours} />
         </Form.Item>
         <Form.Item>
           <div className="tw-flex tw-justify-end tw-items-start tw-gap-2 tw-mt-6">

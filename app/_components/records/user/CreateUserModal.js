@@ -79,7 +79,7 @@ const CreateUserModal = ({ onComplete, onBack, modalKey, isRequesting }) => {
       <Form
         requiredMark={false}
         form={form}
-        name="signupStepOne"
+        name="create-user-form"
         onFinish={(params) => beforeComplete(params)}
         layout="vertical"
       >
@@ -397,7 +397,7 @@ const CreateUserModal = ({ onComplete, onBack, modalKey, isRequesting }) => {
               type="primary"
               htmlType="submit"
             >
-              次へ
+              保存
             </Button>
           </div>
         </Form.Item>

@@ -124,7 +124,7 @@ const ReservationSlotModal = ({ data, closeModal, fetchList }) => {
               size="large"
               onClick={() => cancelReservation()}
             >
-              キャンセル
+              予約がキャンセルされました。
             </Button>
           </section>
         </div>

@@ -3,7 +3,7 @@ import { Empty } from "antd";
 const NoData = ({ message }) => {
   return (
     <>
-      <Empty description={message ?? "データなし"} />
+      <Empty description={message ?? "データがありません。"} />
     </>
   );
 };

@@ -28,11 +28,11 @@ const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
               rules={[
                 {
                   type: "email",
-                  message: "The input is not valid E-mail!",
+                  message: "正しいメールアドレスを入力してください。",
                 },
                 {
                   required: true,
-                  message: "Please input your E-mail!",
+                  message: "メールアドレスを入力してください。",
                 },
               ]}
             >
@@ -44,7 +44,7 @@ const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your E-mail!",
+                  message: "権限タイプを選択してください。",
                 },
               ]}
             >
@@ -64,7 +64,7 @@ const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your E-mail!",
+                  message: "登録店舗を選択してください。",
                 },
               ]}
             >
@@ -75,7 +75,7 @@ const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
                 style={{
                   width: "100%",
                 }}
-                placeholder="select"
+                placeholder="店舗を選択する"
                 options={studios}
               />
             </Form.Item>

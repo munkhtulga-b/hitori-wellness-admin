@@ -32,14 +32,16 @@ const ProgramFormOne = ({
       <Form
         layout="vertical"
         form={form}
-        name="form-one"
+        name="program-form-one"
         onFinish={(params) => onComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
       >
         <Form.Item
           name="thumbnailCode"
-          rules={[{ required: true, message: "Please upload studio image" }]}
+          rules={[
+            { required: true, message: "画像をアップロードしてください。" },
+          ]}
         >
           <section className="tw-flex tw-justify-center">
             <FileUploader
@@ -55,7 +57,7 @@ const ProgramFormOne = ({
           rules={[
             {
               required: true,
-              message: "Please input studio code",
+              message: "コードを入力してください。",
             },
           ]}
         >
@@ -67,7 +69,7 @@ const ProgramFormOne = ({
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "名称を入力してください。",
             },
           ]}
         >
@@ -79,7 +81,7 @@ const ProgramFormOne = ({
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "利用時間を設定してください。",
             },
           ]}
         >
@@ -91,7 +93,7 @@ const ProgramFormOne = ({
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "カテゴリーを選択してください。",
             },
           ]}
           valuePropName="checked"
@@ -114,7 +116,7 @@ const ProgramFormOne = ({
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "説明を入力してください。",
             },
           ]}
         >

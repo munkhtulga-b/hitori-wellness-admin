@@ -216,7 +216,7 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
               checked={isRepeat === true}
               onChange={() => setIsRepeat(true)}
             >
-              繰り返す
+              毎週繰り返す
             </Radio>
           </div>
         </Form.Item>
