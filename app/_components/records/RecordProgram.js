@@ -4,16 +4,18 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal } from "antd";
+import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
 import CreateProgramModal from "./program/CreateProgramModal";
+import { toast } from "react-toastify";
+import _ from "lodash";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
 const columns = [
   {
     title: "名称",
     dataIndex: ["name", "code"],
-    imageIndex: "thumbnail_code",
+    imageIndex: null,
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
@@ -26,13 +28,13 @@ const columns = [
     dataIndex: "status",
     enum: [
       {
-        id: EEnumStudioStatus.ACTIVE,
-        text: "有効",
+        id: EEnumDatabaseStatus.ACTIVE.value,
+        text: EEnumDatabaseStatus.ACTIVE.label,
         style: "tw-bg-bgActive tw-text-statusActive",
       },
       {
-        id: EEnumStudioStatus.INACTIVE,
-        text: "無効",
+        id: EEnumDatabaseStatus.INACTIVE.value,
+        text: EEnumDatabaseStatus.INACTIVE.label,
         style: "tw-bg-bgTag tw-text-statusInactive",
       },
     ],
@@ -47,22 +49,22 @@ const columns = [
   },
 ];
 
-const RecordProgram = ({ studios }) => {
+const RecordProgram = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
-  // const [filters, setFilters] = useState(null);
+  const [filters, setFilters] = useState(null);
 
   useEffect(() => {
     fetchPrograms();
   }, []);
 
-  const fetchPrograms = async () => {
+  const fetchPrograms = async (queries) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.program.getMany();
+    const { isOk, data } = await $api.admin.program.getMany(queries);
     if (isOk) {
       setList(data);
     }
@@ -76,17 +78,75 @@ const RecordProgram = ({ studios }) => {
       await fetchPrograms();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
+      toast.success("Program created");
     }
     setIsRequesting(false);
   };
 
+  const deletePrograms = async () => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.program.deleteMany({
+      ids: _.map(checkedRows, "id"),
+    });
+    if (isOk) {
+      await fetchPrograms(filters);
+      setCheckedRows([]);
+      toast.success("Programs deleted");
+    }
+    setIsRequesting(false);
+  };
+
+  const onFilterChange = (filter) => {
+    const shallowFilters = _.merge(filters, filter);
+    setFilters(shallowFilters);
+    fetchPrograms(shallowFilters);
+  };
+
+  const onFilterClear = (filterKey) => {
+    if (filters) {
+      const shallow = _.omit(filters, filterKey);
+      setFilters(shallow);
+      fetchPrograms(shallow);
+    }
+  };
+
   return (
     <>
-      <div className="tw-flex tw-flex-col tw-gap-6">
+      <div className="tw-flex tw-flex-col tw-gap-6 tw-h-full">
         <RecordTableFilters
           onAdd={() => setIsModalOpen(true)}
-          studios={studios}
-        />
+          onDelete={deletePrograms}
+          onSearch={(value) => onFilterChange({ name: value })}
+          onSearchClear={() => onFilterClear("name")}
+          checkedRows={checkedRows}
+          isRequesting={isRequesting}
+        >
+          <>
+            <Select
+              allowClear
+              size="large"
+              style={{
+                width: 200,
+              }}
+              options={[
+                {
+                  value: EEnumDatabaseStatus.ACTIVE.value,
+                  label: EEnumDatabaseStatus.ACTIVE.label,
+                },
+                {
+                  value: EEnumDatabaseStatus.INACTIVE.value,
+                  label: EEnumDatabaseStatus.INACTIVE.label,
+                },
+              ]}
+              onChange={(value) =>
+                value
+                  ? onFilterChange({ status: value })
+                  : onFilterClear("status")
+              }
+              placeholder="ステータス"
+            />
+          </>
+        </RecordTableFilters>
         <BaseTable
           tableId="admin-table"
           columns={columns}
@@ -99,7 +159,7 @@ const RecordProgram = ({ studios }) => {
       </div>
 
       <Modal
-        title="店舗新規登録"
+        title="メンバー詳細"
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}
@@ -115,9 +175,9 @@ const RecordProgram = ({ studios }) => {
       >
         <CreateProgramModal
           modalKey={modalKey}
+          onBack={() => setIsModalOpen(false)}
+          onComplete={createProgram}
           isRequesting={isRequesting}
-          onCancel={() => setIsModalOpen(false)}
-          onConfirm={createProgram}
         />
       </Modal>
     </>

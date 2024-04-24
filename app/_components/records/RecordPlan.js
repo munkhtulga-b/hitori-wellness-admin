@@ -7,7 +7,7 @@ import RecordTableFilters from "./RecordTableFilters";
 import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
-import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import CreatePlanModal from "./plan/CreatePlanModal";
 
 const columns = [
@@ -26,13 +26,13 @@ const columns = [
     dataIndex: "status",
     enum: [
       {
-        id: EEnumStudioStatus.ACTIVE,
-        text: "有効",
+        id: EEnumDatabaseStatus.ACTIVE.value,
+        text: EEnumDatabaseStatus.ACTIVE.label,
         style: "tw-bg-bgActive tw-text-statusActive",
       },
       {
-        id: EEnumStudioStatus.INACTIVE,
-        text: "無効",
+        id: EEnumDatabaseStatus.INACTIVE.value,
+        text: EEnumDatabaseStatus.INACTIVE.label,
         style: "tw-bg-bgTag tw-text-statusInactive",
       },
     ],
@@ -108,12 +108,12 @@ const RecordPlan = () => {
               }}
               options={[
                 {
-                  value: EEnumStudioStatus.ACTIVE,
-                  label: "有効",
+                  value: EEnumDatabaseStatus.ACTIVE.value,
+                  label: EEnumDatabaseStatus.ACTIVE.label,
                 },
                 {
-                  value: EEnumStudioStatus.INACTIVE,
-                  label: "無効",
+                  value: EEnumDatabaseStatus.INACTIVE.value,
+                  label: EEnumDatabaseStatus.INACTIVE.label,
                 },
               ]}
               onChange={(value) =>

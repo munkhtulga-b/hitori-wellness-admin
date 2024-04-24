@@ -1,7 +1,7 @@
 import { Tabs } from "antd";
 import { useEffect, useState } from "react";
 import { uploadImage } from "@/app/_utils/helpers";
-import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import ProgramFormOne from "./FormOne";
 import ProgramFormTwo from "./FormTwo";
 import $api from "@/app/_api";
@@ -52,8 +52,8 @@ const CreateProgramModal = ({
       params.thumbnailCode = data.url;
       params.status =
         params.status === false
-          ? EEnumStudioStatus.INACTIVE
-          : EEnumStudioStatus.ACTIVE;
+          ? EEnumDatabaseStatus.INACTIVE.value
+          : EEnumDatabaseStatus.ACTIVE.value;
       formatRequestBody(params);
     }
     setIsUploading(false);

@@ -52,28 +52,28 @@ const columns = [
     dataIndex: "status",
     enum: [
       {
-        id: EEnumReservationStatus.ACTIVE,
-        text: "予約中",
+        id: EEnumReservationStatus.ACTIVE.value,
+        text: EEnumReservationStatus.ACTIVE.label,
         style: "tw-bg-aquaLight tw-text-aquaMedium",
       },
       {
-        id: EEnumReservationStatus.CANCELLED,
-        text: "キャンセル済み",
+        id: EEnumReservationStatus.CANCELLED.value,
+        text: EEnumReservationStatus.CANCELLED.label,
         style: "tw-bg-bgTag tw-text-grayMedium",
       },
       {
-        id: EEnumReservationStatus.AUTOMATIC_CANCELLATION,
-        text: "無断キャンセル",
+        id: EEnumReservationStatus.AUTOMATIC_CANCELLATION.value,
+        text: EEnumReservationStatus.AUTOMATIC_CANCELLATION.label,
         style: "tw-bg-bgCancelled tw-text-cancelled",
       },
       {
-        id: EEnumReservationStatus.CHECK_IN,
-        text: "チェックイン",
+        id: EEnumReservationStatus.CHECK_IN.value,
+        text: EEnumReservationStatus.CHECK_IN.label,
         style: "tw-bg-bgActive tw-text-statusActive",
       },
       {
-        id: EEnumReservationStatus.CHECK_OUT,
-        text: "チェックアウト",
+        id: EEnumReservationStatus.CHECK_OUT.value,
+        text: EEnumReservationStatus.CHECK_OUT.label,
         style: "tw-bg-bgActive tw-text-statusActive",
       },
     ],

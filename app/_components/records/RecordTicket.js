@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import CreateTicketModal from "./ticket/CreateTicketModal";
 
 const columns = [
@@ -32,13 +32,13 @@ const columns = [
     dataIndex: "status",
     enum: [
       {
-        id: EEnumStudioStatus.ACTIVE,
-        text: "有効",
+        id: EEnumDatabaseStatus.ACTIVE.value,
+        text: EEnumDatabaseStatus.ACTIVE.label,
         style: "tw-bg-bgActive tw-text-statusActive",
       },
       {
-        id: EEnumStudioStatus.INACTIVE,
-        text: "無効",
+        id: EEnumDatabaseStatus.INACTIVE.value,
+        text: EEnumDatabaseStatus.INACTIVE.label,
         style: "tw-bg-bgTag tw-text-statusInactive",
       },
     ],
