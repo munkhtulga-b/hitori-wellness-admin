@@ -40,14 +40,16 @@ const StudioFormOne = ({
       <Form
         layout="vertical"
         form={form}
-        name="form-one"
+        name="studio-form-one"
         onFinish={(params) => onComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
       >
         <Form.Item
           name="thumbnailCode"
-          rules={[{ required: true, message: "Please upload studio image" }]}
+          rules={[
+            { required: true, message: "画像をアップロードしてください。" },
+          ]}
         >
           <section className="tw-flex tw-justify-center">
             {!data?.thumbnail_code ? (
@@ -81,11 +83,11 @@ const StudioFormOne = ({
           rules={[
             {
               required: true,
-              message: "Please input studio code",
+              message: "コードを入力してください。",
             },
           ]}
         >
-          <Input placeholder="code" />
+          <Input placeholder="" />
         </Form.Item>
         <Form.Item
           name="name"
@@ -93,11 +95,11 @@ const StudioFormOne = ({
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "名称を入力してください。",
             },
           ]}
         >
-          <Input placeholder="name" />
+          <Input placeholder="" />
         </Form.Item>
         <Form.Item
           name="status"

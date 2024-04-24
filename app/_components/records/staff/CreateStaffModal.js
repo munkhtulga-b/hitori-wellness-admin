@@ -51,11 +51,11 @@ const CreateStaffModal = ({
           rules={[
             {
               required: true,
-              message: "Please input your E-mail!",
+              message: "コードを入力してください。",
             },
           ]}
         >
-          <Input placeholder="code" />
+          <Input placeholder="" />
         </Form.Item>
         <Form.Item
           name="name"
@@ -63,7 +63,7 @@ const CreateStaffModal = ({
           rules={[
             {
               required: true,
-              message: "Please input your E-mail!",
+              message: "氏名を入力してください。",
             },
           ]}
         >
@@ -75,7 +75,7 @@ const CreateStaffModal = ({
           rules={[
             {
               required: true,
-              message: "Please input your E-mail!",
+              message: "性別を選択してください。",
             },
           ]}
         >
@@ -102,7 +102,7 @@ const CreateStaffModal = ({
           rules={[
             {
               required: true,
-              message: "Please input your E-mail!",
+              message: "コメントを入力してください。",
             },
           ]}
         >
@@ -114,7 +114,7 @@ const CreateStaffModal = ({
           rules={[
             {
               required: true,
-              message: "Please input your E-mail!",
+              message: "登録店舗を選択してください。",
             },
           ]}
         >
@@ -134,8 +134,7 @@ const CreateStaffModal = ({
           label="ステータス"
           rules={[
             {
-              required: true,
-              message: "Please input your E-mail!",
+              required: false,
             },
           ]}
           valuePropName="checked"
@@ -158,7 +157,7 @@ const CreateStaffModal = ({
               htmlType="submit"
               className="tw-w-[90px]"
             >
-              送信
+              保存
             </Button>
           </div>
         </Form.Item>

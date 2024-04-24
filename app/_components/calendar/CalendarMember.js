@@ -327,7 +327,7 @@ const CalendarMember = ({
         <PartialLoading />
       )}
       <Modal
-        title={`予約詳細`}
+        title={`一時閉店時間`}
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}

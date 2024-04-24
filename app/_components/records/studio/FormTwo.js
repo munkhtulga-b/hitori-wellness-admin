@@ -27,7 +27,7 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
       <Form
         layout="vertical"
         form={form}
-        name="form-two"
+        name="studio-form-two"
         onFinish={(params) => onComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
@@ -38,11 +38,11 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
           rules={[
             {
               required: true,
-              message: "Please input categoryName",
+              message: "エリアを入力してください。",
             },
           ]}
         >
-          <Input placeholder="code" />
+          <Input placeholder="" />
         </Form.Item>
         <section className="tw-flex tw-flex-col">
           <label className="tw-leading-[22px] tw-tracking-[0.14px]">
@@ -54,7 +54,7 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
               rules={[
                 {
                   required: true,
-                  message: "Please input studio name",
+                  message: "郵便番号1を入力してください。",
                   whitespace: false,
                 },
               ]}
@@ -67,7 +67,7 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
               rules={[
                 {
                   required: true,
-                  message: "Please input studio name",
+                  message: "郵便番号2を入力してください。",
                   whitespace: false,
                 },
               ]}
@@ -83,11 +83,11 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
           rules={[
             {
               required: true,
-              message: "Please input prefecture",
+              message: "都道府県を入力してください。",
             },
           ]}
         >
-          <Input placeholder="code" />
+          <Input placeholder="" />
         </Form.Item>
         <Form.Item
           name="address1"
@@ -95,11 +95,11 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
           rules={[
             {
               required: true,
-              message: "Please input prefecture",
+              message: "市区町村を入力してください。",
             },
           ]}
         >
-          <Input placeholder="code" />
+          <Input placeholder="" />
         </Form.Item>
         <Form.Item
           name="address2"
@@ -107,23 +107,23 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
           rules={[
             {
               required: true,
-              message: "Please input prefecture",
+              message: "町名・番地を入力してください。",
             },
           ]}
         >
-          <Input placeholder="code" />
+          <Input placeholder="" />
         </Form.Item>
         <Form.Item
           name="address3"
           label="番号"
           rules={[
             {
-              required: true,
+              required: false,
               message: "Please input prefecture",
             },
           ]}
         >
-          <Input placeholder="code" />
+          <Input placeholder="" />
         </Form.Item>
         <Form.Item>
           <div className="tw-flex tw-justify-end tw-items-start tw-gap-2 tw-mt-6">

@@ -8,7 +8,7 @@ const CreateTicketModal = () => {
       <Form
         requiredMark={false}
         form={form}
-        name="signupStepOne"
+        name="create-ticket-form"
         onFinish={(params) => console.log(params)}
         layout="vertical"
       >

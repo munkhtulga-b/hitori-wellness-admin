@@ -1,3 +1,4 @@
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import { Button, Form, Input, Switch } from "antd";
 
 const CreateItemModal = () => {
@@ -8,7 +9,7 @@ const CreateItemModal = () => {
       <Form
         requiredMark={false}
         form={form}
-        name="signupStepOne"
+        name="create-item-form"
         onFinish={(params) => console.log(params)}
         layout="vertical"
       >
@@ -18,7 +19,7 @@ const CreateItemModal = () => {
           rules={[
             {
               required: true,
-              message: "メールアドレスを入力してください。",
+              message: "コードを入力してください。",
             },
           ]}
         >
@@ -31,7 +32,7 @@ const CreateItemModal = () => {
           rules={[
             {
               required: true,
-              message: "メールアドレスを入力してください。",
+              message: "名称を入力してください。",
             },
           ]}
         >
@@ -44,7 +45,7 @@ const CreateItemModal = () => {
           rules={[
             {
               required: true,
-              message: "メールアドレスを入力してください。",
+              message: "カテゴリーを選択してください。",
             },
           ]}
         >
@@ -61,7 +62,7 @@ const CreateItemModal = () => {
           rules={[
             {
               required: true,
-              message: "メールアドレスを入力してください。",
+              message: "金額を入力してください。",
             },
           ]}
         >
@@ -74,7 +75,7 @@ const CreateItemModal = () => {
           rules={[
             {
               required: true,
-              message: "メールアドレスを入力してください。",
+              message: "説明を入力してください。",
             },
           ]}
         >
@@ -86,10 +87,10 @@ const CreateItemModal = () => {
           label="ステータス"
           rules={[
             {
-              required: true,
-              message: "メールアドレスを入力してください。",
+              required: false,
             },
           ]}
+          initialValue={EEnumDatabaseStatus.ACTIVE.value}
         >
           <Switch />
         </Form.Item>

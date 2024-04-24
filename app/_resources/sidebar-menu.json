@@ -19,7 +19,7 @@
         "route": "/"
       },
       {
-        "text": "入退館履歴",
+        "text": "入館記録",
         "icon": "/assets/sidebar/sidebar-admin-icon.svg",
         "alt": "member-id",
         "route": "/"

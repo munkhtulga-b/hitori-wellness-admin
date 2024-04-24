@@ -95,7 +95,7 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
 
         <Form.Item
           name="date"
-          label="開始時間"
+          label="日程"
           rules={[
             {
               type: "object",
@@ -174,7 +174,7 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
               checked={isRepeat === true}
               onChange={() => setIsRepeat(true)}
             >
-              繰り返す
+              毎週繰り返す
             </Radio>
           </div>
         </Form.Item>

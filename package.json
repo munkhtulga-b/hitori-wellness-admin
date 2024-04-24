@@ -19,6 +19,7 @@
     "react": "^18",
     "react-csv": "^2.2.2",
     "react-dom": "^18",
+    "react-simple-wysiwyg": "^3.0.2",
     "react-toastify": "^10.0.5",
     "zustand": "^4.5.2"
   },
