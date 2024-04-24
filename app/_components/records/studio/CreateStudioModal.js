@@ -4,7 +4,7 @@ import { uploadImage } from "@/app/_utils/helpers";
 import StudioFormOne from "./FormOne";
 import StudioFormTwo from "./FormTwo";
 import StudioFormThree from "./FormThree";
-import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
 const CreateStudioModal = ({
   modalKey,
@@ -31,14 +31,14 @@ const CreateStudioModal = ({
         params.thumbnailCode = data.url;
         params.status =
           params.status === false
-            ? EEnumStudioStatus.INACTIVE
-            : EEnumStudioStatus.ACTIVE;
+            ? EEnumDatabaseStatus.INACTIVE.value
+            : EEnumDatabaseStatus.ACTIVE.value;
         formatRequestBody(params);
       }
     } else {
       params.status === false
-        ? EEnumStudioStatus.INACTIVE
-        : EEnumStudioStatus.ACTIVE;
+        ? EEnumDatabaseStatus.INACTIVE.value
+        : EEnumDatabaseStatus.ACTIVE.value;
       formatRequestBody(params);
     }
     setIsUploading(false);

@@ -9,3 +9,7 @@ export const getMany = (queries) => {
 export const create = (body) => {
   return fetchData(`items`, "POST", body);
 };
+
+export const deleteMany = (body) => {
+  return fetchData(`items`, "DELETE", body);
+};

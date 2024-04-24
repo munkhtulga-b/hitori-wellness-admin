@@ -4,9 +4,12 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal } from "antd";
+import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import CreateCouponModal from "./coupon/CreateCouponModal";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
+import _ from "lodash";
+import { toast } from "react-toastify";
 
 const columns = [
   {
@@ -35,15 +38,15 @@ const RecordCoupon = () => {
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
-  // const [filters, setFilters] = useState(null);
+  const [filters, setFilters] = useState(null);
 
   useEffect(() => {
     fetchCoupons();
   }, []);
 
-  const fetchCoupons = async () => {
+  const fetchCoupons = async (queries) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.coupon.getMany();
+    const { isOk, data } = await $api.admin.coupon.getMany(queries);
     if (isOk) {
       setList(data);
     }
@@ -54,17 +57,77 @@ const RecordCoupon = () => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.coupon.create(body);
     if (isOk) {
-      await fetchCoupons();
+      await fetchCoupons(filters);
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
     }
     setIsRequesting(false);
   };
 
+  const deleteCoupons = async () => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.coupon.deleteMany({
+      ids: _.map(checkedRows, "id"),
+    });
+    if (isOk) {
+      await fetchCoupons(filters);
+      setCheckedRows([]);
+      toast.success("Coupons deleted");
+    }
+    setIsRequesting(false);
+  };
+
+  const onFilterChange = (filter) => {
+    const shallowFilters = _.merge(filters, filter);
+    setFilters(shallowFilters);
+    fetchCoupons(shallowFilters);
+  };
+
+  const onFilterClear = (filterKey) => {
+    if (filters) {
+      const shallow = _.omit(filters, filterKey);
+      setFilters(shallow);
+      fetchCoupons(shallow);
+    }
+  };
+
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
-        <RecordTableFilters onAdd={() => setIsModalOpen(true)} />
+        <RecordTableFilters
+          onAdd={() => setIsModalOpen(true)}
+          onDelete={deleteCoupons}
+          onSearch={(value) => onFilterChange({ name: value })}
+          onSearchClear={() => onFilterClear("name")}
+          checkedRows={checkedRows}
+          isRequesting={isRequesting}
+        >
+          <>
+            <Select
+              allowClear
+              size="large"
+              style={{
+                width: 200,
+              }}
+              options={[
+                {
+                  value: EEnumDatabaseStatus.ACTIVE.value,
+                  label: EEnumDatabaseStatus.ACTIVE.label,
+                },
+                {
+                  value: EEnumDatabaseStatus.INACTIVE.value,
+                  label: EEnumDatabaseStatus.INACTIVE.label,
+                },
+              ]}
+              onChange={(value) =>
+                value
+                  ? onFilterChange({ status: value })
+                  : onFilterClear("status")
+              }
+              placeholder="ステータス"
+            />
+          </>
+        </RecordTableFilters>
         <BaseTable
           tableId="admin-table"
           columns={columns}

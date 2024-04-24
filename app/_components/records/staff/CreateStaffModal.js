@@ -1,4 +1,4 @@
-import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import { Form, Input, Select, Button, Switch } from "antd";
 import { useEffect, useState } from "react";
 import EEnumGender from "@/app/_enums/EEnumGender";
@@ -29,7 +29,9 @@ const CreateStaffModal = ({
     setIsActive(value);
     form.setFieldValue(
       "status",
-      value ? EEnumStudioStatus.ACTIVE : EEnumStudioStatus.INACTIVE
+      value
+        ? EEnumDatabaseStatus.ACTIVE.value
+        : EEnumDatabaseStatus.INACTIVE.value
     );
   };
 
@@ -137,7 +139,7 @@ const CreateStaffModal = ({
             },
           ]}
           valuePropName="checked"
-          initialValue={EEnumStudioStatus.ACTIVE}
+          initialValue={EEnumDatabaseStatus.ACTIVE.value}
         >
           <Switch
             onChange={(checked) => onStatusCheck(checked)}

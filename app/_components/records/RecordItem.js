@@ -4,10 +4,12 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal } from "antd";
+import { Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
+import EEnumItemTypes from "@/app/_enums/EEnumItemTypes";
 import CreateItemModal from "./item/CreateItemModal";
+import _ from "lodash";
 
 const columns = [
   {
@@ -32,13 +34,13 @@ const columns = [
     dataIndex: "status",
     enum: [
       {
-        id: EEnumStudioStatus.ACTIVE,
-        text: "有効",
+        id: EEnumDatabaseStatus.ACTIVE.value,
+        text: EEnumDatabaseStatus.ACTIVE.label,
         style: "tw-bg-bgActive tw-text-statusActive",
       },
       {
-        id: EEnumStudioStatus.INACTIVE,
-        text: "無効",
+        id: EEnumDatabaseStatus.INACTIVE.value,
+        text: EEnumDatabaseStatus.INACTIVE.label,
         style: "tw-bg-bgTag tw-text-statusInactive",
       },
     ],
@@ -63,30 +65,108 @@ const columns = [
 
 const RecordItem = () => {
   const [isLoading, setIsLoading] = useState(false);
-  //   const [isRequesting, setIsRequesting] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
+  const itemTypes = _.map(EEnumItemTypes, (value) => ({
+    value: value.value,
+    label: value.label,
+  }));
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  //   const [modalKey, setModalKey] = useState(0);
-  //   const [filters, setFilters] = useState(null);
+  const [modalKey, setModalKey] = useState(0);
+  const [filters, setFilters] = useState(null);
 
   useEffect(() => {
     fetchItems();
   }, []);
 
-  const fetchItems = async () => {
+  const fetchItems = async (queries) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.item.getMany();
+    const { isOk, data } = await $api.admin.item.getMany(queries);
     if (isOk) {
       setList(data);
     }
     setIsLoading(false);
   };
 
+  const deleteItems = async () => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.item.deleteMany({
+      ids: _.map(checkedRows, "id"),
+    });
+    if (isOk) {
+      await fetchItems();
+      setModalKey((prev) => prev + 1);
+      setCheckedRows([]);
+    }
+    setIsRequesting(false);
+  };
+
+  const onFilterChange = (filter) => {
+    const shallowFilters = _.merge(filters, filter);
+    setFilters(shallowFilters);
+    fetchItems(shallowFilters);
+  };
+
+  const onFilterClear = (filterKey) => {
+    if (filters) {
+      const shallow = _.omit(filters, filterKey);
+      setFilters(shallow);
+      fetchItems(shallow);
+    }
+  };
+
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
-        <RecordTableFilters onAdd={() => setIsModalOpen(true)} />
+        <RecordTableFilters
+          onAdd={() => setIsModalOpen(true)}
+          onDelete={deleteItems}
+          onSearch={(value) => onFilterChange({ name: value })}
+          checkedRows={checkedRows}
+          isRequesting={isRequesting}
+        >
+          <>
+            <Select
+              disabled={!itemTypes?.length}
+              allowClear
+              size="large"
+              style={{
+                width: 120,
+              }}
+              options={itemTypes}
+              onChange={(value) =>
+                value
+                  ? onFilterChange({ itemType: value })
+                  : onFilterClear("itemType")
+              }
+              placeholder="カテゴリー"
+            />
+            <Select
+              allowClear
+              size="large"
+              style={{
+                width: 120,
+              }}
+              options={[
+                {
+                  value: EEnumDatabaseStatus.ACTIVE.value,
+                  label: EEnumDatabaseStatus.ACTIVE.label,
+                },
+                {
+                  value: EEnumDatabaseStatus.INACTIVE.value,
+                  label: EEnumDatabaseStatus.INACTIVE.label,
+                },
+              ]}
+              onChange={(value) =>
+                value
+                  ? onFilterChange({ status: value })
+                  : onFilterClear("status")
+              }
+              placeholder="ステータス"
+            />
+          </>
+        </RecordTableFilters>
         <BaseTable
           tableId="admin-table"
           columns={columns}
@@ -113,7 +193,7 @@ const RecordItem = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        <CreateItemModal />
+        <CreateItemModal modalKey={modalKey} />
       </Modal>
     </>
   );

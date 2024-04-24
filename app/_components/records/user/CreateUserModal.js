@@ -8,7 +8,7 @@ import {
   getAddressFromPostalCode,
 } from "@/app/_utils/helpers";
 import _ from "lodash";
-import { EEnumStudioStatus } from "@/app/_enums/EEnumStudioStatus";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
 const CreateUserModal = ({ onComplete, onBack, modalKey, isRequesting }) => {
   const [form] = Form.useForm();
@@ -63,7 +63,7 @@ const CreateUserModal = ({ onComplete, onBack, modalKey, isRequesting }) => {
     const body = {
       ...omitted,
       birthday: dateOfBirth,
-      status: EEnumStudioStatus.ACTIVE,
+      status: EEnumDatabaseStatus.ACTIVE.value,
     };
     onComplete(body);
   };
