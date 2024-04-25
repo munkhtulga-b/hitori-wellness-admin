@@ -10,6 +10,7 @@ import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import EEnumItemTypes from "@/app/_enums/EEnumItemTypes";
 import CreateItemModal from "./item/CreateItemModal";
 import _ from "lodash";
+import { toast } from "react-toastify";
 
 const columns = [
   {
@@ -63,7 +64,7 @@ const columns = [
   },
 ];
 
-const RecordItem = () => {
+const RecordItem = ({ studios }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
@@ -89,6 +90,18 @@ const RecordItem = () => {
     setIsLoading(false);
   };
 
+  const createItem = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.item.create(body);
+    if (isOk) {
+      await fetchItems();
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("Item created");
+    }
+    setIsRequesting(false);
+  };
+
   const deleteItems = async () => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.item.deleteMany({
@@ -96,8 +109,8 @@ const RecordItem = () => {
     });
     if (isOk) {
       await fetchItems();
-      setModalKey((prev) => prev + 1);
       setCheckedRows([]);
+      toast.success("Items deleted");
     }
     setIsRequesting(false);
   };
@@ -193,7 +206,13 @@ const RecordItem = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        <CreateItemModal modalKey={modalKey} />
+        <CreateItemModal
+          modalKey={modalKey}
+          studios={studios}
+          onComplete={createItem}
+          onBack={() => setIsModalOpen(false)}
+          isRequesting={isRequesting}
+        />
       </Modal>
     </>
   );

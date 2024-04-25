@@ -31,7 +31,7 @@ const columns = [
   },
 ];
 
-const RecordCoupon = () => {
+const RecordCoupon = ({ studios }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
@@ -159,6 +159,7 @@ const RecordCoupon = () => {
           onCancel={() => setIsModalOpen(false)}
           modalKey={modalKey}
           isRequesting={isRequesting}
+          studios={studios}
         />
       </Modal>
     </>

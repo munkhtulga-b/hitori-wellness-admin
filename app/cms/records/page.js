@@ -7,7 +7,6 @@ import RecordStudio from "@/app/_components/records/RecordStudio";
 import RecordPlan from "@/app/_components/records/RecordPlan";
 import RecordReservation from "@/app/_components/records/RecordReservation";
 import RecordProgram from "@/app/_components/records/RecordProgram";
-import RecordTicket from "@/app/_components/records/RecordTicket";
 import RecordUser from "@/app/_components/records/RecordUser";
 import RecordStaff from "@/app/_components/records/RecordStaff";
 import RecordItem from "@/app/_components/records/RecordItem";
@@ -97,7 +96,7 @@ const RecordsPage = () => {
     {
       key: "items",
       label: "商品",
-      children: <RecordItem />,
+      children: <RecordItem studios={studioOptions} />,
     },
     {
       key: "plans",
@@ -105,14 +104,9 @@ const RecordsPage = () => {
       children: <RecordPlan />,
     },
     {
-      key: "tickets",
-      label: "チケット",
-      children: <RecordTicket />,
-    },
-    {
       key: "coupons",
       label: "クーポン",
-      children: <RecordCoupon />,
+      children: <RecordCoupon studios={studioOptions} />,
     },
     {
       key: "reservations",

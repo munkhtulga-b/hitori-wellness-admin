@@ -1,8 +1,37 @@
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
-import { Button, Form, Input, Switch } from "antd";
+import EEnumItemTypes from "@/app/_enums/EEnumItemTypes";
+import { Button, Form, Input, Switch, Select } from "antd";
+import _ from "lodash";
+import { useEffect, useState } from "react";
+import TextEditor from "../../custom/TextEditor";
 
-const CreateItemModal = () => {
+const CreateItemModal = ({
+  studios,
+  modalKey,
+  onComplete,
+  onBack,
+  isRequesting,
+}) => {
   const [form] = Form.useForm();
+  const [itemType, setItemType] = useState(null);
+  const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    form.resetFields();
+    setItemType(null);
+    setDescription("");
+  }, [modalKey]);
+
+  const handleItemTypeChange = (value) => {
+    setItemType(value);
+    form.setFieldValue("itemType", value);
+  };
+
+  const beforeComplete = (params) => {
+    params.expireDays = +params.expireDays;
+    params.price = +params.price;
+    onComplete(params);
+  };
 
   return (
     <>
@@ -10,7 +39,7 @@ const CreateItemModal = () => {
         requiredMark={false}
         form={form}
         name="create-item-form"
-        onFinish={(params) => console.log(params)}
+        onFinish={(params) => beforeComplete(params)}
         layout="vertical"
       >
         <Form.Item
@@ -40,7 +69,7 @@ const CreateItemModal = () => {
         </Form.Item>
 
         <Form.Item
-          name="category"
+          name="itemType"
           label="カテゴリー"
           rules={[
             {
@@ -50,11 +79,57 @@ const CreateItemModal = () => {
           ]}
         >
           <div className="tw-flex tw-justify-start tw-gap-4">
-            <Button size="large">プラン</Button>
-            <Button size="large">チケット</Button>
-            <Button size="large">その他</Button>
+            {_.map(EEnumItemTypes, ({ value, label }) => (
+              <Button
+                key={value}
+                size="large"
+                type={itemType === value ? "primary" : "default"}
+                onClick={() => handleItemTypeChange(value)}
+              >
+                {label}
+              </Button>
+            ))}
           </div>
         </Form.Item>
+
+        {itemType === EEnumItemTypes.TICKET.value && (
+          <>
+            <Form.Item
+              name="expireDays"
+              label="金額（税込）"
+              rules={[
+                {
+                  required: true,
+                  message: "金額を入力してください。",
+                },
+              ]}
+            >
+              <Input type="number" placeholder="" />
+            </Form.Item>
+
+            <Form.Item
+              name="studioIds"
+              label="月会費"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input studio name",
+                },
+              ]}
+            >
+              <Select
+                disabled={!studios}
+                size="large"
+                mode="multiple"
+                style={{
+                  width: "100%",
+                }}
+                placeholder=""
+                options={studios}
+              />
+            </Form.Item>
+          </>
+        )}
 
         <Form.Item
           name="price"
@@ -66,7 +141,7 @@ const CreateItemModal = () => {
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input type="number" placeholder="" />
         </Form.Item>
 
         <Form.Item
@@ -79,7 +154,7 @@ const CreateItemModal = () => {
             },
           ]}
         >
-          <Input placeholder="" />
+          <TextEditor value={description} onChange={setDescription} />
         </Form.Item>
 
         <Form.Item
@@ -97,8 +172,15 @@ const CreateItemModal = () => {
 
         <Form.Item>
           <div className="tw-flex tw-justify-end tw-gap-2">
-            <Button size="large">キャンセル</Button>
-            <Button size="large" type="primary" htmlType="submit">
+            <Button onClick={() => onBack()} size="large">
+              キャンセル
+            </Button>
+            <Button
+              loading={isRequesting}
+              size="large"
+              type="primary"
+              htmlType="submit"
+            >
               保存
             </Button>
           </div>

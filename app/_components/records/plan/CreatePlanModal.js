@@ -1,6 +1,9 @@
+import $api from "@/app/_api";
 import { Tabs } from "antd";
 import { useEffect, useState } from "react";
-// import $api from "@/app/_api";
+import PlanFormOne from "./FormOne";
+import _ from "lodash";
+import PlanFormTwo from "./FormTwo";
 
 const CreatePlanModal = ({
   modalKey,
@@ -9,11 +12,27 @@ const CreatePlanModal = ({
   //   onCancel,
 }) => {
   const [activeKey, setActiveKey] = useState(1);
+  const [items, setItems] = useState(null);
   //   const [requestBody, setRequestBody] = useState({});
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
 
   useEffect(() => {
     resetBody();
   }, [modalKey]);
+
+  const fetchItems = async () => {
+    const { isOk, data } = await $api.admin.item.getMany();
+    if (isOk) {
+      const sorted = _.map(data, ({ id: value, name: label }) => ({
+        value,
+        label,
+      }));
+      setItems(sorted);
+    }
+  };
 
   //   const handleFormOne = async (params) => {
   //     console.log(params);
@@ -28,16 +47,24 @@ const CreatePlanModal = ({
     setActiveKey(1);
   };
 
-  const items = [
+  const tabOptions = [
     {
       key: 1,
       label: "基本情報",
-      children: <></>,
+      children: (
+        <>
+          <PlanFormOne items={items} />
+        </>
+      ),
     },
     {
       key: 2,
       label: "予約制限",
-      children: <></>,
+      children: (
+        <>
+          <PlanFormTwo />
+        </>
+      ),
     },
   ];
 
@@ -48,7 +75,7 @@ const CreatePlanModal = ({
   return (
     <>
       <div className="">
-        <Tabs activeKey={activeKey} items={items} onChange={onTabChange} />
+        <Tabs activeKey={activeKey} items={tabOptions} onChange={onTabChange} />
       </div>
     </>
   );

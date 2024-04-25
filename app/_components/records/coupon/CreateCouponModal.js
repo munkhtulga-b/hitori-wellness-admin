@@ -1,18 +1,76 @@
+import $api from "@/app/_api";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import { Button, Form, Input, Switch, Select, Radio, DatePicker } from "antd";
 import dayjs from "dayjs";
-import { useEffect } from "react";
+import _ from "lodash";
+import { useEffect, useState } from "react";
 
 const CreateCouponModal = ({
+  studios,
   onComplete,
   onCancel,
   modalKey,
   isRequesting,
 }) => {
   const [form] = Form.useForm();
+  const [items, setItems] = useState(null);
+  const studioIds = Form.useWatch("targetStudioIds", form);
+  const [noLimit, setNoLimit] = useState(true);
+  const [discountType, setDiscountType] = useState(1);
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
 
   useEffect(() => {
     form.resetFields();
   }, [modalKey]);
+
+  useEffect(() => {
+    if (noLimit) {
+      form.setFieldValue("targetStudioIds", []);
+    }
+  }, [noLimit]);
+
+  useEffect(() => {
+    if (studioIds?.length) {
+      setNoLimit(false);
+      form.setFieldValue("noLimit", false);
+    }
+  }, [studioIds]);
+
+  const fetchItems = async () => {
+    const { isOk, data } = await $api.admin.item.getMany();
+    if (isOk) {
+      const sorted = _.map(data, ({ id: value, name: label }) => ({
+        value,
+        label,
+      }));
+      setItems(sorted);
+    }
+  };
+
+  const beforeComplete = (params) => {
+    const body = {
+      code: params.code,
+      name: params.name,
+      startAt: `${dayjs(params.startAt).format("YYYY-MM-DD")} ${dayjs()
+        .startOf("day")
+        .format("HH:mm:ss")}`,
+      endAt: `${dayjs(params.endAt).format("YYYY-MM-DD")} ${dayjs()
+        .endOf("day")
+        .format("HH:mm:ss")}`,
+      couponType: 1,
+      maxUseNum: +params.maxUseNum,
+      targetStudioIds: params.targetStudioIds,
+      discountDetails: _.map(params.items, (id) => ({
+        itemId: id,
+        discountType: params.discountType,
+        discountValue: +params.discountValue,
+      })),
+    };
+    onComplete(body);
+  };
 
   return (
     <>
@@ -20,7 +78,7 @@ const CreateCouponModal = ({
         requiredMark={false}
         form={form}
         name="create-coupon-form"
-        onFinish={(params) => onComplete(params)}
+        onFinish={(params) => beforeComplete(params)}
         layout="vertical"
       >
         <Form.Item
@@ -105,7 +163,7 @@ const CreateCouponModal = ({
         </div>
 
         <Form.Item
-          name="planReserveLimitDetails"
+          name="items"
           label="対象商品選択"
           rules={[
             {
@@ -115,33 +173,70 @@ const CreateCouponModal = ({
           ]}
         >
           <Select
-            // disabled={!sortedPlans}
+            disabled={!items}
             size="large"
             mode="multiple"
             style={{
               width: "100%",
             }}
-            placeholder="select"
-            options={[]}
+            placeholder=""
+            options={items}
           />
         </Form.Item>
 
-        <Form.Item
-          name="planReserveLimitDetails"
-          label="利用可能店舗"
-          rules={[
-            {
-              required: true,
-              message: "Please input studio name",
-            },
-          ]}
-          valuePropName="checked"
-        >
-          <Radio>満期後は使用不可となります</Radio>
-        </Form.Item>
+        <div className="tw-flex tw-justify-start tw-gap-2">
+          <Form.Item
+            name="discountType"
+            label="利用可能店舗"
+            rules={[
+              {
+                required: true,
+                message: "Please input studio name",
+              },
+            ]}
+            style={{ flex: 1 }}
+            initialValue={discountType}
+          >
+            <section className="tw-flex tw-flex-col tw-gap-6">
+              <Radio
+                value={1}
+                checked={discountType === 1}
+                onChange={() => {
+                  setDiscountType(1);
+                  form.setFieldValue("discountType", 1);
+                }}
+              >
+                固定
+              </Radio>
+              <Radio
+                value={2}
+                checked={discountType === 2}
+                onChange={() => {
+                  setDiscountType(2);
+                  form.setFieldValue("discountType", 2);
+                }}
+              >
+                割合
+              </Radio>
+            </section>
+          </Form.Item>
+          <Form.Item
+            name="discountValue"
+            label="割合値"
+            rules={[
+              {
+                required: true,
+                message: "Please input studio name",
+              },
+            ]}
+            style={{ flex: 1 }}
+          >
+            <Input placeholder="" type="number" />
+          </Form.Item>
+        </div>
 
         <Form.Item
-          name="planReserveLimitDetails"
+          name="noLimit"
           label="指定の店舗"
           rules={[
             {
@@ -149,30 +244,33 @@ const CreateCouponModal = ({
               message: "Please input studio name",
             },
           ]}
+          valuePropName="checked"
+          initialValue={noLimit}
+        >
+          <Radio checked={noLimit} onChange={() => setNoLimit(true)}>
+            全店舗利用
+          </Radio>
+        </Form.Item>
+
+        <Form.Item
+          name="targetStudioIds"
+          label="指定の店舗"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
         >
           <Select
-            // disabled={!sortedPlans}
+            disabled={!studios}
             size="large"
             mode="multiple"
             style={{
               width: "100%",
             }}
-            placeholder="select"
-            options={[]}
+            placeholder=""
+            options={studios}
           />
-        </Form.Item>
-
-        <Form.Item
-          name="description"
-          label="説明"
-          rules={[
-            {
-              required: true,
-              message: "メールアドレスを入力してください。",
-            },
-          ]}
-        >
-          <Input placeholder="" />
         </Form.Item>
 
         <Form.Item
@@ -180,10 +278,11 @@ const CreateCouponModal = ({
           label="ステータス"
           rules={[
             {
-              required: true,
-              message: "メールアドレスを入力してください。",
+              required: false,
             },
           ]}
+          initialValue={EEnumDatabaseStatus.ACTIVE.value}
+          valuePropName="checked"
         >
           <Switch />
         </Form.Item>

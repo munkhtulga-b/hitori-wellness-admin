@@ -15,7 +15,7 @@ const columns = [
   {
     title: "名称",
     dataIndex: ["name", "code"],
-    imageIndex: null,
+    imageIndex: "thumbnail_code",
     styles: [
       "tw-leading-[22px] tw-tracking-[0.14px]",
       "tw-text-sm tw-tracking-[0.12px]",
