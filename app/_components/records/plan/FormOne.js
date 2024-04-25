@@ -1,57 +1,96 @@
-import { Form, Button, Radio, Select } from "antd";
+import { Form, Button, Select, Input, Checkbox } from "antd";
 import { useEffect, useState } from "react";
-import _ from "lodash";
+import TextEditor from "../../custom/TextEditor";
 
-const PlanFormOne = ({
-  onComplete,
-  onBack,
-  isRequesting,
-  modalKey,
-  plans,
-  tickets,
-}) => {
+const PlanFormOne = ({ items, onComplete, onBack, isRequesting, modalKey }) => {
   const [form] = Form.useForm();
-  const [isTrial, setIsTrial] = useState(false);
-  const [sortedPlans, setSortedPlans] = useState(null);
-  const [sortedTickets, setSortedTickets] = useState(null);
-
-  useEffect(() => {
-    if (plans) {
-      const sorted = _.map(plans, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setSortedPlans(sorted);
-    }
-    if (tickets) {
-      const sorted = _.map(tickets, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setSortedTickets(sorted);
-    }
-  }, [plans, tickets]);
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     form.resetFields();
   }, [modalKey]);
-
-  useEffect(() => {
-    form.setFieldValue("isTrial", isTrial);
-  }, [isTrial]);
 
   return (
     <>
       <Form
         layout="vertical"
         form={form}
-        name="form-two"
+        name="plan-form-one"
         onFinish={(params) => onComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
       >
         <Form.Item
-          name="noLimit"
+          name="code"
+          label="コード"
+          rules={[
+            {
+              required: true,
+              message: "Please input studio name",
+            },
+          ]}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+        <Form.Item
+          name="name"
+          label="名称"
+          rules={[
+            {
+              required: true,
+              message: "Please input studio name",
+            },
+          ]}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+        <Form.Item
+          name="firstMonthlyItemId"
+          label="初月会費"
+          rules={[
+            {
+              required: true,
+              message: "Please input studio name",
+            },
+          ]}
+        >
+          <Select
+            disabled={!items}
+            size="large"
+            mode="multiple"
+            style={{
+              width: "100%",
+            }}
+            placeholder="select"
+            options={items}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="monthlyItemId"
+          label="月会費"
+          rules={[
+            {
+              required: true,
+              message: "Please input studio name",
+            },
+          ]}
+        >
+          <Select
+            disabled={!items}
+            size="large"
+            mode="multiple"
+            style={{
+              width: "100%",
+            }}
+            placeholder="select"
+            options={items}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="canAdmissionFee"
+          label="月会費"
           rules={[
             {
               required: true,
@@ -60,35 +99,12 @@ const PlanFormOne = ({
           ]}
           valuePropName="checked"
         >
-          <Radio checked={isTrial === false} onChange={() => setIsTrial(false)}>
-            会員
-          </Radio>
-        </Form.Item>
-        <Form.Item
-          name="planReserveLimitDetails"
-          label="プラン"
-          rules={[
-            {
-              required: true,
-              message: "Please input studio name",
-            },
-          ]}
-        >
-          <Select
-            disabled={!sortedPlans}
-            size="large"
-            mode="multiple"
-            style={{
-              width: "100%",
-            }}
-            placeholder="select"
-            options={sortedPlans}
-          />
+          <Checkbox />
         </Form.Item>
 
         <Form.Item
-          name="ticketReserveLimitDetails"
-          label="チケット"
+          name="description"
+          label="月会費"
           rules={[
             {
               required: true,
@@ -96,16 +112,7 @@ const PlanFormOne = ({
             },
           ]}
         >
-          <Select
-            disabled={!sortedTickets}
-            size="large"
-            mode="multiple"
-            style={{
-              width: "100%",
-            }}
-            placeholder="select"
-            options={sortedTickets}
-          />
+          <TextEditor value={description} onChange={setDescription} />
         </Form.Item>
 
         <Form.Item>

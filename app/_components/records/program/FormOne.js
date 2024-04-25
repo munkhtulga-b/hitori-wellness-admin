@@ -1,6 +1,7 @@
 import { Form, Input, Button, Switch, Radio } from "antd";
 import FileUploader from "../../custom/FileUploader";
 import { useEffect, useState } from "react";
+import TextEditor from "../../custom/TextEditor";
 
 const ProgramFormOne = ({
   onComplete,
@@ -12,6 +13,7 @@ const ProgramFormOne = ({
 }) => {
   const [form] = Form.useForm();
   const [isTrial, setIsTrial] = useState(false);
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     form.resetFields();
@@ -26,6 +28,10 @@ const ProgramFormOne = ({
   useEffect(() => {
     form.setFieldValue("isTrial", isTrial);
   }, [isTrial]);
+
+  useEffect(() => {
+    form.setFieldValue("description", description);
+  }, [description]);
 
   return (
     <>
@@ -120,7 +126,7 @@ const ProgramFormOne = ({
             },
           ]}
         >
-          <Input placeholder="" />
+          <TextEditor value={description} onChange={setDescription} />
         </Form.Item>
         <Form.Item
           name="status"

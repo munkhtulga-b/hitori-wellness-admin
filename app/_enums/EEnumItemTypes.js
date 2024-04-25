@@ -1,15 +1,15 @@
 const EEnumItemTypes = {
-  OTHER: {
-    value: "OTHER",
-    label: "OTHER",
+  PLAN: {
+    value: "PLAN",
+    label: "プラン",
   },
   TICKET: {
     value: "TICKET",
-    label: "TICKET",
+    label: "チケット",
   },
-  PLAN: {
-    value: "PLAN",
-    label: "PLAN",
+  OTHER: {
+    value: "OTHER",
+    label: "その他",
   },
 };
 
