@@ -9,6 +9,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import CreatePlanModal from "./plan/CreatePlanModal";
+import { toast } from "react-toastify";
 
 const columns = [
   {
@@ -59,26 +60,38 @@ const columns = [
   },
 ];
 
-const RecordPlan = () => {
+const RecordPlan = ({ studios }) => {
   const [isLoading, setIsLoading] = useState(false);
-  // const [isRequesting, setIsRequesting] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [modalKey, setModalKey] = useState(0);
+  const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
     fetchPlans();
   }, []);
 
-  const fetchPlans = async () => {
+  const fetchPlans = async (queries) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.plan.getMany();
+    const { isOk, data } = await $api.admin.plan.getMany(queries);
     if (isOk) {
       setList(data);
     }
     setIsLoading(false);
+  };
+
+  const createPlan = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.plan.create(body);
+    if (isOk) {
+      await fetchPlans();
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("Plan created");
+    }
+    setIsRequesting(false);
   };
 
   const onFilterChange = (filter) => {
@@ -98,13 +111,17 @@ const RecordPlan = () => {
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
-        <RecordTableFilters onAdd={() => setIsModalOpen(true)}>
+        <RecordTableFilters
+          onAdd={() => setIsModalOpen(true)}
+          onSearch={(value) => onFilterChange({ name: value })}
+          onSearchClear={() => onFilterClear("name")}
+        >
           <>
             <Select
               allowClear
               size="large"
               style={{
-                width: 200,
+                width: 120,
               }}
               options={[
                 {
@@ -151,7 +168,13 @@ const RecordPlan = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        <CreatePlanModal />
+        <CreatePlanModal
+          studios={studios}
+          modalKey={modalKey}
+          isRequesting={isRequesting}
+          onComplete={createPlan}
+          onCancel={() => setIsModalOpen(false)}
+        />
       </Modal>
     </>
   );

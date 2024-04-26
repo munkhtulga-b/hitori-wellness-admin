@@ -40,9 +40,11 @@ const BaseTable = ({
     let result = nullSafety(item[column.dataIndex]);
     if (column.type === "date") {
       if (Array.isArray(column.dataIndex)) {
-        result = `${dayjs(item[column.dataIndex[0]]).format(
-          "YYYY-MM-DD HH:mm"
-        )} - ${dayjs(item[column.dataIndex[1]]).format("YYYY-MM-DD HH:mm")}`;
+        result = `${dayjs
+          .utc(item[column.dataIndex[0]])
+          .format("YYYY-MM-DD HH:mm")} - ${dayjs
+          .utc(item[column.dataIndex[1]])
+          .format("YYYY-MM-DD HH:mm")}`;
       } else {
         result = dayjs(result).format("YYYY-MM-DD HH:mm");
       }
@@ -187,7 +189,13 @@ const BaseTable = ({
     }
     if (column.type === "nestedObjectItem") {
       result = (
-        <>{nullSafety(item[column.dataIndex][column.nestedDataIndex])}</>
+        <>
+          {item[column.dataIndex] ? (
+            <>{nullSafety(item[column.dataIndex][column.nestedDataIndex])}</>
+          ) : (
+            <>-</>
+          )}
+        </>
       );
     }
     if (column.type === "singleListObjectItem") {

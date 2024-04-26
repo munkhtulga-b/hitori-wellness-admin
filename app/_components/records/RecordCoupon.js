@@ -24,6 +24,12 @@ const columns = [
     type: "stackedList",
   },
   {
+    title: "予約タイムスロット",
+    dataIndex: ["start_at", "end_at"],
+    customStyle: "",
+    type: "date",
+  },
+  {
     title: "更新日時",
     dataIndex: "updated_at",
     customStyle: "",

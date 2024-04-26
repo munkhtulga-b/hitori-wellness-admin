@@ -1,14 +1,25 @@
-import { Form, Button, Select, Input, Checkbox } from "antd";
+import { Form, Button, Select, Input, Checkbox, Switch } from "antd";
 import { useEffect, useState } from "react";
 import TextEditor from "../../custom/TextEditor";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
 const PlanFormOne = ({ items, onComplete, onBack, isRequesting, modalKey }) => {
   const [form] = Form.useForm();
   const [description, setDescription] = useState("");
+  const status = Form.useWatch("status", form);
 
   useEffect(() => {
     form.resetFields();
   }, [modalKey]);
+
+  useEffect(() => {
+    form.setFieldValue(
+      "status",
+      status
+        ? EEnumDatabaseStatus.ACTIVE.value
+        : EEnumDatabaseStatus.INACTIVE.value
+    );
+  }, [status]);
 
   return (
     <>
@@ -57,11 +68,10 @@ const PlanFormOne = ({ items, onComplete, onBack, isRequesting, modalKey }) => {
           <Select
             disabled={!items}
             size="large"
-            mode="multiple"
             style={{
               width: "100%",
             }}
-            placeholder="select"
+            placeholder=""
             options={items}
           />
         </Form.Item>
@@ -79,11 +89,10 @@ const PlanFormOne = ({ items, onComplete, onBack, isRequesting, modalKey }) => {
           <Select
             disabled={!items}
             size="large"
-            mode="multiple"
             style={{
               width: "100%",
             }}
-            placeholder="select"
+            placeholder=""
             options={items}
           />
         </Form.Item>
@@ -113,6 +122,20 @@ const PlanFormOne = ({ items, onComplete, onBack, isRequesting, modalKey }) => {
           ]}
         >
           <TextEditor value={description} onChange={setDescription} />
+        </Form.Item>
+
+        <Form.Item
+          name="status"
+          label="ステータス"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+          valuePropName="checked"
+          initialValue={true}
+        >
+          <Switch />
         </Form.Item>
 
         <Form.Item>

@@ -35,34 +35,38 @@ const RecordTableFilters = ({
           {children}
         </div>
         <div className="tw-flex tw-justify-start tw-gap-3">
-          <Button size="large" type="primary" onClick={() => onAdd()}>
-            <div className="tw-flex tw-justify-start tw-items-center tw-gap-1">
-              <PlusOutlined style={{ color: "white", fontSize: "18px" }} />
-              <span>新規登録</span>
-            </div>
-          </Button>
-          <Button
-            disabled={!checkedRows?.length}
-            loading={isRequesting}
-            size="large"
-            type="primary"
-            danger
-            onClick={() => onDelete()}
-          >
-            {!isRequesting ? (
+          {onAdd !== null ? (
+            <Button size="large" type="primary" onClick={() => onAdd()}>
               <div className="tw-flex tw-justify-start tw-items-center tw-gap-1">
-                <DeleteOutlined
-                  style={{
-                    color: checkedRows?.length ? "white" : "#BABCC4",
-                    fontSize: "18px",
-                  }}
-                />
-                <span>削除</span>
+                <PlusOutlined style={{ color: "white", fontSize: "18px" }} />
+                <span>新規登録</span>
               </div>
-            ) : (
-              <span>削除</span>
-            )}
-          </Button>
+            </Button>
+          ) : null}
+          {checkedRows ? (
+            <Button
+              disabled={!checkedRows?.length}
+              loading={isRequesting}
+              size="large"
+              type="primary"
+              danger
+              onClick={() => onDelete()}
+            >
+              {!isRequesting ? (
+                <div className="tw-flex tw-justify-start tw-items-center tw-gap-1">
+                  <DeleteOutlined
+                    style={{
+                      color: checkedRows?.length ? "white" : "#BABCC4",
+                      fontSize: "18px",
+                    }}
+                  />
+                  <span>削除</span>
+                </div>
+              ) : (
+                <span>削除</span>
+              )}
+            </Button>
+          ) : null}
         </div>
       </section>
     </>
