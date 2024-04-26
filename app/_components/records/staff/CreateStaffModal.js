@@ -12,27 +12,25 @@ const CreateStaffModal = ({
 }) => {
   const [form] = Form.useForm();
   const [gender, setGender] = useState(null);
-  const [isActive, setIsActive] = useState(true);
+  const status = Form.useWatch("status", form);
 
   useEffect(() => {
     setGender(null);
-    setIsActive(true);
     form.resetFields();
   }, [modalKey]);
+
+  useEffect(() => {
+    form.setFieldValue(
+      "status",
+      status
+        ? EEnumDatabaseStatus.ACTIVE.value
+        : EEnumDatabaseStatus.INACTIVE.value
+    );
+  }, [status]);
 
   const onGenderSelect = (value) => {
     setGender(value);
     form.setFieldValue("gender", value);
-  };
-
-  const onStatusCheck = (value) => {
-    setIsActive(value);
-    form.setFieldValue(
-      "status",
-      value
-        ? EEnumDatabaseStatus.ACTIVE.value
-        : EEnumDatabaseStatus.INACTIVE.value
-    );
   };
 
   return (
@@ -138,12 +136,9 @@ const CreateStaffModal = ({
             },
           ]}
           valuePropName="checked"
-          initialValue={EEnumDatabaseStatus.ACTIVE.value}
+          initialValue={true}
         >
-          <Switch
-            onChange={(checked) => onStatusCheck(checked)}
-            checked={isActive}
-          />
+          <Switch />
         </Form.Item>
         <Form.Item style={{ marginTop: 24, marginBottom: 0 }}>
           <div className="tw-flex tw-justify-end tw-gap-2">

@@ -4,9 +4,11 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal, Pagination } from "antd";
+import { Modal, Pagination, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import EEnumReservationStatus from "@/app/_enums/EEnumReservationStatus";
+import _ from "lodash";
+import ReservationDetailsModal from "./reservation/ReservationDetailsModal";
 
 const columns = [
   {
@@ -82,19 +84,18 @@ const columns = [
   },
 ];
 
-const RecordReservation = () => {
+const RecordReservation = ({ studios }) => {
   const [isLoading, setIsLoading] = useState(false);
-  // const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
-  const [checkedRows, setCheckedRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
-  // const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({});
   const [pagination, setPagination] = useState({
     current: 1,
     count: 10,
     total: 0,
   });
+  const [selectedRow, setSelectedRow] = useState(null);
 
   useEffect(() => {
     fetchReservations();
@@ -114,30 +115,88 @@ const RecordReservation = () => {
     setIsLoading(false);
   };
 
+  const onFilterChange = (filter) => {
+    const shallowFilters = _.merge(filters, filter);
+    const shallowPagination = {
+      limit: pagination.count,
+      page: pagination.current - 1,
+    };
+    const queries = _.merge(shallowFilters, shallowPagination);
+    setFilters(queries);
+    fetchReservations(queries);
+  };
+
+  const onFilterClear = (filterKey) => {
+    if (filters) {
+      const shallow = _.omit(filters, filterKey);
+      setFilters(shallow);
+      fetchReservations(shallow);
+    }
+  };
+
   const onPaginationChange = (page, pageSize) => {
     if (pagination.count == pageSize) {
       setPagination((prev) => ({ ...prev, current: page }));
     } else {
       setPagination((prev) => ({ ...prev, current: 0, count: pageSize }));
     }
-    fetchReservations({
-      page: pagination.count == pageSize ? page - 1 : 0,
-      limit: pageSize,
-    });
+    const queries = _.merge(filters, { page: page - 1, limit: pageSize });
+    fetchReservations(queries);
   };
 
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
-        <RecordTableFilters onAdd={() => setIsModalOpen(true)} />
+        <RecordTableFilters
+          onAdd={null}
+          onSearch={(value) => onFilterChange({ name: value })}
+          onSearchClear={() => onFilterClear("name")}
+        >
+          <>
+            <Select
+              disabled={!studios}
+              allowClear
+              size="large"
+              style={{
+                width: 120,
+              }}
+              options={studios}
+              onChange={(value) => {
+                value
+                  ? onFilterChange({ studioId: value })
+                  : onFilterClear("studioId");
+              }}
+              placeholder="登録店舗"
+            />
+            <Select
+              allowClear
+              size="large"
+              style={{
+                width: 120,
+              }}
+              options={_.map(EEnumReservationStatus, (value) => ({
+                label: value.label,
+                value: value.value,
+              }))}
+              onChange={(value) =>
+                value
+                  ? onFilterChange({ status: value })
+                  : onFilterClear("status")
+              }
+              placeholder="ステータス"
+            />
+          </>
+        </RecordTableFilters>
         <BaseTable
           tableId="admin-table"
           columns={columns}
           data={list}
           isLoading={isLoading}
-          isCheckable={true}
-          checkedRows={checkedRows}
-          onRowCheck={(rows) => setCheckedRows(rows)}
+          isCheckable={false}
+          onClickName={(row) => {
+            setSelectedRow(row);
+            setIsModalOpen(true);
+          }}
         />
         <section className="tw-flex tw-justify-center">
           <Pagination
@@ -164,7 +223,7 @@ const RecordReservation = () => {
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        Create Reservation Modal
+        <ReservationDetailsModal data={selectedRow} />
       </Modal>
     </>
   );

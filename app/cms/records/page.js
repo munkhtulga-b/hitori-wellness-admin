@@ -101,7 +101,7 @@ const RecordsPage = () => {
     {
       key: "plans",
       label: "プラン",
-      children: <RecordPlan />,
+      children: <RecordPlan studios={studioOptions} />,
     },
     {
       key: "coupons",
@@ -111,7 +111,7 @@ const RecordsPage = () => {
     {
       key: "reservations",
       label: "予約",
-      children: <RecordReservation />,
+      children: <RecordReservation studios={studioOptions} />,
     },
   ];
 

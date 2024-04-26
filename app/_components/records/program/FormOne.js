@@ -2,18 +2,19 @@ import { Form, Input, Button, Switch, Radio } from "antd";
 import FileUploader from "../../custom/FileUploader";
 import { useEffect, useState } from "react";
 import TextEditor from "../../custom/TextEditor";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
 const ProgramFormOne = ({
   onComplete,
   onBack,
   uploadFile,
   setUploadFile,
-  isUploading,
   modalKey,
 }) => {
   const [form] = Form.useForm();
   const [isTrial, setIsTrial] = useState(false);
   const [description, setDescription] = useState("");
+  const status = Form.useWatch("status", form);
 
   useEffect(() => {
     form.resetFields();
@@ -33,13 +34,27 @@ const ProgramFormOne = ({
     form.setFieldValue("description", description);
   }, [description]);
 
+  useEffect(() => {
+    form.setFieldValue(
+      "status",
+      status
+        ? EEnumDatabaseStatus.ACTIVE.value
+        : EEnumDatabaseStatus.INACTIVE.value
+    );
+  }, [status]);
+
+  const beforeComplete = (params) => {
+    params.serviceMinutes = +params.serviceMinutes;
+    onComplete(params);
+  };
+
   return (
     <>
       <Form
         layout="vertical"
         form={form}
         name="program-form-one"
-        onFinish={(params) => onComplete(params)}
+        onFinish={(params) => beforeComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
       >
@@ -132,7 +147,7 @@ const ProgramFormOne = ({
           name="status"
           label="ステータス"
           valuePropName="checked"
-          initialValue={false}
+          initialValue={true}
         >
           <Switch />
         </Form.Item>
@@ -141,12 +156,7 @@ const ProgramFormOne = ({
             <Button size="large" onClick={() => onBack()}>
               キャンセル
             </Button>
-            <Button
-              loading={isUploading}
-              type="primary"
-              htmlType="submit"
-              size="large"
-            >
+            <Button type="primary" htmlType="submit" size="large">
               次へ
             </Button>
           </div>

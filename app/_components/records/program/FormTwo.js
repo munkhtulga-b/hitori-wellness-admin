@@ -11,7 +11,15 @@ const ProgramFormTwo = ({
   tickets,
 }) => {
   const [form] = Form.useForm();
-  const [isTrial, setIsTrial] = useState(false);
+  const noLimit = Form.useWatch("noLimit", form);
+  const planReserveLimitDetails = Form.useWatch(
+    "planReserveLimitDetails",
+    form
+  );
+  const ticketReserveLimitDetails = Form.useWatch(
+    "ticketReserveLimitDetails",
+    form
+  );
   const [sortedPlans, setSortedPlans] = useState(null);
   const [sortedTickets, setSortedTickets] = useState(null);
 
@@ -37,17 +45,34 @@ const ProgramFormTwo = ({
   }, [modalKey]);
 
   useEffect(() => {
-    form.setFieldValue("isTrial", isTrial);
-  }, [isTrial]);
+    if (planReserveLimitDetails?.length || ticketReserveLimitDetails?.length) {
+      form.setFieldsValue({
+        noLimit: false,
+      });
+    }
+  }, [planReserveLimitDetails, ticketReserveLimitDetails]);
+
+  useEffect(() => {
+    if (noLimit) {
+      form.setFieldsValue({
+        planReserveLimitDetails: [],
+        ticketReserveLimitDetails: [],
+      });
+    }
+  }, [noLimit]);
+
+  const beforeComplete = (params) => {
+    delete params.noLimit;
+    onComplete(params);
+  };
 
   return (
     <>
-      {/* TODO: MAKE RADIO BUTTON A CHECKBOX (ONCE CHECKED, ALL PLANS AND TICKETS) */}
       <Form
         layout="vertical"
         form={form}
         name="program-form-two"
-        onFinish={(params) => onComplete(params)}
+        onFinish={(params) => beforeComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
       >
@@ -55,22 +80,21 @@ const ProgramFormTwo = ({
           name="noLimit"
           rules={[
             {
-              required: true,
+              required: false,
               message: "Please input studio name",
             },
           ]}
           valuePropName="checked"
+          initialValue={true}
         >
-          <Radio checked={isTrial === false} onChange={() => setIsTrial(false)}>
-            制限なし
-          </Radio>
+          <Radio>制限なし</Radio>
         </Form.Item>
         <Form.Item
           name="planReserveLimitDetails"
           label="プラン制限"
           rules={[
             {
-              required: true,
+              required: noLimit ? false : true,
               message: "プランを選択してください。",
             },
           ]}
@@ -82,7 +106,7 @@ const ProgramFormTwo = ({
             style={{
               width: "100%",
             }}
-            placeholder="select"
+            placeholder=""
             options={sortedPlans}
           />
         </Form.Item>
@@ -92,7 +116,7 @@ const ProgramFormTwo = ({
           label="チケット制限"
           rules={[
             {
-              required: true,
+              required: noLimit ? false : true,
               message: "チケットを選択してください。",
             },
           ]}
@@ -104,7 +128,7 @@ const ProgramFormTwo = ({
             style={{
               width: "100%",
             }}
-            placeholder="select"
+            placeholder=""
             options={sortedTickets}
           />
         </Form.Item>

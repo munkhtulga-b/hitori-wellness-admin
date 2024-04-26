@@ -5,18 +5,18 @@ import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import ProgramFormOne from "./FormOne";
 import ProgramFormTwo from "./FormTwo";
 import $api from "@/app/_api";
+import { toast } from "react-toastify";
 
 const CreateProgramModal = ({
   modalKey,
   isRequesting,
-  onConfirm,
+  onComplete,
   onCancel,
 }) => {
   const [activeKey, setActiveKey] = useState(1);
   const [plans, setPlans] = useState(null);
   const [tickets, setTickets] = useState(null);
 
-  const [isUploading, setIsUploading] = useState(false);
   const [uploadFile, setUploadFile] = useState(null);
   const [requestBody, setRequestBody] = useState({});
 
@@ -46,30 +46,30 @@ const CreateProgramModal = ({
   };
 
   const handleFormOne = async (params) => {
-    setIsUploading(true);
-    const { isOk, data } = await uploadImage(uploadFile);
-    if (isOk) {
-      params.thumbnailCode = data.url;
-      params.status =
-        params.status === false
-          ? EEnumDatabaseStatus.INACTIVE.value
-          : EEnumDatabaseStatus.ACTIVE.value;
-      formatRequestBody(params);
-    }
-    setIsUploading(false);
+    params.status =
+      params.status === false
+        ? EEnumDatabaseStatus.INACTIVE.value
+        : EEnumDatabaseStatus.ACTIVE.value;
+    formatRequestBody(params);
   };
 
   const handleFormTwo = async (params) => {
     formatRequestBody(params);
   };
 
-  const formatRequestBody = (params) => {
+  const formatRequestBody = async (params) => {
     setRequestBody((prev) => ({
       ...prev,
       ...params,
     }));
     if (activeKey === 2) {
-      onConfirm({ ...requestBody, ...params });
+      const { isOk, data } = await uploadImage(uploadFile);
+      if (isOk) {
+        params.thumbnailCode = data.url;
+        onComplete({ ...requestBody, ...params });
+      } else {
+        toast.error("An error occurred while uploading the image");
+      }
     } else {
       setActiveKey((prev) => prev + 1);
     }
@@ -91,7 +91,6 @@ const CreateProgramModal = ({
           onBack={() => onCancel()}
           uploadFile={uploadFile}
           setUploadFile={setUploadFile}
-          isUploading={isUploading}
           modalKey={modalKey}
         />
       ),

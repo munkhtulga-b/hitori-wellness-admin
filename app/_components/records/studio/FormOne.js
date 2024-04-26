@@ -2,6 +2,7 @@ import { Form, Input, Button, Switch } from "antd";
 import FileUploader from "../../custom/FileUploader";
 import { useEffect } from "react";
 import Image from "next/image";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
 const StudioFormOne = ({
   data,
@@ -13,6 +14,7 @@ const StudioFormOne = ({
   modalKey,
 }) => {
   const [form] = Form.useForm();
+  const status = Form.useWatch("status", form);
 
   useEffect(() => {
     form.resetFields();
@@ -34,6 +36,15 @@ const StudioFormOne = ({
       });
     }
   }, [data]);
+
+  useEffect(() => {
+    form.setFieldValue(
+      "status",
+      status
+        ? EEnumDatabaseStatus.ACTIVE.value
+        : EEnumDatabaseStatus.INACTIVE.value
+    );
+  }, [status]);
 
   return (
     <>
@@ -105,7 +116,7 @@ const StudioFormOne = ({
           name="status"
           label="ステータス"
           valuePropName="checked"
-          initialValue={false}
+          initialValue={true}
         >
           <Switch />
         </Form.Item>

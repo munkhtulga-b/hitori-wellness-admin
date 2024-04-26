@@ -15,6 +15,7 @@ const CreateCouponModal = ({
   const [form] = Form.useForm();
   const [items, setItems] = useState(null);
   const studioIds = Form.useWatch("targetStudioIds", form);
+  const status = Form.useWatch("status", form);
   const [noLimit, setNoLimit] = useState(true);
   const [discountType, setDiscountType] = useState(1);
 
@@ -38,6 +39,15 @@ const CreateCouponModal = ({
       form.setFieldValue("noLimit", false);
     }
   }, [studioIds]);
+
+  useEffect(() => {
+    form.setFieldValue(
+      "status",
+      status
+        ? EEnumDatabaseStatus.ACTIVE.value
+        : EEnumDatabaseStatus.INACTIVE.value
+    );
+  }, [status]);
 
   const fetchItems = async () => {
     const { isOk, data } = await $api.admin.item.getMany();
@@ -281,7 +291,7 @@ const CreateCouponModal = ({
               required: false,
             },
           ]}
-          initialValue={EEnumDatabaseStatus.ACTIVE.value}
+          initialValue={true}
           valuePropName="checked"
         >
           <Switch />

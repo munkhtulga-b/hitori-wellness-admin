@@ -5,6 +5,7 @@ import StudioFormOne from "./FormOne";
 import StudioFormTwo from "./FormTwo";
 import StudioFormThree from "./FormThree";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
+import { toast } from "react-toastify";
 
 const CreateStudioModal = ({
   modalKey,
@@ -26,15 +27,11 @@ const CreateStudioModal = ({
   const handleFormOne = async (params) => {
     setIsUploading(true);
     if (!data) {
-      const { isOk, data } = await uploadImage(uploadFile);
-      if (isOk) {
-        params.thumbnailCode = data.url;
-        params.status =
-          params.status === false
-            ? EEnumDatabaseStatus.INACTIVE.value
-            : EEnumDatabaseStatus.ACTIVE.value;
-        formatRequestBody(params);
-      }
+      params.status =
+        params.status === false
+          ? EEnumDatabaseStatus.INACTIVE.value
+          : EEnumDatabaseStatus.ACTIVE.value;
+      formatRequestBody(params);
     } else {
       params.status === false
         ? EEnumDatabaseStatus.INACTIVE.value
@@ -52,13 +49,19 @@ const CreateStudioModal = ({
     formatRequestBody(params);
   };
 
-  const formatRequestBody = (params) => {
+  const formatRequestBody = async (params) => {
     setRequestBody((prev) => ({
       ...prev,
       ...params,
     }));
     if (activeKey === 3) {
-      onConfirm({ ...requestBody, ...params });
+      const { isOk, data: uploadData } = await uploadImage(uploadFile);
+      if (isOk) {
+        params.thumbnailCode = uploadData.url;
+        onConfirm({ ...requestBody, ...params });
+      } else {
+        toast.error("An error occurred while uploading the image");
+      }
     } else {
       setActiveKey((prev) => prev + 1);
     }

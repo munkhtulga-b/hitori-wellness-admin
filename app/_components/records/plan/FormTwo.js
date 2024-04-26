@@ -1,3 +1,4 @@
+import EEnumReservableStudioType from "@/app/_enums/EEnumReservableStudioType";
 import { Form, Button, Select, Input, Checkbox, Radio } from "antd";
 import { useEffect, useState } from "react";
 
@@ -10,14 +11,51 @@ const PlanFormTwo = ({
 }) => {
   const [form] = Form.useForm();
   const [hasExpirationDate, setHasExpirationDate] = useState(false);
-  const [purchaseAllStudios, setPurchaseAllStudios] = useState(false);
-  const [reservationAllStudios, setReservationAllStudios] = useState(false);
-  const [reservationRegisteredStudios, setReservationRegisteredStudios] =
-    useState(false);
+  const studioIds = Form.useWatch("studioIds", form);
+  const purchaseAllStudios = Form.useWatch("purchaseAllStudios", form);
+  const [reservableStudioType, setReservableStudioType] = useState(
+    EEnumReservableStudioType.ALL
+  );
+  const reservableStudioDetails = Form.useWatch(
+    "reservableStudioDetails",
+    form
+  );
 
   useEffect(() => {
     form.resetFields();
+    setHasExpirationDate(false);
   }, [modalKey]);
+
+  useEffect(() => {
+    if (studioIds?.length) {
+      form.setFieldValue("purchaseAllStudios", false);
+    }
+  }, [studioIds]);
+
+  useEffect(() => {
+    if (reservableStudioDetails?.length) {
+      form.setFieldValue(
+        "reservableStudioType",
+        EEnumReservableStudioType.PARTIAL
+      );
+      setReservableStudioType(EEnumReservableStudioType.PARTIAL);
+    }
+  }, [reservableStudioDetails]);
+
+  useEffect(() => {
+    if (
+      reservableStudioType === EEnumReservableStudioType.ALL ||
+      reservableStudioType === EEnumReservableStudioType.HOME
+    ) {
+      form.setFieldValue("reservableStudioDetails", []);
+    }
+  }, [reservableStudioType]);
+
+  useEffect(() => {
+    if (purchaseAllStudios) {
+      form.setFieldValue("studioIds", []);
+    }
+  }, [purchaseAllStudios]);
 
   return (
     <>
@@ -30,14 +68,15 @@ const PlanFormTwo = ({
         validateTrigger="onSubmit"
       >
         <Form.Item
-          name="isCancellableByUser"
+          name="isEnabledWithdraw"
           label="メンバーサイトからのキャンセル制限"
           rules={[
             {
-              required: true,
+              required: false,
               message: "Please input studio name",
             },
           ]}
+          initialValue={false}
           valuePropName="checked"
         >
           <Checkbox />
@@ -45,15 +84,15 @@ const PlanFormTwo = ({
 
         <div className="tw-flex tw-justify-start tw-gap-2">
           <Form.Item
-            name="hasExpirationDate"
+            name="isExpire"
             label="有効期限制限"
             rules={[
               {
-                required: true,
-                message: "Please input studio name",
+                required: false,
               },
             ]}
             valuePropName="checked"
+            initialValue={false}
             style={{ flex: 1 }}
           >
             <Checkbox onChange={(e) => setHasExpirationDate(e.target.checked)}>
@@ -62,7 +101,7 @@ const PlanFormTwo = ({
           </Form.Item>
           {hasExpirationDate && (
             <Form.Item
-              name="validMonths"
+              name="expireMonth"
               label="メンバーサイトからのキャンセル制限"
               rules={[
                 {
@@ -114,20 +153,16 @@ const PlanFormTwo = ({
               },
             ]}
             valuePropName="checked"
+            initialValue={true}
             style={{ marginBottom: 0 }}
           >
-            <Radio
-              checked={purchaseAllStudios}
-              onChange={(e) => setPurchaseAllStudios(e.target.checked)}
-            >
-              全店舗利用
-            </Radio>
+            <Radio>全店舗利用</Radio>
           </Form.Item>
           <Form.Item
-            name="monthlyItemId"
+            name="studioIds"
             rules={[
               {
-                required: true,
+                required: purchaseAllStudios ? false : true,
                 message: "Please input studio name",
               },
             ]}
@@ -148,48 +183,46 @@ const PlanFormTwo = ({
         <div className="tw-flex tw-flex-col tw-gap-1">
           <label>利用可能店舗</label>
           <Form.Item
-            name="reservationAllStudios"
+            name="reservableStudioType"
             rules={[
               {
                 required: true,
                 message: "Please input studio name",
               },
             ]}
-            valuePropName="checked"
+            initialValue={EEnumReservableStudioType.ALL}
             style={{ marginBottom: 0 }}
           >
-            <Radio
-              checked={reservationAllStudios}
-              onChange={(e) => setReservationAllStudios(e.target.checked)}
-            >
-              全店舗利用
-            </Radio>
+            <div className="tw-flex tw-flex-col tw-gap-1">
+              <Radio
+                checked={reservableStudioType === EEnumReservableStudioType.ALL}
+                onChange={() =>
+                  setReservableStudioType(EEnumReservableStudioType.ALL)
+                }
+              >
+                全店舗利用
+              </Radio>
+              <Radio
+                checked={
+                  reservableStudioType === EEnumReservableStudioType.HOME
+                }
+                onChange={() =>
+                  setReservableStudioType(EEnumReservableStudioType.HOME)
+                }
+              >
+                登録店舗
+              </Radio>
+            </div>
           </Form.Item>
           <Form.Item
-            name="reservationRegisteredStudios"
+            name="reservableStudioDetails"
             rules={[
               {
-                required: true,
-                message: "Please input studio name",
-              },
-            ]}
-            valuePropName="checked"
-            style={{ marginBottom: 0 }}
-          >
-            <Radio
-              checked={reservationRegisteredStudios}
-              onChange={(e) =>
-                setReservationRegisteredStudios(e.target.checked)
-              }
-            >
-              登録店舗
-            </Radio>
-          </Form.Item>
-          <Form.Item
-            name="monthlyItemId"
-            rules={[
-              {
-                required: true,
+                required:
+                  reservableStudioType === EEnumReservableStudioType.HOME ||
+                  reservableStudioType === EEnumReservableStudioType.ALL
+                    ? false
+                    : true,
                 message: "Please input studio name",
               },
             ]}

@@ -4,16 +4,18 @@ import { useEffect, useState } from "react";
 import PlanFormOne from "./FormOne";
 import _ from "lodash";
 import PlanFormTwo from "./FormTwo";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
 const CreatePlanModal = ({
   modalKey,
-  //   isRequesting,
-  //   onConfirm,
-  //   onCancel,
+  isRequesting,
+  onComplete,
+  onCancel,
+  studios,
 }) => {
   const [activeKey, setActiveKey] = useState(1);
   const [items, setItems] = useState(null);
-  //   const [requestBody, setRequestBody] = useState({});
+  const [requestBody, setRequestBody] = useState({});
 
   useEffect(() => {
     fetchItems();
@@ -34,16 +36,24 @@ const CreatePlanModal = ({
     }
   };
 
-  //   const handleFormOne = async (params) => {
-  //     console.log(params);
-  //   };
+  const handleFormOne = async (params) => {
+    params.status =
+      params.status === true
+        ? EEnumDatabaseStatus.ACTIVE.value
+        : EEnumDatabaseStatus.INACTIVE.value;
+    setRequestBody(params);
+    setActiveKey(2);
+  };
 
-  //   const handleFormTwo = async (params) => {
-  //     console.log(params);
-  //   };
+  const handleFormTwo = async (params) => {
+    params.maxCcReservableNumByPlan = +params.maxCcReservableNumByPlan;
+    params.maxReservableNumAtDayByPlan = +params.maxReservableNumAtDayByPlan;
+    delete params.purchaseAllStudios;
+    onComplete({ ...requestBody, ...params });
+  };
 
   const resetBody = () => {
-    // setRequestBody({});
+    setRequestBody({});
     setActiveKey(1);
   };
 
@@ -53,7 +63,12 @@ const CreatePlanModal = ({
       label: "基本情報",
       children: (
         <>
-          <PlanFormOne items={items} />
+          <PlanFormOne
+            items={items}
+            modalKey={modalKey}
+            onBack={onCancel}
+            onComplete={handleFormOne}
+          />
         </>
       ),
     },
@@ -62,7 +77,13 @@ const CreatePlanModal = ({
       label: "予約制限",
       children: (
         <>
-          <PlanFormTwo />
+          <PlanFormTwo
+            studios={studios}
+            modalKey={modalKey}
+            isRequesting={isRequesting}
+            onComplete={handleFormTwo}
+            onBack={() => setActiveKey(1)}
+          />
         </>
       ),
     },

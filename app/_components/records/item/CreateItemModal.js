@@ -15,6 +15,7 @@ const CreateItemModal = ({
   const [form] = Form.useForm();
   const [itemType, setItemType] = useState(null);
   const [description, setDescription] = useState("");
+  const status = Form.useWatch("status", form);
 
   useEffect(() => {
     form.resetFields();
@@ -22,13 +23,24 @@ const CreateItemModal = ({
     setDescription("");
   }, [modalKey]);
 
+  useEffect(() => {
+    form.setFieldValue(
+      "status",
+      status
+        ? EEnumDatabaseStatus.ACTIVE.value
+        : EEnumDatabaseStatus.INACTIVE.value
+    );
+  }, [status]);
+
   const handleItemTypeChange = (value) => {
     setItemType(value);
     form.setFieldValue("itemType", value);
   };
 
   const beforeComplete = (params) => {
-    params.expireDays = +params.expireDays;
+    if (params.expireDays) {
+      params.expireDays = +params.expireDays;
+    }
     params.price = +params.price;
     onComplete(params);
   };
@@ -165,7 +177,7 @@ const CreateItemModal = ({
               required: false,
             },
           ]}
-          initialValue={EEnumDatabaseStatus.ACTIVE.value}
+          initialValue={true}
         >
           <Switch />
         </Form.Item>
