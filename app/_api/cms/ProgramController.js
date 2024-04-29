@@ -10,6 +10,10 @@ export const create = (body) => {
   return fetchData(`programs`, "POST", body);
 };
 
+export const update = (id, body) => {
+  return fetchData(`programs/${id}`, "PATCH", body);
+};
+
 export const deleteMany = (body) => {
   return fetchData(`programs`, "DELETE", body);
 };

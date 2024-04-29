@@ -42,6 +42,7 @@ const RecordCoupon = ({ studios }) => {
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
@@ -49,6 +50,13 @@ const RecordCoupon = ({ studios }) => {
   useEffect(() => {
     fetchCoupons();
   }, []);
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      setSelectedRow(null);
+      setModalKey((prev) => prev + 1);
+    }
+  }, [isModalOpen]);
 
   const fetchCoupons = async (queries) => {
     setIsLoading(true);
@@ -62,6 +70,17 @@ const RecordCoupon = ({ studios }) => {
   const createCoupon = async (body) => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.coupon.create(body);
+    if (isOk) {
+      await fetchCoupons(filters);
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+    }
+    setIsRequesting(false);
+  };
+
+  const updateCoupon = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.coupon.update(selectedRow.id, body);
     if (isOk) {
       await fetchCoupons(filters);
       setModalKey((prev) => prev + 1);
@@ -142,6 +161,10 @@ const RecordCoupon = ({ studios }) => {
           isCheckable={true}
           checkedRows={checkedRows}
           onRowCheck={(rows) => setCheckedRows(rows)}
+          onClickName={(row) => {
+            setSelectedRow(row);
+            setIsModalOpen(true);
+          }}
         />
       </div>
 
@@ -161,7 +184,8 @@ const RecordCoupon = ({ studios }) => {
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
         <CreateCouponModal
-          onComplete={createCoupon}
+          data={selectedRow}
+          onComplete={selectedRow ? updateCoupon : createCoupon}
           onCancel={() => setIsModalOpen(false)}
           modalKey={modalKey}
           isRequesting={isRequesting}

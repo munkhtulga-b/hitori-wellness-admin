@@ -5,6 +5,7 @@ import TextEditor from "../../custom/TextEditor";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
 const ProgramFormOne = ({
+  data,
   onComplete,
   onBack,
   uploadFile,
@@ -15,6 +16,23 @@ const ProgramFormOne = ({
   const [isTrial, setIsTrial] = useState(false);
   const [description, setDescription] = useState("");
   const status = Form.useWatch("status", form);
+
+  useEffect(() => {
+    if (data) {
+      setTimeout(() => {
+        form.setFieldsValue({
+          thumbnailCode: data?.thumbnail_code,
+          code: data?.code,
+          name: data?.name,
+          status:
+            data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
+          isTrial: data?.is_trial,
+          description: data?.description,
+          serviceMinutes: data?.service_minutes,
+        });
+      }, 500);
+    }
+  }, [data]);
 
   useEffect(() => {
     form.resetFields();
@@ -67,6 +85,7 @@ const ProgramFormOne = ({
           <section className="tw-flex tw-justify-center">
             <FileUploader
               currentFile={uploadFile}
+              previousFile={data?.thumbnail_code}
               onFileChange={(file) => setUploadFile(file)}
               modalKey={modalKey}
             />
@@ -113,11 +132,12 @@ const ProgramFormOne = ({
           label="カテゴリー"
           rules={[
             {
-              required: true,
+              required: false,
               message: "カテゴリーを選択してください。",
             },
           ]}
           valuePropName="checked"
+          initialValue={false}
         >
           <div className="tw-flex tw-flex-col tw-gap-6">
             <Radio

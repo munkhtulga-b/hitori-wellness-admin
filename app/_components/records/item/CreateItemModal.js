@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import TextEditor from "../../custom/TextEditor";
 
 const CreateItemModal = ({
+  data,
   studios,
   modalKey,
   onComplete,
@@ -16,6 +17,31 @@ const CreateItemModal = ({
   const [itemType, setItemType] = useState(null);
   const [description, setDescription] = useState("");
   const status = Form.useWatch("status", form);
+
+  useEffect(() => {
+    if (data) {
+      setTimeout(() => {
+        form.setFieldsValue({
+          code: data?.code,
+          name: data?.name,
+          description: data?.description,
+          itemType: data?.item_type,
+          price: data?.prices[0]?.price,
+          status:
+            data?.status === true
+              ? EEnumDatabaseStatus.ACTIVE.value
+              : EEnumDatabaseStatus.INACTIVE.value,
+        });
+        setItemType(data?.item_type);
+        if (data?.item_type === EEnumItemTypes.TICKET.value) {
+          form.setFieldsValue({
+            expiresDays: data?.m_ticket?.expires_days,
+            studioIds: _.map(data?.m_ticket?.studio_ids, "id"),
+          });
+        }
+      }, 500);
+    }
+  }, [data]);
 
   useEffect(() => {
     form.resetFields();
@@ -35,6 +61,17 @@ const CreateItemModal = ({
   const handleItemTypeChange = (value) => {
     setItemType(value);
     form.setFieldValue("itemType", value);
+  };
+
+  const isPriceReadOnly = () => {
+    let result = true;
+    if (!data) return false;
+    if (data?.item_type === EEnumItemTypes.TICKET.value) {
+      result = false;
+    } else {
+      result = true;
+    }
+    return result;
   };
 
   const beforeComplete = (params) => {
@@ -93,6 +130,7 @@ const CreateItemModal = ({
           <div className="tw-flex tw-justify-start tw-gap-4">
             {_.map(EEnumItemTypes, ({ value, label }) => (
               <Button
+                disabled={data ? true : false}
                 key={value}
                 size="large"
                 type={itemType === value ? "primary" : "default"}
@@ -107,7 +145,7 @@ const CreateItemModal = ({
         {itemType === EEnumItemTypes.TICKET.value && (
           <>
             <Form.Item
-              name="expireDays"
+              name="expiresDays"
               label="金額（税込）"
               rules={[
                 {
@@ -153,7 +191,7 @@ const CreateItemModal = ({
             },
           ]}
         >
-          <Input type="number" placeholder="" />
+          <Input disabled={isPriceReadOnly()} type="number" placeholder="" />
         </Form.Item>
 
         <Form.Item

@@ -165,7 +165,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
               allowClear
               size="large"
               style={{
-                width: 200,
+                width: 120,
               }}
               options={[
                 {

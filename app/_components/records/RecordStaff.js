@@ -60,6 +60,7 @@ const RecordStaff = ({ studios }) => {
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
@@ -67,6 +68,13 @@ const RecordStaff = ({ studios }) => {
   useEffect(() => {
     fetchStaff();
   }, []);
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      setSelectedRow(null);
+      setModalKey((prev) => prev + 1);
+    }
+  }, [isModalOpen]);
 
   const fetchStaff = async (filters) => {
     setIsLoading(true);
@@ -85,6 +93,18 @@ const RecordStaff = ({ studios }) => {
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("Staff created successfully");
+    }
+    setIsRequesting(false);
+  };
+
+  const updateStaff = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.staff.update(selectedRow.id, body);
+    if (isOk) {
+      await fetchStaff();
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("Staff updated successfully");
     }
     setIsRequesting(false);
   };
@@ -177,6 +197,10 @@ const RecordStaff = ({ studios }) => {
           isCheckable={true}
           checkedRows={checkedRows}
           onRowCheck={(rows) => setCheckedRows(rows)}
+          onClickName={(row) => {
+            setSelectedRow(row);
+            setIsModalOpen(true);
+          }}
         />
       </div>
 
@@ -196,11 +220,12 @@ const RecordStaff = ({ studios }) => {
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
         <CreateStaffModal
+          data={selectedRow}
           modalKey={modalKey}
           onCancel={() => setIsModalOpen(false)}
           studios={studios}
           isRequesting={isRequesting}
-          onConfirm={(body) => createStaff(body)}
+          onConfirm={selectedRow ? updateStaff : createStaff}
         />
       </Modal>
     </>

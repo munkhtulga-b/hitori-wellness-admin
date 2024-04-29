@@ -1,8 +1,10 @@
 import EEnumReservableStudioType from "@/app/_enums/EEnumReservableStudioType";
 import { Form, Button, Select, Input, Checkbox, Radio } from "antd";
+import _ from "lodash";
 import { useEffect, useState } from "react";
 
 const PlanFormTwo = ({
+  data,
   studios,
   onComplete,
   onBack,
@@ -20,6 +22,22 @@ const PlanFormTwo = ({
     "reservableStudioDetails",
     form
   );
+
+  useEffect(() => {
+    if (data) {
+      setTimeout(() => {
+        form.setFieldsValue({
+          isEnabledWithdraw: data?.is_enabled_withdraw,
+          isExpire: data?.is_expire,
+          maxCcReservableNumByPlan: data?.max_cc_reservable_num_by_plan,
+          maxReservableNumAtDayByPlan: data?.max_reservable_num_at_day_by_plan,
+          reservableStudioType: data?.reservable_studio_type,
+          studioIds: _.map(data?.studios, "id"),
+          reservableStudioDetails: _.map(data?.reservable_studios, "id"),
+        });
+      }, 500);
+    }
+  }, [data]);
 
   useEffect(() => {
     form.resetFields();

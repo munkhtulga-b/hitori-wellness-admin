@@ -9,3 +9,7 @@ export const getMany = (queries) => {
 export const create = (body) => {
   return fetchData(`plans`, "POST", body);
 };
+
+export const update = (id, body) => {
+  return fetchData(`plans/${id}`, "PATCH", body);
+};

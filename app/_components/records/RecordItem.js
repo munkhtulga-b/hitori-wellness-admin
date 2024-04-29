@@ -73,6 +73,7 @@ const RecordItem = ({ studios }) => {
     label: value.label,
   }));
   const [checkedRows, setCheckedRows] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
@@ -80,6 +81,13 @@ const RecordItem = ({ studios }) => {
   useEffect(() => {
     fetchItems();
   }, []);
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      setSelectedRow(null);
+      setModalKey((prev) => prev + 1);
+    }
+  }, [isModalOpen]);
 
   const fetchItems = async (queries) => {
     setIsLoading(true);
@@ -98,6 +106,18 @@ const RecordItem = ({ studios }) => {
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("Item created");
+    }
+    setIsRequesting(false);
+  };
+
+  const updateItem = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.item.update(selectedRow.id, body);
+    if (isOk) {
+      await fetchItems();
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("Item updated");
     }
     setIsRequesting(false);
   };
@@ -188,6 +208,10 @@ const RecordItem = ({ studios }) => {
           isCheckable={true}
           checkedRows={checkedRows}
           onRowCheck={(rows) => setCheckedRows(rows)}
+          onClickName={(row) => {
+            setSelectedRow(row);
+            setIsModalOpen(true);
+          }}
         />
       </div>
 
@@ -207,9 +231,10 @@ const RecordItem = ({ studios }) => {
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
         <CreateItemModal
+          data={selectedRow}
           modalKey={modalKey}
           studios={studios}
-          onComplete={createItem}
+          onComplete={selectedRow ? updateItem : createItem}
           onBack={() => setIsModalOpen(false)}
           isRequesting={isRequesting}
         />
