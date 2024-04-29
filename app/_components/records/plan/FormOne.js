@@ -3,10 +3,34 @@ import { useEffect, useState } from "react";
 import TextEditor from "../../custom/TextEditor";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
-const PlanFormOne = ({ items, onComplete, onBack, isRequesting, modalKey }) => {
+const PlanFormOne = ({
+  data,
+  items,
+  onComplete,
+  onBack,
+  isRequesting,
+  modalKey,
+}) => {
   const [form] = Form.useForm();
   const [description, setDescription] = useState("");
   const status = Form.useWatch("status", form);
+
+  useEffect(() => {
+    if (data) {
+      setTimeout(() => {
+        form.setFieldsValue({
+          code: data?.code,
+          name: data?.name,
+          description: data?.description,
+          status:
+            data?.status === true
+              ? EEnumDatabaseStatus.ACTIVE.value
+              : EEnumDatabaseStatus.INACTIVE.value,
+          canAdmissionFee: data?.admission_fee ? true : false,
+        });
+      }, 500);
+    }
+  }, [data]);
 
   useEffect(() => {
     form.resetFields();
@@ -60,13 +84,13 @@ const PlanFormOne = ({ items, onComplete, onBack, isRequesting, modalKey }) => {
           label="初月会費"
           rules={[
             {
-              required: true,
+              required: data ? false : true,
               message: "Please input studio name",
             },
           ]}
         >
           <Select
-            disabled={!items}
+            disabled={!items || data}
             size="large"
             style={{
               width: "100%",
@@ -81,13 +105,13 @@ const PlanFormOne = ({ items, onComplete, onBack, isRequesting, modalKey }) => {
           label="月会費"
           rules={[
             {
-              required: true,
+              required: data ? false : true,
               message: "Please input studio name",
             },
           ]}
         >
           <Select
-            disabled={!items}
+            disabled={!items || data}
             size="large"
             style={{
               width: "100%",
@@ -102,13 +126,14 @@ const PlanFormOne = ({ items, onComplete, onBack, isRequesting, modalKey }) => {
           label="月会費"
           rules={[
             {
-              required: true,
+              required: false,
               message: "Please input studio name",
             },
           ]}
           valuePropName="checked"
+          initialValue={false}
         >
-          <Checkbox />
+          <Checkbox disabled={data} />
         </Form.Item>
 
         <Form.Item

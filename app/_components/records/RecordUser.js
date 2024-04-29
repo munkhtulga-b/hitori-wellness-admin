@@ -95,7 +95,7 @@ const RecordUser = ({ studios }) => {
       queries
         ? queries
         : {
-            page: pagination.current,
+            page: pagination.current - 1,
             limit: pagination.count,
           }
     );

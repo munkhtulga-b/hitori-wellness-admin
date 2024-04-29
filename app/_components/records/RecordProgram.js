@@ -54,6 +54,7 @@ const RecordProgram = () => {
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
@@ -61,6 +62,13 @@ const RecordProgram = () => {
   useEffect(() => {
     fetchPrograms();
   }, []);
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      setSelectedRow(null);
+      setModalKey((prev) => prev + 1);
+    }
+  }, [isModalOpen]);
 
   const fetchPrograms = async (queries) => {
     setIsLoading(true);
@@ -79,6 +87,18 @@ const RecordProgram = () => {
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("Program created");
+    }
+    setIsRequesting(false);
+  };
+
+  const updateProgram = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.program.update(selectedRow.id, body);
+    if (isOk) {
+      await fetchPrograms();
+      setIsModalOpen(false);
+      setModalKey((prev) => prev + 1);
+      toast.success("Program updated");
     }
     setIsRequesting(false);
   };
@@ -126,7 +146,7 @@ const RecordProgram = () => {
               allowClear
               size="large"
               style={{
-                width: 200,
+                width: 120,
               }}
               options={[
                 {
@@ -155,6 +175,10 @@ const RecordProgram = () => {
           isCheckable={true}
           checkedRows={checkedRows}
           onRowCheck={(rows) => setCheckedRows(rows)}
+          onClickName={(row) => {
+            setSelectedRow(row);
+            setIsModalOpen(true);
+          }}
         />
       </div>
 
@@ -162,7 +186,9 @@ const RecordProgram = () => {
         title="メンバー詳細"
         open={isModalOpen}
         footer={null}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
         styles={{
           header: {
             marginBottom: 24,
@@ -174,9 +200,12 @@ const RecordProgram = () => {
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
         <CreateProgramModal
+          data={selectedRow}
           modalKey={modalKey}
-          onBack={() => setIsModalOpen(false)}
-          onComplete={createProgram}
+          onBack={() => {
+            setIsModalOpen(false);
+          }}
+          onComplete={!selectedRow ? createProgram : updateProgram}
           isRequesting={isRequesting}
         />
       </Modal>

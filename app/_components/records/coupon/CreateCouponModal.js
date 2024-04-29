@@ -6,6 +6,7 @@ import _ from "lodash";
 import { useEffect, useState } from "react";
 
 const CreateCouponModal = ({
+  data,
   studios,
   onComplete,
   onCancel,
@@ -22,6 +23,30 @@ const CreateCouponModal = ({
   useEffect(() => {
     fetchItems();
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      setTimeout(() => {
+        form.setFieldsValue({
+          code: data?.code,
+          name: data?.name,
+          startAt: dayjs(data?.start_at),
+          endAt: dayjs(data?.end_at),
+          maxUseNum: data?.max_use_num,
+          discountType: data?.discounts[0]?.discount_type,
+          discountValue: data?.discounts[0]?.discount_value,
+          items: _.map(data?.discounts, "item_id"),
+          targetStudioIds: _.map(data?.studio_ids, "id"),
+          noLimit: data?.target_studio_ids?.length === 0,
+          status:
+            data?.status === true
+              ? EEnumDatabaseStatus.ACTIVE.value
+              : EEnumDatabaseStatus.INACTIVE.value,
+        });
+        setNoLimit(data?.target_studio_ids?.length === 0);
+      }, 500);
+    }
+  }, [data]);
 
   useEffect(() => {
     form.resetFields();

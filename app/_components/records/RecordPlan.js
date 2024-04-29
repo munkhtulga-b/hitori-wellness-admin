@@ -65,6 +65,7 @@ const RecordPlan = ({ studios }) => {
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
@@ -72,6 +73,13 @@ const RecordPlan = ({ studios }) => {
   useEffect(() => {
     fetchPlans();
   }, []);
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      setSelectedRow(null);
+      setModalKey((prev) => prev + 1);
+    }
+  }, [isModalOpen]);
 
   const fetchPlans = async (queries) => {
     setIsLoading(true);
@@ -90,6 +98,18 @@ const RecordPlan = ({ studios }) => {
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("Plan created");
+    }
+    setIsRequesting(false);
+  };
+
+  const updatePlan = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.plan.update(selectedRow.id, body);
+    if (isOk) {
+      await fetchPlans();
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("Plan updated");
     }
     setIsRequesting(false);
   };
@@ -150,6 +170,10 @@ const RecordPlan = ({ studios }) => {
           isCheckable={true}
           checkedRows={checkedRows}
           onRowCheck={(rows) => setCheckedRows(rows)}
+          onClickName={(row) => {
+            setSelectedRow(row);
+            setIsModalOpen(true);
+          }}
         />
       </div>
 
@@ -169,10 +193,11 @@ const RecordPlan = ({ studios }) => {
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
         <CreatePlanModal
+          data={selectedRow}
           studios={studios}
           modalKey={modalKey}
           isRequesting={isRequesting}
-          onComplete={createPlan}
+          onComplete={selectedRow ? updatePlan : createPlan}
           onCancel={() => setIsModalOpen(false)}
         />
       </Modal>

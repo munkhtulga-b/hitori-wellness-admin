@@ -8,6 +8,7 @@ import $api from "@/app/_api";
 import { toast } from "react-toastify";
 
 const CreateProgramModal = ({
+  data,
   modalKey,
   isRequesting,
   onComplete,
@@ -24,6 +25,13 @@ const CreateProgramModal = ({
     fetchPlans();
     fetchTickets();
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      setActiveKey(1);
+      setUploadFile(null);
+    }
+  }, [data]);
 
   useEffect(() => {
     resetBody();
@@ -63,12 +71,16 @@ const CreateProgramModal = ({
       ...params,
     }));
     if (activeKey === 2) {
-      const { isOk, data } = await uploadImage(uploadFile);
-      if (isOk) {
-        params.thumbnailCode = data.url;
-        onComplete({ ...requestBody, ...params });
+      if (uploadFile) {
+        const { isOk, data: uploadData } = await uploadImage(uploadFile);
+        if (isOk) {
+          params.thumbnailCode = uploadData.url;
+          onComplete({ ...requestBody, ...params });
+        } else {
+          toast.error("An error occurred while uploading the image");
+        }
       } else {
-        toast.error("An error occurred while uploading the image");
+        onComplete({ ...requestBody, ...params });
       }
     } else {
       setActiveKey((prev) => prev + 1);
@@ -87,6 +99,7 @@ const CreateProgramModal = ({
       label: "基本情報",
       children: (
         <ProgramFormOne
+          data={data}
           onComplete={handleFormOne}
           onBack={() => onCancel()}
           uploadFile={uploadFile}
@@ -100,6 +113,7 @@ const CreateProgramModal = ({
       label: "予約制限",
       children: (
         <ProgramFormTwo
+          data={data}
           onComplete={handleFormTwo}
           onBack={() => setActiveKey(1)}
           plans={plans}

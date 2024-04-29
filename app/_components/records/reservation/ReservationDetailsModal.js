@@ -91,12 +91,12 @@ const ReservationDetailsModal = ({ data, closeModal, fetchList }) => {
             <div className="tw-bg-gray-200 tw-rounded-full tw-size-[60px]"></div>
             <div className="tw-flex tw-flex-col tw-gap-1">
               <span className="tw-leading-[22px] tw-tracking-[0.14px]">
-                {`${nullSafety(data.detailed?.member?.last_name)} ${nullSafety(
-                  data.detailed?.member?.first_name
+                {`${nullSafety(data?.member?.last_name)} ${nullSafety(
+                  data?.member?.first_name
                 )}`}
               </span>
               <span className="tw-leading-[26px] tw-tracking-[0.14px] tw-text-secondary">
-                {nullSafety(data.detailed?.member?.mail_address)}
+                {nullSafety(data?.member?.mail_address)}
               </span>
             </div>
           </section>

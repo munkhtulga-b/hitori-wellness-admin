@@ -10,6 +10,10 @@ export const create = (body) => {
   return fetchData(`instructors`, "POST", body);
 };
 
+export const update = (id, body) => {
+  return fetchData(`instructors/${id}`, "PATCH", body);
+};
+
 export const deleteMany = (body) => {
   return fetchData(`instructors`, "DELETE", body);
 };

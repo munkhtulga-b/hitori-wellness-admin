@@ -7,6 +7,7 @@ import PlanFormTwo from "./FormTwo";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
 const CreatePlanModal = ({
+  data,
   modalKey,
   isRequesting,
   onComplete,
@@ -64,6 +65,7 @@ const CreatePlanModal = ({
       children: (
         <>
           <PlanFormOne
+            data={data}
             items={items}
             modalKey={modalKey}
             onBack={onCancel}
@@ -78,6 +80,7 @@ const CreatePlanModal = ({
       children: (
         <>
           <PlanFormTwo
+            data={data}
             studios={studios}
             modalKey={modalKey}
             isRequesting={isRequesting}

@@ -2,8 +2,10 @@ import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import { Form, Input, Select, Button, Switch } from "antd";
 import { useEffect, useState } from "react";
 import EEnumGender from "@/app/_enums/EEnumGender";
+import _ from "lodash";
 
 const CreateStaffModal = ({
+  data,
   studios,
   isRequesting,
   onCancel,
@@ -13,6 +15,25 @@ const CreateStaffModal = ({
   const [form] = Form.useForm();
   const [gender, setGender] = useState(null);
   const status = Form.useWatch("status", form);
+
+  useEffect(() => {
+    if (data) {
+      setTimeout(() => {
+        form.setFieldsValue({
+          code: data?.code,
+          name: data?.name,
+          description: data?.description,
+          studioIds: _.map(data?.studio_ids, "id"),
+          gender: data?.gender,
+          status:
+            data?.status === true
+              ? EEnumDatabaseStatus.ACTIVE.value
+              : EEnumDatabaseStatus.INACTIVE.value,
+        });
+        setGender(data?.gender);
+      }, 500);
+    }
+  }, [data]);
 
   useEffect(() => {
     setGender(null);

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { message } from "antd";
 
-const FileUploader = ({ currentFile, onFileChange }) => {
+const FileUploader = ({ currentFile, previousFile, onFileChange }) => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const handleFileChange = (files) => {
@@ -40,7 +40,7 @@ const FileUploader = ({ currentFile, onFileChange }) => {
           onDragEnter={(e) => e.preventDefault()}
           onDragLeave={(e) => e.preventDefault()}
           className={`${
-            currentFile ? "tw-bg-white" : "tw-bg-gray-300"
+            currentFile || previousFile ? "tw-bg-white" : "tw-bg-gray-300"
           } tw-cursor-pointer tw-size-[150px] tw-overflow-hidden tw-border tw-border-primary tw-p-4 tw-rounded-xl tw-grid tw-place-items-center hover:tw-scale-105 tw-transition-all tw-duration-200`}
         >
           {currentFile ? (
@@ -50,6 +50,21 @@ const FileUploader = ({ currentFile, onFileChange }) => {
               width={0}
               height={0}
               style={{ objectFit: "contain", height: "auto", width: "auto" }}
+            />
+          ) : null}
+          {!currentFile && previousFile ? (
+            <Image
+              priority
+              src={`https://${process.env.BASE_IMAGE_URL}${previousFile}`}
+              alt="thumbnail"
+              width={0}
+              height={0}
+              style={{
+                objectFit: "contain",
+                height: "auto",
+                width: "100%",
+              }}
+              unoptimized
             />
           ) : null}
         </section>

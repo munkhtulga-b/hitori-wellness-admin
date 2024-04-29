@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import _ from "lodash";
 
 const ProgramFormTwo = ({
+  data,
   onComplete,
   onBack,
   isRequesting,
@@ -24,19 +25,40 @@ const ProgramFormTwo = ({
   const [sortedTickets, setSortedTickets] = useState(null);
 
   useEffect(() => {
-    if (plans) {
-      const sorted = _.map(plans, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setSortedPlans(sorted);
+    if (sortedPlans && sortedTickets && data) {
+      setTimeout(() => {
+        form.setFieldsValue({
+          planReserveLimitDetails: _.map(
+            data?.plan_reserve_limit_details,
+            ({ plan_id: value, plan_name: label }) => ({
+              value,
+              label,
+            })
+          ),
+          ticketReserveLimitDetails: _.map(
+            data?.ticket_reserve_limit_details,
+            ({ ticket_id: value, ticket_name: label }) => ({
+              value,
+              label,
+            })
+          ),
+        });
+      }, 500);
     }
-    if (tickets) {
-      const sorted = _.map(tickets, ({ id: value, name: label }) => ({
+  }, [sortedPlans, sortedTickets, data]);
+
+  useEffect(() => {
+    if (plans && tickets) {
+      const sortedPlans = _.map(plans, ({ id: value, name: label }) => ({
         value,
         label,
       }));
-      setSortedTickets(sorted);
+      const sortedTickets = _.map(tickets, ({ id: value, name: label }) => ({
+        value,
+        label,
+      }));
+      setSortedPlans(sortedPlans);
+      setSortedTickets(sortedTickets);
     }
   }, [plans, tickets]);
 
