@@ -79,14 +79,14 @@ const CalendarSettingsModal = ({
         <SettingsOptions />
       ) : (
         <>
-          {selectedSettingsOption === 1 ? (
+          {selectedSettingsOption.value === 1 ? (
             <>
               <StudioBusinessHourModal
                 closeModal={closeModal}
                 fetchStudios={fetchStudios}
               />
             </>
-          ) : selectedSettingsOption === 2 ? (
+          ) : selectedSettingsOption.value === 2 ? (
             <>
               <StudioShiftSlotModal
                 closeModal={closeModal}
