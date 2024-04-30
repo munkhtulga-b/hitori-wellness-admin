@@ -14,7 +14,6 @@ const CreateStaffModal = ({
 }) => {
   const [form] = Form.useForm();
   const [gender, setGender] = useState(null);
-  const status = Form.useWatch("status", form);
 
   useEffect(() => {
     if (data) {
@@ -40,18 +39,17 @@ const CreateStaffModal = ({
     form.resetFields();
   }, [modalKey]);
 
-  useEffect(() => {
-    form.setFieldValue(
-      "status",
-      status
-        ? EEnumDatabaseStatus.ACTIVE.value
-        : EEnumDatabaseStatus.INACTIVE.value
-    );
-  }, [status]);
-
   const onGenderSelect = (value) => {
     setGender(value);
     form.setFieldValue("gender", value);
+  };
+
+  const beforeComplete = (params) => {
+    params.status =
+      params.status === true
+        ? EEnumDatabaseStatus.ACTIVE.value
+        : EEnumDatabaseStatus.INACTIVE.value;
+    onConfirm(params);
   };
 
   return (
@@ -60,7 +58,7 @@ const CreateStaffModal = ({
         layout="vertical"
         form={form}
         name="create-staff-form"
-        onFinish={(params) => onConfirm(params)}
+        onFinish={(params) => beforeComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
       >

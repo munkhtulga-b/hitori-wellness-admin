@@ -15,7 +15,6 @@ const ProgramFormOne = ({
   const [form] = Form.useForm();
   const [isTrial, setIsTrial] = useState(false);
   const [description, setDescription] = useState("");
-  const status = Form.useWatch("status", form);
 
   useEffect(() => {
     if (data) {
@@ -52,17 +51,12 @@ const ProgramFormOne = ({
     form.setFieldValue("description", description);
   }, [description]);
 
-  useEffect(() => {
-    form.setFieldValue(
-      "status",
-      status
-        ? EEnumDatabaseStatus.ACTIVE.value
-        : EEnumDatabaseStatus.INACTIVE.value
-    );
-  }, [status]);
-
   const beforeComplete = (params) => {
     params.serviceMinutes = +params.serviceMinutes;
+    params.status =
+      params.status === true
+        ? EEnumDatabaseStatus.ACTIVE.value
+        : EEnumDatabaseStatus.INACTIVE.value;
     onComplete(params);
   };
 

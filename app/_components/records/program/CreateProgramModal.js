@@ -38,15 +38,17 @@ const CreateProgramModal = ({
   }, [modalKey]);
 
   const fetchPlans = async () => {
-    const { isOk, data } = await $api.admin.plan.getMany();
+    const { isOk, data } = await $api.admin.plan.getMany({
+      status: EEnumDatabaseStatus.ACTIVE.value,
+    });
     if (isOk) {
       setPlans(data);
     }
   };
 
   const fetchTickets = async () => {
-    const { isOk, data } = await $api.admin.item.getMany({
-      itemType: "ticket",
+    const { isOk, data } = await $api.admin.ticket.getMany({
+      status: EEnumDatabaseStatus.ACTIVE.value,
     });
     if (isOk) {
       setTickets(data);
