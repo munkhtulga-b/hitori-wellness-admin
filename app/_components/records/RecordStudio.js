@@ -10,6 +10,7 @@ import _ from "lodash";
 import { toast } from "react-toastify";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import CreateStudioModal from "./studio/CreateStudioModal";
+import { uploadImage } from "@/app/_utils/helpers";
 
 const columns = [
   {
@@ -70,6 +71,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
+  const [uploadFile, setUploadFile] = useState(null);
 
   useEffect(() => {
     fetchStudios();
@@ -86,24 +88,48 @@ const RecordStudio = ({ studioCategoryNames }) => {
 
   const createStudio = async (body) => {
     setIsRequesting(true);
-    const { isOk } = await $api.admin.studio.create(body);
-    if (isOk) {
-      await fetchStudios();
-      setIsModalOpen(false);
-      setModalKey((prev) => prev + 1);
-      toast.success("Studio Created Success");
+    const { isOk: uploadOk, data: uploadData } = await uploadImage(uploadFile);
+    if (uploadOk) {
+      body.thumbnailCode = uploadData.url;
+      const { isOk } = await $api.admin.studio.create(body);
+      if (isOk) {
+        await fetchStudios();
+        setIsModalOpen(false);
+        setModalKey((prev) => prev + 1);
+        toast.success("Studio Created Success");
+      }
+    } else {
+      toast.error("An error occurred while uploading the image");
     }
     setIsRequesting(false);
   };
 
   const updateStudio = async (body) => {
     setIsRequesting(true);
-    const { isOk } = await $api.admin.studio.update(selectedRow.id, body);
-    if (isOk) {
-      await fetchStudios();
-      setIsModalOpen(false);
-      setModalKey((prev) => prev + 1);
-      toast.success("Studio Updated Success");
+    if (uploadFile) {
+      const { isOk: uploadOk, data: uploadData } = await uploadImage(
+        uploadFile
+      );
+      if (uploadOk) {
+        body.thumbnailCode = uploadData.url;
+        const { isOk } = await $api.admin.studio.update(selectedRow.id, body);
+        if (isOk) {
+          await fetchStudios();
+          setIsModalOpen(false);
+          setModalKey((prev) => prev + 1);
+          toast.success("Studio Updated Success");
+        }
+      } else {
+        toast.error("An error occurred while uploading the image");
+      }
+    } else {
+      const { isOk } = await $api.admin.studio.update(selectedRow.id, body);
+      if (isOk) {
+        await fetchStudios();
+        setIsModalOpen(false);
+        setModalKey((prev) => prev + 1);
+        toast.success("Studio Updated Success");
+      }
     }
     setIsRequesting(false);
   };
@@ -139,7 +165,10 @@ const RecordStudio = ({ studioCategoryNames }) => {
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
         <RecordTableFilters
-          onAdd={() => setIsModalOpen(true)}
+          onAdd={() => {
+            setSelectedRow(null);
+            setIsModalOpen(true);
+          }}
           onSearch={(value) => onFilterChange({ name: value })}
           onSearchClear={() => onFilterClear("name")}
           onDelete={deleteStudios}
@@ -218,6 +247,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
           },
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
+        destroyOnClose
       >
         <CreateStudioModal
           data={selectedRow}
@@ -230,6 +260,8 @@ const RecordStudio = ({ studioCategoryNames }) => {
             setSelectedRow(null);
             setIsModalOpen(false);
           }}
+          uploadFile={uploadFile}
+          setUploadFile={setUploadFile}
         />
       </Modal>
     </>

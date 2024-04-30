@@ -65,6 +65,7 @@ const PlanFormTwo = ({
       reservableStudioType === EEnumReservableStudioType.ALL ||
       reservableStudioType === EEnumReservableStudioType.HOME
     ) {
+      form.setFieldValue("reservableStudioType", reservableStudioType);
       form.setFieldValue("reservableStudioDetails", []);
     }
   }, [reservableStudioType]);

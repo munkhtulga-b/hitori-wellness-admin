@@ -74,13 +74,6 @@ const RecordPlan = ({ studios }) => {
     fetchPlans();
   }, []);
 
-  useEffect(() => {
-    if (!isModalOpen) {
-      setSelectedRow(null);
-      setModalKey((prev) => prev + 1);
-    }
-  }, [isModalOpen]);
-
   const fetchPlans = async (queries) => {
     setIsLoading(true);
     const { isOk, data } = await $api.admin.plan.getMany(queries);
@@ -132,7 +125,10 @@ const RecordPlan = ({ studios }) => {
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
         <RecordTableFilters
-          onAdd={() => setIsModalOpen(true)}
+          onAdd={() => {
+            setSelectedRow(null);
+            setIsModalOpen(true);
+          }}
           onSearch={(value) => onFilterChange({ name: value })}
           onSearchClear={() => onFilterClear("name")}
         >
@@ -191,6 +187,7 @@ const RecordPlan = ({ studios }) => {
           },
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
+        destroyOnClose
       >
         <CreatePlanModal
           data={selectedRow}

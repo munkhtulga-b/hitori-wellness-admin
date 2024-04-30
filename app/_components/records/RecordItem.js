@@ -82,13 +82,6 @@ const RecordItem = ({ studios }) => {
     fetchItems();
   }, []);
 
-  useEffect(() => {
-    if (!isModalOpen) {
-      setSelectedRow(null);
-      setModalKey((prev) => prev + 1);
-    }
-  }, [isModalOpen]);
-
   const fetchItems = async (queries) => {
     setIsLoading(true);
     const { isOk, data } = await $api.admin.item.getMany(queries);
@@ -153,7 +146,10 @@ const RecordItem = ({ studios }) => {
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
         <RecordTableFilters
-          onAdd={() => setIsModalOpen(true)}
+          onAdd={() => {
+            setSelectedRow(null);
+            setIsModalOpen(true);
+          }}
           onDelete={deleteItems}
           onSearch={(value) => onFilterChange({ name: value })}
           checkedRows={checkedRows}
@@ -229,6 +225,7 @@ const RecordItem = ({ studios }) => {
           },
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
+        destroyOnClose
       >
         <CreateItemModal
           data={selectedRow}

@@ -69,13 +69,6 @@ const RecordStaff = ({ studios }) => {
     fetchStaff();
   }, []);
 
-  useEffect(() => {
-    if (!isModalOpen) {
-      setSelectedRow(null);
-      setModalKey((prev) => prev + 1);
-    }
-  }, [isModalOpen]);
-
   const fetchStaff = async (filters) => {
     setIsLoading(true);
     const { isOk, data } = await $api.admin.staff.getMany(filters);
@@ -140,7 +133,10 @@ const RecordStaff = ({ studios }) => {
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
         <RecordTableFilters
-          onAdd={() => setIsModalOpen(true)}
+          onAdd={() => {
+            setSelectedRow(null);
+            setIsModalOpen(true);
+          }}
           studios={studios}
           checkedRows={checkedRows}
           onDelete={deleteStaff}
@@ -218,6 +214,7 @@ const RecordStaff = ({ studios }) => {
           },
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
+        destroyOnClose
       >
         <CreateStaffModal
           data={selectedRow}
