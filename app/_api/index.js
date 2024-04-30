@@ -9,6 +9,7 @@ import * as user from "./cms/UserController";
 import * as program from "./cms/ProgramController";
 import * as reservation from "./cms/ReservationController";
 import * as item from "./cms/ItemController";
+import * as ticket from "./cms/TicketController";
 import * as plan from "./cms/PlanController";
 import * as coupon from "./cms/CouponController";
 import * as staff from "./cms/StaffController";
@@ -28,6 +29,7 @@ const $api = {
     program,
     reservation,
     item,
+    ticket,
     plan,
     coupon,
     staff,

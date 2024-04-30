@@ -13,7 +13,6 @@ const PlanFormOne = ({
 }) => {
   const [form] = Form.useForm();
   const [description, setDescription] = useState("");
-  const status = Form.useWatch("status", form);
 
   useEffect(() => {
     if (data) {
@@ -36,14 +35,13 @@ const PlanFormOne = ({
     form.resetFields();
   }, [modalKey]);
 
-  useEffect(() => {
-    form.setFieldValue(
-      "status",
-      status
+  const beforeComplete = (params) => {
+    params.status =
+      params.status === true
         ? EEnumDatabaseStatus.ACTIVE.value
-        : EEnumDatabaseStatus.INACTIVE.value
-    );
-  }, [status]);
+        : EEnumDatabaseStatus.INACTIVE.value;
+    onComplete(params);
+  };
 
   return (
     <>
@@ -51,7 +49,7 @@ const PlanFormOne = ({
         layout="vertical"
         form={form}
         name="plan-form-one"
-        onFinish={(params) => onComplete(params)}
+        onFinish={(params) => beforeComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
       >

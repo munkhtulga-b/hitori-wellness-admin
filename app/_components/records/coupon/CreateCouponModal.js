@@ -16,7 +16,6 @@ const CreateCouponModal = ({
   const [form] = Form.useForm();
   const [items, setItems] = useState(null);
   const studioIds = Form.useWatch("targetStudioIds", form);
-  const status = Form.useWatch("status", form);
   const [noLimit, setNoLimit] = useState(true);
   const [discountType, setDiscountType] = useState(1);
 
@@ -65,15 +64,6 @@ const CreateCouponModal = ({
     }
   }, [studioIds]);
 
-  useEffect(() => {
-    form.setFieldValue(
-      "status",
-      status
-        ? EEnumDatabaseStatus.ACTIVE.value
-        : EEnumDatabaseStatus.INACTIVE.value
-    );
-  }, [status]);
-
   const fetchItems = async () => {
     const { isOk, data } = await $api.admin.item.getMany();
     if (isOk) {
@@ -103,6 +93,10 @@ const CreateCouponModal = ({
         discountType: params.discountType,
         discountValue: +params.discountValue,
       })),
+      status:
+        params.status === true
+          ? EEnumDatabaseStatus.ACTIVE.value
+          : EEnumDatabaseStatus.INACTIVE.value,
     };
     onComplete(body);
   };

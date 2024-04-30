@@ -16,7 +16,6 @@ const CreateItemModal = ({
   const [form] = Form.useForm();
   const [itemType, setItemType] = useState(null);
   const [description, setDescription] = useState("");
-  const status = Form.useWatch("status", form);
 
   useEffect(() => {
     if (data) {
@@ -49,15 +48,6 @@ const CreateItemModal = ({
     setDescription("");
   }, [modalKey]);
 
-  useEffect(() => {
-    form.setFieldValue(
-      "status",
-      status
-        ? EEnumDatabaseStatus.ACTIVE.value
-        : EEnumDatabaseStatus.INACTIVE.value
-    );
-  }, [status]);
-
   const handleItemTypeChange = (value) => {
     setItemType(value);
     form.setFieldValue("itemType", value);
@@ -79,6 +69,10 @@ const CreateItemModal = ({
       params.expireDays = +params.expireDays;
     }
     params.price = +params.price;
+    params.status =
+      params.status === true
+        ? EEnumDatabaseStatus.ACTIVE.value
+        : EEnumDatabaseStatus.INACTIVE.value;
     onComplete(params);
   };
 

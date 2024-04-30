@@ -14,7 +14,6 @@ const StudioFormOne = ({
   modalKey,
 }) => {
   const [form] = Form.useForm();
-  const status = Form.useWatch("status", form);
 
   useEffect(() => {
     form.resetFields();
@@ -37,14 +36,13 @@ const StudioFormOne = ({
     }
   }, [data]);
 
-  useEffect(() => {
-    form.setFieldValue(
-      "status",
-      status
+  const beforeComplete = (params) => {
+    params.status =
+      params.status === true
         ? EEnumDatabaseStatus.ACTIVE.value
-        : EEnumDatabaseStatus.INACTIVE.value
-    );
-  }, [status]);
+        : EEnumDatabaseStatus.INACTIVE.value;
+    onComplete(params);
+  };
 
   return (
     <>
@@ -52,7 +50,7 @@ const StudioFormOne = ({
         layout="vertical"
         form={form}
         name="studio-form-one"
-        onFinish={(params) => onComplete(params)}
+        onFinish={(params) => beforeComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
       >
