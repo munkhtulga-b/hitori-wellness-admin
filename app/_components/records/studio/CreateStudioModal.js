@@ -1,11 +1,9 @@
 import { Tabs } from "antd";
 import { useEffect, useState } from "react";
-import { uploadImage } from "@/app/_utils/helpers";
 import StudioFormOne from "./FormOne";
 import StudioFormTwo from "./FormTwo";
 import StudioFormThree from "./FormThree";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
-import { toast } from "react-toastify";
 
 const CreateStudioModal = ({
   modalKey,
@@ -13,11 +11,13 @@ const CreateStudioModal = ({
   onConfirm,
   onCancel,
   data,
+  uploadFile,
+  setUploadFile,
 }) => {
   const [activeKey, setActiveKey] = useState(1);
 
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadFile, setUploadFile] = useState(null);
+
   const [requestBody, setRequestBody] = useState({});
 
   useEffect(() => {
@@ -55,13 +55,7 @@ const CreateStudioModal = ({
       ...params,
     }));
     if (activeKey === 3) {
-      const { isOk, data: uploadData } = await uploadImage(uploadFile);
-      if (isOk) {
-        params.thumbnailCode = uploadData.url;
-        onConfirm({ ...requestBody, ...params });
-      } else {
-        toast.error("An error occurred while uploading the image");
-      }
+      onConfirm({ ...requestBody, ...params });
     } else {
       setActiveKey((prev) => prev + 1);
     }

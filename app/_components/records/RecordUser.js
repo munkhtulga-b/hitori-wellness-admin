@@ -76,6 +76,7 @@ const RecordUser = ({ studios }) => {
   const [isRequesting, setIsRequesting] = useState(false);
   const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
@@ -114,6 +115,24 @@ const RecordUser = ({ studios }) => {
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("User created");
+    }
+    setIsRequesting(false);
+  };
+
+  const updateUser = async (body) => {
+    setIsRequesting(true);
+    if (
+      body.mailAddress?.toLowerCase() ===
+      selectedRow.mail_address?.toLowerCase()
+    ) {
+      delete body.mailAddress;
+    }
+    const { isOk } = await $api.admin.user.update(selectedRow.id, body);
+    if (isOk) {
+      await fetchUsers();
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("User updated");
     }
     setIsRequesting(false);
   };
@@ -164,7 +183,10 @@ const RecordUser = ({ studios }) => {
     <>
       <div className="tw-flex tw-flex-col tw-gap-6 tw-h-full">
         <RecordTableFilters
-          onAdd={() => setIsModalOpen(true)}
+          onAdd={() => {
+            setSelectedRow(null);
+            setIsModalOpen(true);
+          }}
           onDelete={deleteUsers}
           studios={studios}
           onSearch={(value) => onFilterChange({ name: value })}
@@ -192,7 +214,7 @@ const RecordUser = ({ studios }) => {
               allowClear
               size="large"
               style={{
-                width: 200,
+                width: 120,
               }}
               options={[
                 {
@@ -221,6 +243,10 @@ const RecordUser = ({ studios }) => {
           isCheckable={true}
           checkedRows={checkedRows}
           onRowCheck={(rows) => setCheckedRows(rows)}
+          onClickName={(row) => {
+            setSelectedRow(row);
+            setIsModalOpen(true);
+          }}
         />
         <section className="tw-justify-self-end tw-flex tw-justify-center">
           <Pagination
@@ -246,11 +272,13 @@ const RecordUser = ({ studios }) => {
           },
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
+        destroyOnClose
       >
         <CreateUserModal
+          data={selectedRow}
           modalKey={modalKey}
           onBack={() => setIsModalOpen(false)}
-          onComplete={createUser}
+          onComplete={selectedRow ? updateUser : createUser}
           isRequesting={isRequesting}
         />
       </Modal>

@@ -13,7 +13,7 @@ const StudioFormThree = ({
   modalKey,
 }) => {
   const [form] = Form.useForm();
-  const [isTwentyFourHour, setIsTwentyFourHour] = useState(false);
+  const isTwentyFourHour = Form.useWatch("isTwentyFourHour", form);
   const startHour = Form.useWatch("startHour", form);
   const endHour = Form.useWatch("endHour", form);
   const [businessHours, setBusinessHours] = useState("");
@@ -35,7 +35,6 @@ const StudioFormThree = ({
         isTwentyFourHour: timeDifference >= 23,
         businessHours: data?.business_hours,
       });
-      setIsTwentyFourHour(timeDifference >= 23);
     }
   }, [data]);
 
@@ -51,10 +50,11 @@ const StudioFormThree = ({
       dayjs(startHour, "HH:mm"),
       "hour"
     );
-    if (timeDifference <= 23) {
-      setIsTwentyFourHour(false);
+    console.log(timeDifference);
+    if (timeDifference >= 23) {
+      form.setFieldValue("isTwentyFourHour", true);
     } else {
-      setIsTwentyFourHour(true);
+      form.setFieldValue("isTwentyFourHour", false);
     }
   }, [startHour, endHour]);
 
@@ -136,19 +136,16 @@ const StudioFormThree = ({
           </div>
         </section>
         <Form.Item
+          name="isTwentyFourHour"
           rules={[
             {
               required: false,
               message: "Please input prefecture",
             },
           ]}
+          valuePropName="checked"
         >
-          <Radio
-            onChange={(e) => setIsTwentyFourHour(e.target.checked)}
-            checked={isTwentyFourHour}
-          >
-            24時間営業
-          </Radio>
+          <Radio>24時間営業</Radio>
         </Form.Item>
         <Form.Item
           name="gmapUrl"

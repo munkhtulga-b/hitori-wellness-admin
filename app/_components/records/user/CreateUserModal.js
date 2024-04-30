@@ -9,14 +9,47 @@ import {
 } from "@/app/_utils/helpers";
 import _ from "lodash";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
+import dayjs from "dayjs";
 
-const CreateUserModal = ({ onComplete, onBack, modalKey, isRequesting }) => {
+const CreateUserModal = ({
+  data,
+  onComplete,
+  onBack,
+  modalKey,
+  isRequesting,
+}) => {
   const [form] = Form.useForm();
   const [genderValue, setGenderValue] = useState(null);
   const zipCode2 = Form.useWatch("zipCode2", form);
   const zipCode1 = Form.useWatch("zipCode1", form);
   const [isFetching, setIsFetching] = useState(false);
   const [address, setAddress] = useState(null);
+
+  useEffect(() => {
+    if (data) {
+      setTimeout(() => {
+        form.setFieldsValue({
+          mailAddress: data?.mail_address,
+          lastName: data?.last_name,
+          firstName: data?.first_name,
+          lastKana: data?.last_kana,
+          firstKana: data?.first_kana,
+          gender: data?.gender,
+          birthYear: dayjs(data?.birthday).format("YYYY"),
+          birthMonth: dayjs(data?.birthday).format("MM"),
+          birthDay: dayjs(data?.birthday).format("DD"),
+          zipCode1: data?.zip_code1,
+          zipCode2: data?.zip_code2,
+          address1: data?.address1,
+          address2: data?.address2,
+          address3: data?.address3,
+          prefecture: data?.prefecture,
+          tel: data?.tel,
+        });
+        setGenderValue(data?.gender);
+      }, 500);
+    }
+  }, [data]);
 
   useEffect(() => {
     const fullPostalCode = `${zipCode1}${zipCode2}`;
@@ -377,7 +410,7 @@ const CreateUserModal = ({ onComplete, onBack, modalKey, isRequesting }) => {
           label="緊急連絡先"
           rules={[
             {
-              required: true,
+              required: false,
               message: "緊急連絡先電話番号を入力してください。",
               whitespace: false,
             },

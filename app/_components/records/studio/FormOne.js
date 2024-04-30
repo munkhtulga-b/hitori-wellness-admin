@@ -1,7 +1,6 @@
 import { Form, Input, Button, Switch } from "antd";
 import FileUploader from "../../custom/FileUploader";
 import { useEffect } from "react";
-import Image from "next/image";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
 const StudioFormOne = ({
@@ -61,29 +60,12 @@ const StudioFormOne = ({
           ]}
         >
           <section className="tw-flex tw-justify-center">
-            {!data?.thumbnail_code ? (
-              <FileUploader
-                currentFile={uploadFile}
-                onFileChange={(file) => setUploadFile(file)}
-                modalKey={modalKey}
-              />
-            ) : (
-              <div className="tw-w-[150px] tw-overflow-hidden tw-rounded-xl">
-                <Image
-                  priority
-                  src={`https://${process.env.BASE_IMAGE_URL}${data?.thumbnail_code}`}
-                  alt="thumbnail"
-                  width={0}
-                  height={0}
-                  style={{
-                    objectFit: "contain",
-                    height: "auto",
-                    width: "100%",
-                  }}
-                  unoptimized
-                />
-              </div>
-            )}
+            <FileUploader
+              currentFile={uploadFile}
+              previousFile={data?.thumbnail_code}
+              onFileChange={(file) => setUploadFile(file)}
+              modalKey={modalKey}
+            />
           </section>
         </Form.Item>
         <Form.Item

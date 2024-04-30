@@ -51,13 +51,6 @@ const RecordCoupon = ({ studios }) => {
     fetchCoupons();
   }, []);
 
-  useEffect(() => {
-    if (!isModalOpen) {
-      setSelectedRow(null);
-      setModalKey((prev) => prev + 1);
-    }
-  }, [isModalOpen]);
-
   const fetchCoupons = async (queries) => {
     setIsLoading(true);
     const { isOk, data } = await $api.admin.coupon.getMany(queries);
@@ -120,7 +113,10 @@ const RecordCoupon = ({ studios }) => {
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
         <RecordTableFilters
-          onAdd={() => setIsModalOpen(true)}
+          onAdd={() => {
+            setSelectedRow(null);
+            setIsModalOpen(true);
+          }}
           onDelete={deleteCoupons}
           onSearch={(value) => onFilterChange({ name: value })}
           onSearchClear={() => onFilterClear("name")}
@@ -182,6 +178,7 @@ const RecordCoupon = ({ studios }) => {
           },
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
+        destroyOnClose
       >
         <CreateCouponModal
           data={selectedRow}
