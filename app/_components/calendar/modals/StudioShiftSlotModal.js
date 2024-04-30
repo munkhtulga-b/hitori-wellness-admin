@@ -19,8 +19,19 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
         endHour: dayjs.utc(data.detailed?.shift?.end_at),
         isRepeat: data.detailed?.shift?.is_repeat,
       });
+      if (data?.detailed?.shift?.end_date) {
+        form.setFieldValue(
+          "endDate",
+          dayjs.utc(data.detailed?.shift?.end_date)
+        );
+      }
+      setIsRepeat(data.detailed?.shift?.is_repeat);
     }
   }, [data]);
+
+  useEffect(() => {
+    form.setFieldValue("isRepeat", isRepeat);
+  }, [isRepeat]);
 
   const createShiftSlot = async (body) => {
     setIsLoading(true);
@@ -60,6 +71,10 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
       isRepeat: params.isRepeat,
     };
 
+    if (params.isRepeat === true) {
+      body["endDate"] = dayjs(params.endDate).format("YYYY-MM-DD");
+    }
+
     data ? updateShiftSlot(body) : createShiftSlot(body);
   };
 
@@ -83,7 +98,7 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="説明" />
         </Form.Item>
 
         {/* <div className="tw-flex tw-flex-col tw-gap-1">
@@ -161,7 +176,6 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
               message: "Please input your E-mail!",
             },
           ]}
-          valuePropName="checked"
         >
           <div className="tw-flex tw-flex-col tw-gap-6">
             <Radio
@@ -178,6 +192,28 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
             </Radio>
           </div>
         </Form.Item>
+
+        {isRepeat === true && (
+          <Form.Item
+            name="endDate"
+            label="日程"
+            rules={[
+              {
+                type: "object",
+                required: true,
+                message: "Please input your E-mail!",
+              },
+            ]}
+          >
+            <DatePicker
+              className="tw-w-full"
+              format={"YYYY/MM/DD"}
+              disabledDate={(current) =>
+                current < dayjs().startOf("day").subtract(1, "day")
+              }
+            />
+          </Form.Item>
+        )}
 
         <Form.Item style={{ marginTop: 24, marginBottom: 0 }}>
           <div className="tw-flex tw-justify-end tw-gap-2">
