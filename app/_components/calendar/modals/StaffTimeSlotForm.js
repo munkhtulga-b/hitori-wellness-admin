@@ -28,6 +28,10 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
         description: data?.description,
         isRepeat: data?.is_repeat,
       });
+      if (data?.end_date) {
+        form.setFieldValue("endDate", dayjs.utc(data?.end_date));
+      }
+      setIsRepeat(data?.is_repeat);
     }
   }, [data]);
 
@@ -80,11 +84,12 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
       ).format("HH:mm")}`,
       isRepeat: params.isRepeat,
     };
-    if (data) {
-      updateStaffTimeSlot(body);
-    } else {
-      createStaffTimeSlot(body);
+
+    if (params.isRepeat === true) {
+      body["endDate"] = dayjs(params.endDate).format("YYYY-MM-DD");
     }
+
+    data ? updateStaffTimeSlot(body) : createStaffTimeSlot(body);
   };
 
   const resetForm = () => {
@@ -118,7 +123,7 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
             style={{
               width: "100%",
             }}
-            placeholder="select"
+            placeholder="スタッフを選択"
             options={staff}
           />
         </Form.Item>
@@ -203,7 +208,6 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
               message: "Please input your E-mail!",
             },
           ]}
-          valuePropName="checked"
         >
           <div className="tw-flex tw-flex-col tw-gap-6">
             <Radio
@@ -220,6 +224,28 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
             </Radio>
           </div>
         </Form.Item>
+
+        {isRepeat === true && (
+          <Form.Item
+            name="endDate"
+            label="指定の日程"
+            rules={[
+              {
+                type: "object",
+                required: true,
+                message: "Please input your E-mail!",
+              },
+            ]}
+          >
+            <DatePicker
+              format={"YYYY/MM/DD"}
+              disabledDate={(current) =>
+                current < dayjs().subtract(1, "day").endOf("day")
+              }
+              className="tw-w-full"
+            />
+          </Form.Item>
+        )}
 
         <Form.Item style={{ marginTop: 24, marginBottom: 0 }}>
           <div className="tw-flex tw-justify-end tw-gap-2">

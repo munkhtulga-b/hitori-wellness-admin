@@ -84,6 +84,13 @@ const ProgramFormTwo = ({
   }, [noLimit]);
 
   const beforeComplete = (params) => {
+    if (params.noLimit) {
+      params["isPlanReserveLimit"] = false;
+      params["isTicketReserveLimit"] = false;
+    } else {
+      params["isPlanReserveLimit"] = true;
+      params["isTicketReserveLimit"] = true;
+    }
     delete params.noLimit;
     onComplete(params);
   };

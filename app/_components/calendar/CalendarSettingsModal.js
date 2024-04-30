@@ -41,7 +41,7 @@ const CalendarSettingsModal = ({
             <li
               key={option.value}
               className="tw-bg-white tw-rounded-xl tw-p-4 tw-shadow tw-flex tw-justify-start tw-items-center tw-gap-2 tw-cursor-pointer hover:tw-ring hover:tw-ring-divider tw-transition-all tw-duration-200"
-              onClick={() => setSelectedSettingsOption(option.value)}
+              onClick={() => setSelectedSettingsOption(option)}
             >
               <Image
                 src={`/assets/calendar/${option.icon}`}

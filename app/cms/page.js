@@ -221,7 +221,11 @@ const CalendarPage = () => {
                   onClick={() => setSelectedSettingsOption(null)}
                 />
               )}
-              <span>店舗設定</span>
+              <span>
+                {!selectedSettingsOption
+                  ? "店舗設定"
+                  : `${selectedSettingsOption.label}`}
+              </span>
             </div>
           </>
         }
