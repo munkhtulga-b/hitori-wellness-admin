@@ -1,19 +1,22 @@
+import $api from "@/app/_api";
 import { useCalendarStore } from "@/app/_store/calendar";
 import { Form, Button, TimePicker, DatePicker, Radio, Input } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const StudioShiftSlotModal = ({
   data,
-  deleteSlot,
-  onComplete,
-  isDeleting,
-  isRequesting,
-  modalKey,
+  closeModal,
+  fetchList,
+  selectedStudio,
+  selectedWeek,
 }) => {
   const [form] = Form.useForm();
   const calendarStore = useCalendarStore((state) => state.body);
   const [isRepeat, setIsRepeat] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -37,13 +40,54 @@ const StudioShiftSlotModal = ({
   }, [data]);
 
   useEffect(() => {
-    form.resetFields();
-    setIsRepeat(false);
-  }, [modalKey]);
-
-  useEffect(() => {
     form.setFieldValue("isRepeat", isRepeat);
   }, [isRepeat]);
+
+  const createShiftSlot = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.shiftSlot.create(body);
+    if (isOk) {
+      await fetchList(selectedStudio?.id, {
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      resetForm();
+      closeModal();
+      toast.success("Shift slot created");
+    }
+    setIsRequesting(false);
+  };
+
+  const updateShiftSlot = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.shiftSlot.update(
+      data.detailed?.shift.id,
+      body
+    );
+    if (isOk) {
+      await fetchList(selectedStudio?.id, {
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      resetForm();
+      closeModal();
+      toast.success("Shift slot created");
+    }
+    setIsRequesting(false);
+  };
+
+  const deleteShiftSlot = async () => {
+    setIsDeleting(true);
+    const { isOk } = await $api.admin.shiftSlot.destroy(
+      data.detailed?.shift.id
+    );
+    if (isOk) {
+      await fetchList(selectedStudio?.id, {
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      closeModal();
+      toast.success("Shift slot deleted");
+    }
+    setIsDeleting(false);
+  };
 
   const beforeComplete = (params) => {
     const body = {
@@ -62,7 +106,12 @@ const StudioShiftSlotModal = ({
       body["endDate"] = dayjs(params.endDate).format("YYYY-MM-DD");
     }
 
-    onComplete(body);
+    data ? updateShiftSlot(body) : createShiftSlot(body);
+  };
+
+  const resetForm = () => {
+    form.resetFields();
+    setIsRepeat(false);
   };
 
   return (
@@ -205,11 +254,12 @@ const StudioShiftSlotModal = ({
         <Form.Item style={{ marginTop: 24, marginBottom: 0 }}>
           <div className="tw-flex tw-justify-end tw-gap-2">
             <Button
+              disabled={!data}
               loading={isDeleting}
               type="primary"
               danger
               size="large"
-              onClick={() => deleteSlot()}
+              onClick={() => deleteShiftSlot()}
             >
               削除
             </Button>

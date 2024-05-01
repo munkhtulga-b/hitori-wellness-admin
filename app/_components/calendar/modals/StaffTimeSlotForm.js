@@ -4,20 +4,67 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import $api from "@/app/_api";
 import _ from "lodash";
+import { toast } from "react-toastify";
 
 const StaffTimeSlotForm = ({
   data,
-  onComplete,
-  deleteSlot,
-  isDeleting,
-  isRequesting,
-  modalKey,
+  closeModal,
+  fetchList,
+  selectedStudio,
+  selectedWeek,
 }) => {
   const [form] = Form.useForm();
   const calendarStore = useCalendarStore((state) => state.body);
 
   const [staff, setStaff] = useState(null);
   const [isRepeat, setIsRepeat] = useState(false);
+
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
+
+  const createSlot = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.staffSlot.create(body);
+    if (isOk) {
+      await fetchList({
+        studioId: selectedStudio?.id,
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      resetForm();
+      closeModal(false);
+      toast.success("Staff slot created");
+    }
+    setIsRequesting(false);
+  };
+
+  const updateSlot = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.staffSlot.update(data.id, body);
+    if (isOk) {
+      await fetchList({
+        studioId: selectedStudio?.id,
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      resetForm();
+      closeModal(false);
+      toast.success("Staff slot updated");
+    }
+    setIsRequesting(false);
+  };
+
+  const deleteSlot = async () => {
+    setIsDeleting(true);
+    const { isOk } = await $api.admin.staffSlot.destroy(data.id);
+    if (isOk) {
+      await fetchList({
+        studioId: selectedStudio?.id,
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      closeModal();
+      toast.success("Staff slot deleted");
+    }
+    setIsDeleting(false);
+  };
 
   useEffect(() => {
     fetchStaff();
@@ -39,11 +86,6 @@ const StaffTimeSlotForm = ({
       setIsRepeat(data?.is_repeat);
     }
   }, [data]);
-
-  useEffect(() => {
-    form.resetFields();
-    setIsRepeat(false);
-  }, [modalKey]);
 
   useEffect(() => {
     form.setFieldValue("isRepeat", isRepeat);
@@ -77,7 +119,12 @@ const StaffTimeSlotForm = ({
       body["endDate"] = dayjs(params.endDate).format("YYYY-MM-DD");
     }
 
-    onComplete(body);
+    data ? updateSlot(body) : createSlot(body);
+  };
+
+  const resetForm = () => {
+    form.resetFields();
+    setIsRepeat(false);
   };
 
   return (
@@ -233,7 +280,10 @@ const StaffTimeSlotForm = ({
         <Form.Item style={{ marginTop: 24, marginBottom: 0 }}>
           <div className="tw-flex tw-justify-end tw-gap-2">
             <Button
+              disabled={!data}
               loading={isDeleting}
+              type="primary"
+              danger
               size="large"
               onClick={() => deleteSlot()}
             >

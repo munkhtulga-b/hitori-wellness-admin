@@ -235,6 +235,13 @@ const CalendarPage = () => {
           setSelectedSettingsOption={setSelectedSettingsOption}
           closeModal={() => setIsModalOpen(false)}
           fetchStudios={fetchStudios}
+          fetchList={
+            calendarType === "member"
+              ? fetchMemberTimeSlots
+              : fetchStaffTimeSlots
+          }
+          selectedStudio={selectedStudio}
+          selectedWeek={selectedWeek}
         />
       </Modal>
     </>

@@ -32,6 +32,9 @@ const CalendarSettingsModal = ({
   selectedSettingsOption,
   setSelectedSettingsOption,
   fetchStudios,
+  fetchList,
+  selectedStudio,
+  selectedWeek,
 }) => {
   const SettingsOptions = () => {
     return (
@@ -90,12 +93,19 @@ const CalendarSettingsModal = ({
             <>
               <StudioShiftSlotModal
                 closeModal={closeModal}
-                fetchStudios={fetchStudios}
+                fetchList={fetchList}
+                selectedStudio={selectedStudio}
+                selectedWeek={selectedWeek}
               />
             </>
           ) : (
             <>
-              <StaffTimeSlotForm closeModal={closeModal} />
+              <StaffTimeSlotForm
+                closeModal={closeModal}
+                fetchList={fetchList}
+                selectedStudio={selectedStudio}
+                selectedWeek={selectedWeek}
+              />
             </>
           )}
         </>
