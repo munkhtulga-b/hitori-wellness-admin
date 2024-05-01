@@ -4,8 +4,6 @@ import PartialLoading from "../PartialLoading";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import StaffTimeSlotForm from "./modals/StaffTimeSlotForm";
-import $api from "@/app/_api";
-import { toast } from "react-toastify";
 import { useState } from "react";
 
 const CalendarStaff = ({
@@ -17,55 +15,8 @@ const CalendarStaff = ({
   selectedWeek,
   fetchList,
 }) => {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isRequesting, setIsRequesting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalKey, setModalKey] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState(null);
-
-  const createSlot = async (body) => {
-    setIsRequesting(true);
-    const { isOk } = await $api.admin.staffSlot.create(body);
-    if (isOk) {
-      await fetchList({
-        studioId: selectedStudio?.id,
-        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
-      });
-      setModalKey((prev) => prev + 1);
-      setIsModalOpen(false);
-      toast.success("Staff slot created");
-    }
-    setIsRequesting(false);
-  };
-
-  const updateSlot = async (body) => {
-    setIsRequesting(true);
-    const { isOk } = await $api.admin.staffSlot.update(selectedSlot.id, body);
-    if (isOk) {
-      await fetchList({
-        studioId: selectedStudio?.id,
-        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
-      });
-      setModalKey((prev) => prev + 1);
-      setIsModalOpen(false);
-      toast.success("Staff slot updated");
-    }
-    setIsRequesting(false);
-  };
-
-  const deleteSlot = async () => {
-    setIsDeleting(true);
-    const { isOk } = await $api.admin.staffSlot.destroy(selectedSlot.id);
-    if (isOk) {
-      await fetchList({
-        studioId: selectedStudio?.id,
-        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
-      });
-      setIsModalOpen(false);
-      toast.success("Staff slot deleted");
-    }
-    setIsDeleting(false);
-  };
 
   const generateHoursInDay = () => {
     const hours = [];
@@ -361,11 +312,10 @@ const CalendarStaff = ({
       >
         <StaffTimeSlotForm
           data={selectedSlot}
-          onComplete={selectedSlot ? updateSlot : createSlot}
-          deleteSlot={deleteSlot}
-          isDeleting={isDeleting}
-          isRequesting={isRequesting}
-          modalKey={modalKey}
+          closeModal={() => setIsModalOpen(false)}
+          fetchList={fetchList}
+          selectedStudio={selectedStudio}
+          selectedWeek={selectedWeek}
         />
       </Modal>
     </>

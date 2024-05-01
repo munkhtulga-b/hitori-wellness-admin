@@ -2,6 +2,9 @@ import { Button } from "antd";
 import EEnumReservationStatus from "@/app/_enums/EEnumReservationStatus";
 import { nullSafety } from "@/app/_utils/helpers";
 import dayjs from "dayjs";
+import $api from "@/app/_api";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 const columns = [
   {
@@ -35,7 +38,28 @@ const columns = [
   },
 ];
 
-const ReservationSlotModal = ({ data, onCancel, isRequesting }) => {
+const ReservationSlotModal = ({
+  data,
+  fetchList,
+  selectedStudio,
+  selectedWeek,
+  closeModal,
+}) => {
+  const [isRequesting, setIsRequesting] = useState(false);
+
+  const cancelReservation = async () => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.reservation.cancel(data?.id);
+    if (isOk) {
+      await fetchList(selectedStudio?.id, {
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      closeModal();
+      toast.success("Reservation cancelled");
+    }
+    setIsRequesting(false);
+  };
+
   const formatData = (column) => {
     let result = "-";
     if (column.obj) {
@@ -106,7 +130,7 @@ const ReservationSlotModal = ({ data, onCancel, isRequesting }) => {
               loading={isRequesting}
               type="primary"
               size="large"
-              onClick={() => onCancel()}
+              onClick={() => cancelReservation()}
             >
               キャンセルする
             </Button>
