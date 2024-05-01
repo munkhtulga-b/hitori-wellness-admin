@@ -1,6 +1,12 @@
 import dayjs from "dayjs";
 import _ from "lodash";
 import PartialLoading from "../PartialLoading";
+import { Modal } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
+import StaffTimeSlotForm from "./modals/StaffTimeSlotForm";
+import $api from "@/app/_api";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 const CalendarStaff = ({
   isFetching,
@@ -9,8 +15,58 @@ const CalendarStaff = ({
   dateType,
   selectedDay,
   selectedWeek,
-  onActiveSlotSelect,
+  fetchList,
 }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+
+  const createSlot = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.staffSlot.create(body);
+    if (isOk) {
+      await fetchList({
+        studioId: selectedStudio?.id,
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("Staff slot created");
+    }
+    setIsRequesting(false);
+  };
+
+  const updateSlot = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.staffSlot.update(selectedSlot.id, body);
+    if (isOk) {
+      await fetchList({
+        studioId: selectedStudio?.id,
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("Staff slot updated");
+    }
+    setIsRequesting(false);
+  };
+
+  const deleteSlot = async () => {
+    setIsDeleting(true);
+    const { isOk } = await $api.admin.staffSlot.destroy(selectedSlot.id);
+    if (isOk) {
+      await fetchList({
+        studioId: selectedStudio?.id,
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      setIsModalOpen(false);
+      toast.success("Staff slot deleted");
+    }
+    setIsDeleting(false);
+  };
+
   const generateHoursInDay = () => {
     const hours = [];
     const currentDay = dayjs();
@@ -171,7 +227,10 @@ const CalendarStaff = ({
                                         52
                                       }px`,
                                     }}
-                                    onClick={() => onActiveSlotSelect(item)}
+                                    onClick={() => {
+                                      setSelectedSlot(item);
+                                      setIsModalOpen(true);
+                                    }}
                                   >
                                     <span className="tw-text-sm tw-tracking-[0.12px] tw-whitespace-nowrap">
                                       {item.instructor?.name}
@@ -284,6 +343,31 @@ const CalendarStaff = ({
       ) : (
         <PartialLoading />
       )}
+
+      <Modal
+        title={`シフト管理`}
+        open={isModalOpen}
+        footer={null}
+        onCancel={() => setIsModalOpen(false)}
+        styles={{
+          header: {
+            marginBottom: 24,
+          },
+          content: {
+            padding: 40,
+          },
+        }}
+        closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
+      >
+        <StaffTimeSlotForm
+          data={selectedSlot}
+          onComplete={selectedSlot ? updateSlot : createSlot}
+          deleteSlot={deleteSlot}
+          isDeleting={isDeleting}
+          isRequesting={isRequesting}
+          modalKey={modalKey}
+        />
+      </Modal>
     </>
   );
 };

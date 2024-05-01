@@ -1,62 +1,49 @@
-import $api from "@/app/_api";
 import { useCalendarStore } from "@/app/_store/calendar";
 import { Form, Button, TimePicker, DatePicker, Radio, Input } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
-const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
+const StudioShiftSlotModal = ({
+  data,
+  deleteSlot,
+  onComplete,
+  isDeleting,
+  isRequesting,
+  modalKey,
+}) => {
   const [form] = Form.useForm();
   const calendarStore = useCalendarStore((state) => state.body);
-  const [isLoading, setIsLoading] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
 
   useEffect(() => {
     if (data) {
-      form.setFieldsValue({
-        title: data.detailed?.shift?.title,
-        date: dayjs.utc(data.detailed?.shift?.start_at),
-        startHour: dayjs.utc(data.detailed?.shift?.start_at),
-        endHour: dayjs.utc(data.detailed?.shift?.end_at),
-        isRepeat: data.detailed?.shift?.is_repeat,
-      });
-      if (data?.detailed?.shift?.end_date) {
-        form.setFieldValue(
-          "endDate",
-          dayjs.utc(data.detailed?.shift?.end_date)
-        );
-      }
-      setIsRepeat(data.detailed?.shift?.is_repeat);
+      setTimeout(() => {
+        form.setFieldsValue({
+          title: data.detailed?.shift?.title,
+          date: dayjs.utc(data.detailed?.shift?.start_at),
+          startHour: dayjs.utc(data.detailed?.shift?.start_at),
+          endHour: dayjs.utc(data.detailed?.shift?.end_at),
+          isRepeat: data.detailed?.shift?.is_repeat,
+        });
+        if (data?.detailed?.shift?.end_date) {
+          form.setFieldValue(
+            "endDate",
+            dayjs.utc(data.detailed?.shift?.end_date)
+          );
+        }
+        setIsRepeat(data.detailed?.shift?.is_repeat);
+      }, 500);
     }
   }, [data]);
 
   useEffect(() => {
+    form.resetFields();
+    setIsRepeat(false);
+  }, [modalKey]);
+
+  useEffect(() => {
     form.setFieldValue("isRepeat", isRepeat);
   }, [isRepeat]);
-
-  const createShiftSlot = async (body) => {
-    setIsLoading(true);
-    const { isOk } = await $api.admin.shiftSlot.create(body);
-    if (isOk) {
-      await fetchStudios();
-      form.resetFields();
-      closeModal();
-    }
-    setIsLoading(false);
-  };
-
-  const updateShiftSlot = async (body) => {
-    setIsLoading(true);
-    const { isOk } = await $api.admin.shiftSlot.update(
-      data.detailed?.shift.id,
-      body
-    );
-    if (isOk) {
-      await fetchStudios();
-      form.resetFields();
-      closeModal();
-    }
-    setIsLoading(false);
-  };
 
   const beforeComplete = (params) => {
     const body = {
@@ -75,7 +62,7 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
       body["endDate"] = dayjs(params.endDate).format("YYYY-MM-DD");
     }
 
-    data ? updateShiftSlot(body) : createShiftSlot(body);
+    onComplete(body);
   };
 
   return (
@@ -217,11 +204,17 @@ const StudioShiftSlotModal = ({ data, closeModal, fetchStudios }) => {
 
         <Form.Item style={{ marginTop: 24, marginBottom: 0 }}>
           <div className="tw-flex tw-justify-end tw-gap-2">
-            <Button size="large" onClick={() => closeModal()}>
-              キャンセル
+            <Button
+              loading={isDeleting}
+              type="primary"
+              danger
+              size="large"
+              onClick={() => deleteSlot()}
+            >
+              削除
             </Button>
             <Button
-              loading={isLoading}
+              loading={isRequesting}
               type="primary"
               size="large"
               htmlType="submit"

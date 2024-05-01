@@ -9,11 +9,9 @@ import CalendarFilters from "../_components/calendar/CalendarFilters";
 import CalendarMember from "../_components/calendar/CalendarMember";
 import CalendarStaff from "../_components/calendar/CalendarStaff";
 import CalendarSettingsModal from "../_components/calendar/CalendarSettingsModal";
-import _ from "lodash";
 import $api from "../_api";
 import { useCalendarStore } from "../_store/calendar";
 import dayjs from "dayjs";
-import ActiveSlotModal from "../_components/calendar/modals/ActiveSlotModal";
 
 const CalendarPage = () => {
   const setCalendarStore = useCalendarStore((state) => state.setBody);
@@ -25,11 +23,9 @@ const CalendarPage = () => {
   const [dateType, setDateType] = useState("week");
 
   const [isFetching, setIsFetching] = useState(false);
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [isActiveSlotModalOpen, setIsActiveSlotModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSettingsOption, setSelectedSettingsOption] = useState(null);
   const [selectedStudio, setSelectedStudio] = useState(null);
-  const [selectedActiveSlot, setSelectedActiveSlot] = useState(null);
 
   const [selectedWeek, setSelectedWeek] = useState({
     start: dayjs().startOf("week"),
@@ -89,22 +85,21 @@ const CalendarPage = () => {
     }
   };
 
-  const onStudioChange = (studioId) => {
-    if (studioId) {
-      const matched = _.find(studios, { id: studioId });
-      setSelectedStudio(matched);
+  const onStudioChange = (studio) => {
+    if (studio) {
+      setSelectedStudio(studio);
       setCalendarStore({
-        studioId: studioId,
+        studioId: studio.id,
       });
       if (calendarType === "staff") {
         fetchStaffTimeSlots({
-          studioId,
+          studioId: studio.id,
           startAt: dayjs(
             dateType === "day" ? selectedDay : selectedWeek.start
           ).format("YYYY-MM-DD"),
         });
       } else {
-        fetchMemberTimeSlots(studioId, {
+        fetchMemberTimeSlots(studio.id, {
           startAt: dayjs(
             dateType === "day" ? selectedDay : selectedWeek.start
           ).format("YYYY-MM-DD"),
@@ -153,9 +148,9 @@ const CalendarPage = () => {
           setCalendarType={(type) => onCalendarTypeChange(type)}
           dateType={dateType}
           setDateType={setDateType}
-          setIsSettingsModalOpen={setIsSettingsModalOpen}
-          onStudioChange={(studioId) => {
-            onStudioChange(studioId);
+          setIsSettingsModalOpen={setIsModalOpen}
+          onStudioChange={(studio) => {
+            onStudioChange(studio);
           }}
           onDateChange={(value) => {
             handleFetch({
@@ -184,10 +179,6 @@ const CalendarPage = () => {
               dateType={dateType}
               selectedDay={selectedDay}
               selectedWeek={selectedWeek}
-              onActiveSlotSelect={(data) => {
-                setSelectedActiveSlot(data);
-                setIsActiveSlotModalOpen(true);
-              }}
               fetchList={fetchMemberTimeSlots}
             />
           ) : (
@@ -198,10 +189,7 @@ const CalendarPage = () => {
               dateType={dateType}
               selectedDay={selectedDay}
               selectedWeek={selectedWeek}
-              onActiveSlotSelect={(data) => {
-                setSelectedActiveSlot(data);
-                setIsActiveSlotModalOpen(true);
-              }}
+              fetchList={fetchStaffTimeSlots}
             />
           )}
         </div>
@@ -229,9 +217,9 @@ const CalendarPage = () => {
             </div>
           </>
         }
-        open={isSettingsModalOpen}
+        open={isModalOpen}
         footer={null}
-        onCancel={() => setIsSettingsModalOpen(false)}
+        onCancel={() => setIsModalOpen(false)}
         styles={{
           header: {
             marginBottom: 24,
@@ -245,28 +233,8 @@ const CalendarPage = () => {
         <CalendarSettingsModal
           selectedSettingsOption={selectedSettingsOption}
           setSelectedSettingsOption={setSelectedSettingsOption}
-          closeModal={() => setIsSettingsModalOpen(false)}
+          closeModal={() => setIsModalOpen(false)}
           fetchStudios={fetchStudios}
-        />
-      </Modal>
-      <Modal
-        title={`シフト管理`}
-        open={isActiveSlotModalOpen}
-        footer={null}
-        onCancel={() => setIsActiveSlotModalOpen(false)}
-        styles={{
-          header: {
-            marginBottom: 24,
-          },
-          content: {
-            padding: 40,
-          },
-        }}
-        closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
-      >
-        <ActiveSlotModal
-          data={selectedActiveSlot}
-          closeModal={() => setIsActiveSlotModalOpen(false)}
         />
       </Modal>
     </>

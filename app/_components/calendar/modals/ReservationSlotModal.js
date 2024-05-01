@@ -2,9 +2,6 @@ import { Button } from "antd";
 import EEnumReservationStatus from "@/app/_enums/EEnumReservationStatus";
 import { nullSafety } from "@/app/_utils/helpers";
 import dayjs from "dayjs";
-import $api from "@/app/_api";
-import { toast } from "react-toastify";
-import { useState } from "react";
 
 const columns = [
   {
@@ -38,20 +35,7 @@ const columns = [
   },
 ];
 
-const ReservationSlotModal = ({ data, closeModal, fetchList }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const cancelReservation = async () => {
-    setIsLoading(true);
-    const { isOk } = await $api.admin.reservation.cancel(data.id);
-    if (isOk) {
-      await fetchList();
-      closeModal();
-      toast.success("Reservation cancelled");
-    }
-    setIsLoading(false);
-  };
-
+const ReservationSlotModal = ({ data, onCancel, isRequesting }) => {
   const formatData = (column) => {
     let result = "-";
     if (column.obj) {
@@ -119,10 +103,10 @@ const ReservationSlotModal = ({ data, closeModal, fetchList }) => {
           </section>
           <section className="tw-flex tw-justify-end">
             <Button
-              loading={isLoading}
+              loading={isRequesting}
               type="primary"
               size="large"
-              onClick={() => cancelReservation()}
+              onClick={() => onCancel()}
             >
               キャンセルする
             </Button>

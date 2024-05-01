@@ -6,6 +6,8 @@ import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import ReservationSlotModal from "./modals/ReservationSlotModal";
 import StudioShiftSlotModal from "./modals/StudioShiftSlotModal";
+import $api from "@/app/_api";
+import { toast } from "react-toastify";
 
 const CalendarMember = ({
   isFetching,
@@ -14,12 +16,73 @@ const CalendarMember = ({
   dateType,
   selectedDay,
   selectedWeek,
-  // onActiveSlotSelect,
   fetchList,
 }) => {
   const [modalType, setModalType] = useState("member");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [isRequesting, setIsRequesting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
+
+  const createShiftSlot = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.shiftSlot.create(body);
+    if (isOk) {
+      await fetchList(selectedStudio?.id, {
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("Shift slot created");
+    }
+    setIsRequesting(false);
+  };
+
+  const updateShiftSlot = async (body) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.shiftSlot.update(
+      selectedSlot.detailed?.shift.id,
+      body
+    );
+    if (isOk) {
+      await fetchList(selectedStudio?.id, {
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      setModalKey((prev) => prev + 1);
+      setIsModalOpen(false);
+      toast.success("Shift slot created");
+    }
+    setIsRequesting(false);
+  };
+
+  const deleteShiftSlot = async () => {
+    setIsDeleting(true);
+    const { isOk } = await $api.admin.shiftSlot.destroy(
+      selectedSlot.detailed?.shift.id
+    );
+    if (isOk) {
+      await fetchList(selectedStudio?.id, {
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      setIsModalOpen(false);
+      toast.success("Shift slot deleted");
+    }
+    setIsDeleting(false);
+  };
+
+  const cancelReservation = async () => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.reservation.cancel(selectedSlot?.id);
+    if (isOk) {
+      await fetchList(selectedStudio?.id, {
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
+      });
+      setIsModalOpen(false);
+      toast.success("Reservation cancelled");
+    }
+    setIsRequesting(false);
+  };
 
   const generateHoursInDay = () => {
     const hours = [];
@@ -344,14 +407,20 @@ const CalendarMember = ({
         {modalType === "member" ? (
           <ReservationSlotModal
             data={selectedSlot}
-            closeModal={() => setIsModalOpen(false)}
-            fetchList={fetchList}
+            onCancel={cancelReservation}
+            isRequesting={isRequesting}
           />
         ) : (
           <StudioShiftSlotModal
             data={selectedSlot}
             closeModal={() => setIsModalOpen(false)}
-            fetchStudios={fetchList}
+            deleteSlot={deleteShiftSlot}
+            onComplete={(body) =>
+              selectedSlot ? updateShiftSlot(body) : createShiftSlot(body)
+            }
+            isRequesting={isRequesting}
+            isDeleting={isDeleting}
+            modalKey={modalKey}
           />
         )}
       </Modal>

@@ -193,7 +193,7 @@ const CalendarFilters = ({
                 }))}
                 onChange={(value) => {
                   setCalendarStore({ studioId: value });
-                  onStudioChange(value);
+                  onStudioChange(_.find(studios, { id: value }));
                 }}
                 value={selectedStudio.id}
                 style={{ width: 200 }}

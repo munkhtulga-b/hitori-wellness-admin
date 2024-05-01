@@ -4,15 +4,20 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import $api from "@/app/_api";
 import _ from "lodash";
-import { toast } from "react-toastify";
 
-const StaffTimeSlotForm = ({ closeModal, data }) => {
+const StaffTimeSlotForm = ({
+  data,
+  onComplete,
+  deleteSlot,
+  isDeleting,
+  isRequesting,
+  modalKey,
+}) => {
   const [form] = Form.useForm();
   const calendarStore = useCalendarStore((state) => state.body);
 
   const [staff, setStaff] = useState(null);
   const [isRepeat, setIsRepeat] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchStaff();
@@ -36,30 +41,13 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
   }, [data]);
 
   useEffect(() => {
+    form.resetFields();
+    setIsRepeat(false);
+  }, [modalKey]);
+
+  useEffect(() => {
     form.setFieldValue("isRepeat", isRepeat);
   }, [isRepeat]);
-
-  const createStaffTimeSlot = async (body) => {
-    setIsLoading(true);
-    const { isOk } = await $api.admin.staffSlot.create(body);
-    if (isOk) {
-      resetForm();
-      closeModal();
-      toast.success("Time slot created successfully");
-    }
-    setIsLoading(false);
-  };
-
-  const updateStaffTimeSlot = async (body) => {
-    setIsLoading(true);
-    const { isOk } = await $api.admin.staffSlot.update(data?.id, body);
-    if (isOk) {
-      resetForm();
-      closeModal();
-      toast.success("Time slot updated successfully");
-    }
-    setIsLoading(false);
-  };
 
   const fetchStaff = async () => {
     const { isOk, data } = await $api.admin.staff.getMany();
@@ -89,12 +77,7 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
       body["endDate"] = dayjs(params.endDate).format("YYYY-MM-DD");
     }
 
-    data ? updateStaffTimeSlot(body) : createStaffTimeSlot(body);
-  };
-
-  const resetForm = () => {
-    form.resetFields();
-    setIsRepeat(false);
+    onComplete(body);
   };
 
   return (
@@ -249,11 +232,15 @@ const StaffTimeSlotForm = ({ closeModal, data }) => {
 
         <Form.Item style={{ marginTop: 24, marginBottom: 0 }}>
           <div className="tw-flex tw-justify-end tw-gap-2">
-            <Button size="large" onClick={() => closeModal()}>
-              キャンセル
+            <Button
+              loading={isDeleting}
+              size="large"
+              onClick={() => deleteSlot()}
+            >
+              削除
             </Button>
             <Button
-              loading={isLoading}
+              loading={isRequesting}
               type="primary"
               size="large"
               htmlType="submit"
