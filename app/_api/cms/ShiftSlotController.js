@@ -13,3 +13,7 @@ export const create = (body) => {
 export const update = (id, body) => {
   return fetchData(`shiftSlots/${id}`, "PATCH", body);
 };
+
+export const destroy = (id) => {
+  return fetchData(`shiftSlots/${id}`, "DELETE");
+};
