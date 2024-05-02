@@ -6,6 +6,7 @@ import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import ReservationSlotModal from "./modals/ReservationSlotModal";
 import StudioShiftSlotModal from "./modals/StudioShiftSlotModal";
+import CalendarSlotCard from "./CalendarSlotCard";
 
 const CalendarMember = ({
   isFetching,
@@ -101,35 +102,10 @@ const CalendarMember = ({
     return days;
   };
 
-  const getReservationDetails = (item) => {
-    let result = "-";
-    if (item.detailed?.member) {
-      result = `${item.detailed.member.last_name} ${item.detailed.member.first_name}`;
-    }
-    if (item.detailed?.shift) {
-      result = `${item.detailed.shift?.title}`;
-    }
-    return result;
-  };
-
   const handleSlotClick = (item) => {
     item.detailed?.member ? setModalType("member") : setModalType("shift");
     setSelectedSlot(item);
     setIsModalOpen(true);
-  };
-
-  const getSlotStyle = (item, hourIndex) => {
-    let result = "";
-    if (item.detailed?.shift) {
-      result = "tw-bg-bgCancelled/30 tw-border-cancelled";
-    } else {
-      if (hourIndex % 2 === 0) {
-        result = "tw-bg-bgCalendarGreen tw-border-calendarGreen";
-      } else {
-        result = "tw-bg-bgCalendarBlue tw-border-available";
-      }
-    }
-    return result;
   };
 
   return (
@@ -195,29 +171,13 @@ const CalendarMember = ({
                                 style={{ zIndex: 10 + hour.index }}
                               >
                                 {hour.data.map((item, itemIndex) => (
-                                  <section
+                                  <CalendarSlotCard
                                     key={itemIndex}
-                                    className={`${getSlotStyle(
-                                      item,
-                                      hourIndex
-                                    )} tw-p-2 tw-rounded-xl tw-border tw-overflow-x-hidden tw-cursor-pointer`}
-                                    style={{
-                                      flex: 1,
-                                      height: `${
-                                        (dayjs(item.end_at).diff(
-                                          dayjs(item.start_at),
-                                          "minute"
-                                        ) /
-                                          60) *
-                                        52
-                                      }px`,
-                                    }}
-                                    onClick={() => handleSlotClick(item)}
-                                  >
-                                    <span className="tw-text-sm tw-tracking-[0.12px] tw-whitespace-nowrap">
-                                      {getReservationDetails(item)}
-                                    </span>
-                                  </section>
+                                    item={item}
+                                    itemIndex={itemIndex}
+                                    hourIndex={hourIndex}
+                                    handleSlotClick={handleSlotClick}
+                                  />
                                 ))}
                               </div>
                             </>
@@ -287,29 +247,13 @@ const CalendarMember = ({
                               style={{ zIndex: 10 + hour.index }}
                             >
                               {hour.data.map((item, itemIndex) => (
-                                <section
+                                <CalendarSlotCard
                                   key={itemIndex}
-                                  className={`${
-                                    hourIndex % 2 === 0
-                                      ? "tw-bg-bgCalendarBlue"
-                                      : "tw-bg-bgCalendarGreen"
-                                  } tw-p-2 tw-rounded-xl tw-border tw-border-available tw-overflow-x-hidden tw-cursor-pointer`}
-                                  style={{
-                                    flex: 1,
-                                    height: `${
-                                      (dayjs(item.end_at).diff(
-                                        dayjs(item.start_at),
-                                        "minute"
-                                      ) /
-                                        60) *
-                                      52
-                                    }px`,
-                                  }}
-                                >
-                                  <span className="tw-text-sm tw-tracking-[0.12px] tw-whitespace-nowrap">
-                                    {getReservationDetails(item)}
-                                  </span>
-                                </section>
+                                  item={item}
+                                  itemIndex={itemIndex}
+                                  hourIndex={hourIndex}
+                                  handleSlotClick={handleSlotClick}
+                                />
                               ))}
                             </div>
                           </>
