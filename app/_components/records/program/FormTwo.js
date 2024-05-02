@@ -26,20 +26,8 @@ const ProgramFormTwo = ({
 
   useEffect(() => {
     if (sortedPlans && sortedTickets && data) {
-      const previousPlanDetails = _.map(
-        data?.plan_reserve_limit,
-        ({ id: value, name: label }) => ({
-          value,
-          label,
-        })
-      );
-      const previousTicketDetails = _.map(
-        data?.ticket_reserve_limit,
-        ({ id: value, name: label }) => ({
-          value,
-          label,
-        })
-      );
+      const previousPlanDetails = _.map(data?.plan_reserve_limit, "id");
+      const previousTicketDetails = _.map(data?.ticket_reserve_limit, "id");
       setTimeout(() => {
         form.setFieldsValue({
           planReserveLimitDetails: previousPlanDetails,
@@ -90,8 +78,16 @@ const ProgramFormTwo = ({
       params["isPlanReserveLimit"] = false;
       params["isTicketReserveLimit"] = false;
     } else {
-      params["isPlanReserveLimit"] = true;
-      params["isTicketReserveLimit"] = true;
+      if (planReserveLimitDetails?.length) {
+        params["isPlanReserveLimit"] = true;
+      } else {
+        params["isPlanReserveLimit"] = false;
+      }
+      if (ticketReserveLimitDetails?.length) {
+        params["isTicketReserveLimit"] = true;
+      } else {
+        params["isTicketReserveLimit"] = false;
+      }
     }
     delete params.noLimit;
     onComplete(params);
