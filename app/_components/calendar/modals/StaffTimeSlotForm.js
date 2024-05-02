@@ -22,6 +22,44 @@ const StaffTimeSlotForm = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
+  useEffect(() => {
+    fetchStaff();
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        instructorId: data?.instructor?.id,
+        date: dayjs.utc(data?.start_at),
+        startHour: dayjs.utc(data?.start_at),
+        endHour: dayjs.utc(data?.end_at),
+        description: data?.description,
+        isRepeat: data?.is_repeat,
+      });
+      if (data?.end_date) {
+        form.setFieldValue("endDate", dayjs.utc(data?.end_date));
+      }
+      setIsRepeat(data?.is_repeat);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    form.setFieldValue("isRepeat", isRepeat);
+  }, [isRepeat]);
+
+  const fetchStaff = async () => {
+    const { isOk, data } = await $api.admin.staff.getMany({
+      studioId: selectedStudio?.id,
+    });
+    if (isOk) {
+      const sorted = _.map(data, ({ id: value, name: label }) => ({
+        value,
+        label,
+      }));
+      setStaff(sorted);
+    }
+  };
+
   const createSlot = async (body) => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.staffSlot.create(body);
@@ -64,42 +102,6 @@ const StaffTimeSlotForm = ({
       toast.success("Staff slot deleted");
     }
     setIsDeleting(false);
-  };
-
-  useEffect(() => {
-    fetchStaff();
-  }, []);
-
-  useEffect(() => {
-    if (data) {
-      form.setFieldsValue({
-        instructorId: data?.instructor?.id,
-        date: dayjs.utc(data?.start_at),
-        startHour: dayjs.utc(data?.start_at),
-        endHour: dayjs.utc(data?.end_at),
-        description: data?.description,
-        isRepeat: data?.is_repeat,
-      });
-      if (data?.end_date) {
-        form.setFieldValue("endDate", dayjs.utc(data?.end_date));
-      }
-      setIsRepeat(data?.is_repeat);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    form.setFieldValue("isRepeat", isRepeat);
-  }, [isRepeat]);
-
-  const fetchStaff = async () => {
-    const { isOk, data } = await $api.admin.staff.getMany();
-    if (isOk) {
-      const sorted = _.map(data, ({ id: value, name: label }) => ({
-        value,
-        label,
-      }));
-      setStaff(sorted);
-    }
   };
 
   const beforeComplete = (params) => {

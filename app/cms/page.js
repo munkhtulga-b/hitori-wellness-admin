@@ -229,6 +229,7 @@ const CalendarPage = () => {
           },
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
+        destroyOnClose
       >
         <CalendarSettingsModal
           selectedSettingsOption={selectedSettingsOption}
