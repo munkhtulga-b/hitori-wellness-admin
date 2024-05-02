@@ -30,7 +30,8 @@ const StudioFormOne = ({
         thumbnailCode: data?.thumbnail_code,
         code: data?.code,
         name: data?.name,
-        status: data?.status,
+        status:
+          data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
       });
     }
   }, [data]);

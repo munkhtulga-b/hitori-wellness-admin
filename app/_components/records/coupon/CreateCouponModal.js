@@ -38,9 +38,7 @@ const CreateCouponModal = ({
           targetStudioIds: _.map(data?.studio_ids, "id"),
           noLimit: data?.target_studio_ids?.length === 0,
           status:
-            data?.status === true
-              ? EEnumDatabaseStatus.ACTIVE.value
-              : EEnumDatabaseStatus.INACTIVE.value,
+            data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
         setNoLimit(data?.target_studio_ids?.length === 0);
       }, 500);

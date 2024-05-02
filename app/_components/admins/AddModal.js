@@ -5,10 +5,17 @@ import { useEffect } from "react";
 const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
   const [form] = Form.useForm();
   const getLevelTypes = useAdminAccessStore((state) => state.getAccess());
+  const levelType = Form.useWatch("levelType", form);
 
   useEffect(() => {
     form.resetFields();
   }, [modalKey]);
+
+  useEffect(() => {
+    if (levelType == 1) {
+      form.setFieldValue("studioIds", []);
+    }
+  }, [levelType]);
 
   return (
     <>
@@ -63,7 +70,7 @@ const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
               label="登録店舗"
               rules={[
                 {
-                  required: true,
+                  required: levelType == 1 ? false : true,
                   message: "登録店舗を選択してください。",
                 },
               ]}

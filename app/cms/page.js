@@ -31,7 +31,7 @@ const CalendarPage = () => {
     start: dayjs().startOf("week"),
     end: dayjs().endOf("week"),
   });
-  const [selectedDay, setSelectedDay] = useState(dayjs(selectedWeek.start));
+  const [selectedDay, setSelectedDay] = useState(dayjs());
 
   useEffect(() => {
     fetchStudios();

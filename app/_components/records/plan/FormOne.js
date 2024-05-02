@@ -22,9 +22,7 @@ const PlanFormOne = ({
           name: data?.name,
           description: data?.description,
           status:
-            data?.status === true
-              ? EEnumDatabaseStatus.ACTIVE.value
-              : EEnumDatabaseStatus.INACTIVE.value,
+            data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
           canAdmissionFee: data?.admission_fee ? true : false,
         });
       }, 500);

@@ -27,9 +27,7 @@ const CreateItemModal = ({
           itemType: data?.item_type,
           price: data?.prices[0]?.price,
           status:
-            data?.status === true
-              ? EEnumDatabaseStatus.ACTIVE.value
-              : EEnumDatabaseStatus.INACTIVE.value,
+            data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
         setItemType(data?.item_type);
         if (data?.item_type === EEnumItemTypes.TICKET.value) {

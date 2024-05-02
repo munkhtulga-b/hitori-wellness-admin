@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAdminAccessStore } from "@/app/_store/admin-access";
 import _ from "lodash";
+import EEnumAdminLevelTypes from "@/app/_enums/EEnumAdminLevelTypes";
 
 const AuthLogin = () => {
   const router = useRouter();
@@ -21,7 +22,10 @@ const AuthLogin = () => {
     setIsLoading(true);
     const { isOk, data } = await $api.auth.login(params);
     if (isOk) {
-      const access = await getAdminAccess();
+      const access = _.map(EEnumAdminLevelTypes, ({ value, label }) => ({
+        value,
+        label,
+      }));
       if (access) {
         Cookies.set("token", data.tokens);
         setUser(data.admin);
@@ -32,22 +36,22 @@ const AuthLogin = () => {
     setIsLoading(false);
   };
 
-  const getAdminAccess = async () => {
-    const { isOk, data } = await $api.admin.access.getMany();
-    if (isOk) {
-      const sorted = _.uniqBy(data, "level_type");
-      const mapped = _.map(
-        sorted,
-        ({ level_type: value, level_type: label }) => ({
-          value,
-          label: `タイプ${label}`,
-        })
-      );
-      return mapped;
-    } else {
-      return null;
-    }
-  };
+  // const getAdminAccess = async () => {
+  //   const { isOk, data } = await $api.admin.access.getMany();
+  //   if (isOk) {
+  //     const sorted = _.uniqBy(data, "level_type");
+  //     const mapped = _.map(
+  //       sorted,
+  //       ({ level_type: value, level_type: label }) => ({
+  //         value,
+  //         label: `タイプ${label}`,
+  //       })
+  //     );
+  //     return mapped;
+  //   } else {
+  //     return null;
+  //   }
+  // };
 
   return (
     <motion.div

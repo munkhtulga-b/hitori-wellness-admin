@@ -5,6 +5,7 @@ import PlanFormOne from "./FormOne";
 import _ from "lodash";
 import PlanFormTwo from "./FormTwo";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
+import EEnumItemTypes from "@/app/_enums/EEnumItemTypes";
 
 const CreatePlanModal = ({
   data,
@@ -27,7 +28,10 @@ const CreatePlanModal = ({
   }, [modalKey]);
 
   const fetchItems = async () => {
-    const { isOk, data } = await $api.admin.item.getMany();
+    const { isOk, data } = await $api.admin.item.getMany({
+      itemType: EEnumItemTypes.PLAN.value,
+      status: EEnumDatabaseStatus.ACTIVE.value,
+    });
     if (isOk) {
       const sorted = _.map(data, ({ id: value, name: label }) => ({
         value,

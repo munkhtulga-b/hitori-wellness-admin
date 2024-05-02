@@ -25,9 +25,7 @@ const CreateStaffModal = ({
           studioIds: _.map(data?.studio_ids, "id"),
           gender: data?.gender,
           status:
-            data?.status === true
-              ? EEnumDatabaseStatus.ACTIVE.value
-              : EEnumDatabaseStatus.INACTIVE.value,
+            data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
         setGender(data?.gender);
       }, 500);
