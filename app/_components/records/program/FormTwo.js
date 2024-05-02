@@ -26,22 +26,24 @@ const ProgramFormTwo = ({
 
   useEffect(() => {
     if (sortedPlans && sortedTickets && data) {
+      const previousPlanDetails = _.map(
+        data?.plan_reserve_limit,
+        ({ id: value, name: label }) => ({
+          value,
+          label,
+        })
+      );
+      const previousTicketDetails = _.map(
+        data?.ticket_reserve_limit,
+        ({ id: value, name: label }) => ({
+          value,
+          label,
+        })
+      );
       setTimeout(() => {
         form.setFieldsValue({
-          planReserveLimitDetails: _.map(
-            data?.plan_reserve_limit_details,
-            ({ plan_id: value, plan_name: label }) => ({
-              value,
-              label,
-            })
-          ),
-          ticketReserveLimitDetails: _.map(
-            data?.ticket_reserve_limit_details,
-            ({ ticket_id: value, ticket_name: label }) => ({
-              value,
-              label,
-            })
-          ),
+          planReserveLimitDetails: previousPlanDetails,
+          ticketReserveLimitDetails: previousTicketDetails,
         });
       }, 500);
     }
@@ -123,7 +125,8 @@ const ProgramFormTwo = ({
           label="プラン制限"
           rules={[
             {
-              required: noLimit ? false : true,
+              required:
+                noLimit || ticketReserveLimitDetails?.length ? false : true,
               message: "プランを選択してください。",
             },
           ]}
@@ -145,7 +148,8 @@ const ProgramFormTwo = ({
           label="チケット制限"
           rules={[
             {
-              required: noLimit ? false : true,
+              required:
+                noLimit || planReserveLimitDetails?.length ? false : true,
               message: "チケットを選択してください。",
             },
           ]}

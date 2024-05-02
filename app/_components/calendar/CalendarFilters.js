@@ -37,7 +37,11 @@ const CalendarFilters = ({
 
   useEffect(() => {
     if (dateType === "day") {
-      setSelectedDay(dayjs(selectedWeek.start));
+      if (dayjs(selectedWeek.start).isAfter(dayjs().startOf("week"))) {
+        setSelectedDay(dayjs(selectedWeek.start));
+      } else {
+        setSelectedDay(dayjs());
+      }
     }
   }, [dateType]);
 

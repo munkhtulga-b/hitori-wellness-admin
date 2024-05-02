@@ -1,4 +1,4 @@
-import { Input, Button } from "antd";
+import { Input, Button, Modal } from "antd";
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -14,8 +14,20 @@ const RecordTableFilters = ({
   isRequesting,
   checkedRows,
 }) => {
+  const [modal, contextHolder] = Modal.useModal();
+  const showDeleteConfirm = () => {
+    modal.confirm({
+      title: "This is a warning message",
+      content: "some messages...some messages...",
+      onOk() {
+        onDelete();
+      },
+    });
+  };
+
   return (
     <>
+      {contextHolder}
       <section className="tw-flex tw-flex-col tw-items-end xl:tw-flex-row xl:tw-justify-between xl:tw-items-start tw-gap-10">
         <div className="tw-self-start tw-flex tw-justify-start tw-items-center tw-gap-3">
           <Input
@@ -50,7 +62,7 @@ const RecordTableFilters = ({
               size="large"
               type="primary"
               danger
-              onClick={() => onDelete()}
+              onClick={() => showDeleteConfirm()}
             >
               {!isRequesting ? (
                 <div className="tw-flex tw-justify-start tw-items-center tw-gap-1">

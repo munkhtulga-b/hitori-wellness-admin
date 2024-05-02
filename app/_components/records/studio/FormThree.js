@@ -4,6 +4,7 @@ import { Form, Input, Button, TimePicker, Radio } from "antd";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import TextEditor from "../../custom/TextEditor";
+import _ from "lodash";
 
 const StudioFormThree = ({
   data,
@@ -50,7 +51,6 @@ const StudioFormThree = ({
       dayjs(startHour, "HH:mm"),
       "hour"
     );
-    console.log(timeDifference);
     if (timeDifference >= 23) {
       form.setFieldValue("isTwentyFourHour", true);
     } else {
@@ -76,9 +76,8 @@ const StudioFormThree = ({
         timeperiod: "FULLTIME",
       },
     ];
-    delete params.startHour;
-    delete params.endHour;
-    onComplete(params);
+    const body = _.omit(params, ["startHour", "endHour", "isTwentyFourHour"]);
+    onComplete(body);
   };
 
   return (
