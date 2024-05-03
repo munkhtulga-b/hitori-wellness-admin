@@ -24,7 +24,7 @@ const columns = [
     type: "stackedList",
   },
   {
-    title: "予約タイムスロット",
+    title: "適用期間",
     dataIndex: ["start_at", "end_at"],
     customStyle: "",
     type: "date",
@@ -165,7 +165,7 @@ const RecordCoupon = ({ studios }) => {
       </div>
 
       <Modal
-        title="クーポン新規登録"
+        title={selectedRow ? "クーポン情報" : "新規クーポン登録"}
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}

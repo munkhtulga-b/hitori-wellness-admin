@@ -179,7 +179,7 @@ const RecordProgram = () => {
       </div>
 
       <Modal
-        title="メンバー詳細"
+        title={selectedRow ? "プログラム情報" : "新規プログラム登録"}
         open={isModalOpen}
         footer={null}
         onCancel={() => {

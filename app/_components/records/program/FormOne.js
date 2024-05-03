@@ -103,11 +103,11 @@ const ProgramFormOne = ({
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="0000" />
         </Form.Item>
         <Form.Item
           name="name"
-          label="プログラム名称"
+          label="名称"
           rules={[
             {
               required: true,
@@ -115,7 +115,7 @@ const ProgramFormOne = ({
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="名称" />
         </Form.Item>
         <Form.Item
           name="serviceMinutes"

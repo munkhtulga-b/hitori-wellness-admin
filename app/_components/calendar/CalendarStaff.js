@@ -131,7 +131,7 @@ const CalendarStaff = ({
                       key={dayjs(day).format("ddd")}
                       className={`tw-flex tw-flex-col tw-min-w-[200px] tw-max-w-[200px] xl:tw-min-w-[100%] xl:tw-max-w-[100%] ${
                         dayIndex === 0 ? "tw-border-x" : "tw-border-r"
-                      } tw-border-divider`}
+                      } tw-border-divider tw-overflow-hidden`}
                     >
                       <div className="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-mb-2">
                         <span className="tw-leading-[26px] tw-tracking-[0.14px]">

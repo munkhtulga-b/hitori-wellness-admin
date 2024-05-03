@@ -93,7 +93,7 @@ const CreateItemModal = ({
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="0000" />
         </Form.Item>
 
         <Form.Item
@@ -106,7 +106,7 @@ const CreateItemModal = ({
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="名称" />
         </Form.Item>
 
         <Form.Item
@@ -138,7 +138,7 @@ const CreateItemModal = ({
           <>
             <Form.Item
               name="expiresDays"
-              label="金額（税込）"
+              label="有効期限制限"
               rules={[
                 {
                   required: true,
@@ -146,12 +146,12 @@ const CreateItemModal = ({
                 },
               ]}
             >
-              <Input type="number" placeholder="" />
+              <Input type="number" placeholder="日" />
             </Form.Item>
 
             <Form.Item
               name="studioIds"
-              label="月会費"
+              label="利用可能店舗"
               rules={[
                 {
                   required: true,
@@ -166,7 +166,7 @@ const CreateItemModal = ({
                 style={{
                   width: "100%",
                 }}
-                placeholder=""
+                placeholder="店舗を選択"
                 options={studios}
               />
             </Form.Item>
@@ -183,7 +183,11 @@ const CreateItemModal = ({
             },
           ]}
         >
-          <Input disabled={isPriceReadOnly()} type="number" placeholder="" />
+          <Input
+            disabled={isPriceReadOnly()}
+            type="number"
+            placeholder="0000"
+          />
         </Form.Item>
 
         <Form.Item

@@ -55,7 +55,7 @@ const StudioBusinessHourModal = ({ closeModal, fetchStudios }) => {
       <Form
         layout="vertical"
         form={form}
-        name="create-staff-form"
+        name="studio-business-hours-form"
         onFinish={(params) => beforeComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
@@ -74,7 +74,7 @@ const StudioBusinessHourModal = ({ closeModal, fetchStudios }) => {
             {
               type: "object",
               required: true,
-              message: "Please input your E-mail!",
+              message: "開店時間を設定してください。",
             },
           ]}
         >
@@ -98,7 +98,7 @@ const StudioBusinessHourModal = ({ closeModal, fetchStudios }) => {
             {
               type: "object",
               required: true,
-              message: "Please input your E-mail!",
+              message: "閉店時間を設定してください。",
             },
           ]}
         >

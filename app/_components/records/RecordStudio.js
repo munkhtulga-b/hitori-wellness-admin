@@ -231,7 +231,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
       </div>
 
       <Modal
-        title="店舗新規登録"
+        title={selectedRow ? "店舗情報" : "新規店舗登録"}
         open={isModalOpen}
         footer={null}
         onCancel={() => {

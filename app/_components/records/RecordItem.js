@@ -212,7 +212,7 @@ const RecordItem = ({ studios }) => {
       </div>
 
       <Modal
-        title="商品新規登録"
+        title={selectedRow ? "アイテム情報" : "新規アイテム登録"}
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}

@@ -1,4 +1,4 @@
-import { Form, Select, Button, DatePicker, TimePicker, Radio } from "antd";
+import { Form, Select, Button, DatePicker, Radio } from "antd";
 import { useCalendarStore } from "@/app/_store/calendar";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
@@ -30,9 +30,8 @@ const StaffTimeSlotForm = ({
     if (data) {
       form.setFieldsValue({
         instructorId: data?.instructor?.id,
-        date: dayjs.utc(data?.start_at),
-        startHour: dayjs.utc(data?.start_at),
-        endHour: dayjs.utc(data?.end_at),
+        startTime: dayjs.utc(data?.start_at),
+        endTime: dayjs.utc(data?.end_at),
         description: data?.description,
         isRepeat: data?.is_repeat,
       });
@@ -108,12 +107,8 @@ const StaffTimeSlotForm = ({
     const body = {
       studioId: calendarStore.studioId,
       instructorId: params.instructorId,
-      startTime: `${dayjs(params.date).format("YYYY-MM-DD")} ${dayjs(
-        params.startHour
-      ).format("HH:mm")}`,
-      endTime: `${dayjs(params.date).format("YYYY-MM-DD")} ${dayjs(
-        params.endHour
-      ).format("HH:mm")}`,
+      startTime: dayjs(params.startTime).format("YYYY-MM-DD HH:mm"),
+      endTime: dayjs(params.endTime).format("YYYY-MM-DD HH:mm"),
       isRepeat: params.isRepeat,
     };
 
@@ -145,7 +140,7 @@ const StaffTimeSlotForm = ({
           rules={[
             {
               required: true,
-              message: "Please select instructor",
+              message: "スタッフを選択してください。",
             },
           ]}
         >
@@ -159,19 +154,23 @@ const StaffTimeSlotForm = ({
             options={staff}
           />
         </Form.Item>
+
         <Form.Item
-          name="date"
-          label="指定の日程"
+          name="startTime"
+          label="開始時間"
           rules={[
             {
               type: "object",
               required: true,
-              message: "Please input your E-mail!",
+              message: "開始時間を設定してください。",
             },
           ]}
         >
           <DatePicker
-            format={"YYYY/MM/DD"}
+            showTime
+            minuteStep={30}
+            format={"YYYY-MM-DD HH:mm"}
+            needConfirm={false}
             disabledDate={(current) =>
               current < dayjs().subtract(1, "day").endOf("day")
             }
@@ -180,41 +179,24 @@ const StaffTimeSlotForm = ({
         </Form.Item>
 
         <Form.Item
-          name="startHour"
-          label="開始時間"
-          rules={[
-            {
-              type: "object",
-              required: true,
-              message: "Please input your E-mail!",
-            },
-          ]}
-        >
-          <TimePicker
-            format={"HH:mm"}
-            minuteStep={30}
-            needConfirm={false}
-            showNow={false}
-            className="tw-w-full"
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="endHour"
+          name="endTime"
           label="終了時間"
           rules={[
             {
               type: "object",
               required: true,
-              message: "Please input your E-mail!",
+              message: "終了時間を設定してください。",
             },
           ]}
         >
-          <TimePicker
-            format={"HH:mm"}
+          <DatePicker
+            showTime
             minuteStep={30}
+            format={"YYYY-MM-DD HH:mm"}
             needConfirm={false}
-            showNow={false}
+            disabledDate={(current) =>
+              current < dayjs().subtract(1, "day").endOf("day")
+            }
             className="tw-w-full"
           />
         </Form.Item>
@@ -260,12 +242,12 @@ const StaffTimeSlotForm = ({
         {isRepeat === true && (
           <Form.Item
             name="endDate"
-            label="指定の日程"
+            label="終了日"
             rules={[
               {
                 type: "object",
                 required: true,
-                message: "Please input your E-mail!",
+                message: "終了日を設定してください。",
               },
             ]}
           >
