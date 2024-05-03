@@ -42,11 +42,11 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="関東" />
         </Form.Item>
         <section className="tw-flex tw-flex-col">
           <label className="tw-leading-[22px] tw-tracking-[0.14px]">
-            郵便番号１
+            郵便番号
           </label>
           <section className="tw-flex tw-justify-start tw-gap-2">
             <Form.Item
@@ -87,7 +87,7 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="都道府県" />
         </Form.Item>
         <Form.Item
           name="address1"
@@ -99,7 +99,7 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="市区町村" />
         </Form.Item>
         <Form.Item
           name="address2"
@@ -111,7 +111,7 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="町名・番地" />
         </Form.Item>
         <Form.Item
           name="address3"
@@ -123,7 +123,7 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="番号" />
         </Form.Item>
         <Form.Item>
           <div className="tw-flex tw-justify-end tw-items-start tw-gap-2 tw-mt-6">

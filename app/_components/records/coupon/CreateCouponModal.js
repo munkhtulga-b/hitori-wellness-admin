@@ -118,7 +118,7 @@ const CreateCouponModal = ({
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="0000" />
         </Form.Item>
 
         <Form.Item
@@ -131,7 +131,7 @@ const CreateCouponModal = ({
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="名称" />
         </Form.Item>
 
         <Form.Item
@@ -139,11 +139,11 @@ const CreateCouponModal = ({
           label="最大使用回数"
           rules={[
             {
-              required: false,
+              required: true,
             },
           ]}
         >
-          <Input type="number" placeholder="" />
+          <Input type="number" placeholder="00" />
         </Form.Item>
 
         <div className="tw-flex tw-justify-start tw-gap-2">
@@ -154,7 +154,7 @@ const CreateCouponModal = ({
               {
                 type: "object",
                 required: true,
-                message: "開始日程を選択してください。",
+                message: "開始日を選択してください。",
               },
             ]}
             style={{ flex: 1 }}
@@ -174,7 +174,7 @@ const CreateCouponModal = ({
               {
                 type: "object",
                 required: true,
-                message: "終了日程を選択してください。",
+                message: "終了日を選択してください。",
               },
             ]}
             style={{ flex: 1 }}
@@ -195,7 +195,7 @@ const CreateCouponModal = ({
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "対象商品を選択してください。",
             },
           ]}
         >
@@ -206,7 +206,7 @@ const CreateCouponModal = ({
             style={{
               width: "100%",
             }}
-            placeholder=""
+            placeholder="商品を選択"
             options={items}
           />
         </Form.Item>
@@ -214,11 +214,11 @@ const CreateCouponModal = ({
         <div className="tw-flex tw-justify-start tw-gap-2">
           <Form.Item
             name="discountType"
-            label="利用可能店舗"
+            label="割合タイプ"
             rules={[
               {
                 required: true,
-                message: "Please input studio name",
+                message: "割合タイプを選択してください。",
               },
             ]}
             style={{ flex: 1 }}
@@ -253,7 +253,7 @@ const CreateCouponModal = ({
             rules={[
               {
                 required: true,
-                message: "Please input studio name",
+                message: "割合を設定をしてください。",
               },
             ]}
             style={{ flex: 1 }}
@@ -295,7 +295,7 @@ const CreateCouponModal = ({
             style={{
               width: "100%",
             }}
-            placeholder=""
+            placeholder="店舗を選択"
             options={studios}
           />
         </Form.Item>

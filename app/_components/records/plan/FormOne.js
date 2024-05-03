@@ -57,11 +57,11 @@ const PlanFormOne = ({
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "コードを入力してください。",
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="0000" />
         </Form.Item>
         <Form.Item
           name="name"
@@ -69,11 +69,11 @@ const PlanFormOne = ({
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "名称を入力してください。",
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="名称" />
         </Form.Item>
         <Form.Item
           name="firstMonthlyItemId"
@@ -81,7 +81,7 @@ const PlanFormOne = ({
           rules={[
             {
               required: data ? false : true,
-              message: "Please input studio name",
+              message: "初月会費を選択してください。",
             },
           ]}
         >
@@ -91,7 +91,7 @@ const PlanFormOne = ({
             style={{
               width: "100%",
             }}
-            placeholder=""
+            placeholder="初月会費を選択"
             options={items}
           />
         </Form.Item>
@@ -102,7 +102,7 @@ const PlanFormOne = ({
           rules={[
             {
               required: data ? false : true,
-              message: "Please input studio name",
+              message: "月会費を選択してください。",
             },
           ]}
         >
@@ -112,18 +112,17 @@ const PlanFormOne = ({
             style={{
               width: "100%",
             }}
-            placeholder=""
+            placeholder="月会費を選択"
             options={items}
           />
         </Form.Item>
 
         <Form.Item
           name="canAdmissionFee"
-          label="月会費"
+          label="入会費を請求する"
           rules={[
             {
               required: false,
-              message: "Please input studio name",
             },
           ]}
           valuePropName="checked"
@@ -138,7 +137,7 @@ const PlanFormOne = ({
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "説明を入力してください。",
             },
           ]}
         >

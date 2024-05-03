@@ -141,7 +141,7 @@ const PlanFormTwo = ({
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "1か月同時予約回数を設定してください。",
             },
           ]}
         >
@@ -154,7 +154,7 @@ const PlanFormTwo = ({
           rules={[
             {
               required: true,
-              message: "Please input studio name",
+              message: "1日同時予約回数を設定してください。",
             },
           ]}
         >
@@ -168,7 +168,6 @@ const PlanFormTwo = ({
             rules={[
               {
                 required: true,
-                message: "Please input studio name",
               },
             ]}
             valuePropName="checked"
@@ -193,7 +192,7 @@ const PlanFormTwo = ({
               style={{
                 width: "100%",
               }}
-              placeholder=""
+              placeholder="店舗を選択"
               options={studios}
             />
           </Form.Item>
@@ -232,30 +231,6 @@ const PlanFormTwo = ({
                 登録店舗
               </Radio>
             </div>
-          </Form.Item>
-          <Form.Item
-            name="reservableStudioDetails"
-            rules={[
-              {
-                required:
-                  reservableStudioType === EEnumReservableStudioType.HOME ||
-                  reservableStudioType === EEnumReservableStudioType.ALL
-                    ? false
-                    : true,
-                message: "Please input studio name",
-              },
-            ]}
-          >
-            <Select
-              disabled={!studios}
-              size="large"
-              mode="multiple"
-              style={{
-                width: "100%",
-              }}
-              placeholder=""
-              options={studios}
-            />
           </Form.Item>
         </div>
 

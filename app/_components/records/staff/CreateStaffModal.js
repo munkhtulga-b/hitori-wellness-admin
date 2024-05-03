@@ -70,7 +70,7 @@ const CreateStaffModal = ({
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="0000" />
         </Form.Item>
         <Form.Item
           name="name"
@@ -82,7 +82,7 @@ const CreateStaffModal = ({
             },
           ]}
         >
-          <Input placeholder="name" />
+          <Input placeholder="氏名" />
         </Form.Item>
         <Form.Item
           name="gender"
@@ -121,7 +121,7 @@ const CreateStaffModal = ({
             },
           ]}
         >
-          <Input placeholder="description" />
+          <Input placeholder="コメント" />
         </Form.Item>
         <Form.Item
           name="studioIds"
@@ -140,7 +140,7 @@ const CreateStaffModal = ({
             style={{
               width: "100%",
             }}
-            placeholder="select"
+            placeholder="店舗を選択"
             options={studios}
           />
         </Form.Item>

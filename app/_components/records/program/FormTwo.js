@@ -134,7 +134,7 @@ const ProgramFormTwo = ({
             style={{
               width: "100%",
             }}
-            placeholder=""
+            placeholder="プランを選択"
             options={sortedPlans}
           />
         </Form.Item>
@@ -157,7 +157,7 @@ const ProgramFormTwo = ({
             style={{
               width: "100%",
             }}
-            placeholder=""
+            placeholder="チケットを選択"
             options={sortedTickets}
           />
         </Form.Item>

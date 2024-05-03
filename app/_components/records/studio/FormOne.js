@@ -79,7 +79,7 @@ const StudioFormOne = ({
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="0000" />
         </Form.Item>
         <Form.Item
           name="name"
@@ -91,7 +91,7 @@ const StudioFormOne = ({
             },
           ]}
         >
-          <Input placeholder="" />
+          <Input placeholder="名称" />
         </Form.Item>
         <Form.Item
           name="status"

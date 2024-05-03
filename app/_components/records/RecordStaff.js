@@ -201,7 +201,7 @@ const RecordStaff = ({ studios }) => {
       </div>
 
       <Modal
-        title="店舗新規登録"
+        title={selectedRow ? "スタッフ情報" : "新規スタッフ登録"}
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}

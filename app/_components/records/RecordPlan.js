@@ -174,7 +174,7 @@ const RecordPlan = ({ studios }) => {
       </div>
 
       <Modal
-        title="プラン新規登録"
+        title={selectedRow ? "プラン情報" : "新規プラン登録"}
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}

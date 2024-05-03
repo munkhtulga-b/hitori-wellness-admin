@@ -1,6 +1,6 @@
 import $api from "@/app/_api";
 import { useCalendarStore } from "@/app/_store/calendar";
-import { Form, Button, TimePicker, DatePicker, Radio, Input } from "antd";
+import { Form, Button, DatePicker, Radio, Input } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -23,9 +23,8 @@ const StudioShiftSlotModal = ({
       setTimeout(() => {
         form.setFieldsValue({
           title: data.detailed?.shift?.title,
-          date: dayjs.utc(data.detailed?.shift?.start_at),
-          startHour: dayjs.utc(data.detailed?.shift?.start_at),
-          endHour: dayjs.utc(data.detailed?.shift?.end_at),
+          startAt: dayjs.utc(data.detailed?.shift?.start_at),
+          endAt: dayjs.utc(data.detailed?.shift?.end_at),
           isRepeat: data.detailed?.shift?.is_repeat,
         });
         if (data?.detailed?.shift?.end_date) {
@@ -93,12 +92,8 @@ const StudioShiftSlotModal = ({
     const body = {
       studioId: calendarStore.studioId,
       title: params.title,
-      startAt: `${dayjs(params.date).format("YYYY-MM-DD")} ${dayjs(
-        params.startHour
-      ).format("HH:mm")}`,
-      endAt: `${dayjs(params.date).format("YYYY-MM-DD")} ${dayjs(
-        params.endHour
-      ).format("HH:mm")}`,
+      startAt: dayjs(params.startAt).format("YYYY-MM-DD HH:mm"),
+      endAt: dayjs(params.endAt).format("YYYY-MM-DD HH:mm"),
       isRepeat: params.isRepeat,
     };
 
@@ -130,7 +125,7 @@ const StudioShiftSlotModal = ({
           rules={[
             {
               required: true,
-              message: "Please input your E-mail!",
+              message: "説明を入力してください。",
             },
           ]}
         >
@@ -145,61 +140,47 @@ const StudioShiftSlotModal = ({
         </div> */}
 
         <Form.Item
-          name="date"
-          label="日程"
-          rules={[
-            {
-              type: "object",
-              required: true,
-              message: "Please input your E-mail!",
-            },
-          ]}
-        >
-          <DatePicker
-            className="tw-w-full"
-            format={"YYYY/MM/DD"}
-            disabledDate={(current) =>
-              current < dayjs().startOf("day").subtract(1, "day")
-            }
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="startHour"
+          name="startAt"
           label="開始時間"
           rules={[
             {
               type: "object",
               required: true,
-              message: "Please input your E-mail!",
+              message: "開始時間を設定してください。",
             },
           ]}
         >
-          <TimePicker
-            format={"HH:mm"}
+          <DatePicker
+            showTime
             minuteStep={30}
+            format={"YYYY-MM-DD HH:mm"}
             needConfirm={false}
-            showNow={false}
+            disabledDate={(current) =>
+              current < dayjs().subtract(1, "day").endOf("day")
+            }
             className="tw-w-full"
           />
         </Form.Item>
 
         <Form.Item
-          name="endHour"
+          name="endAt"
           label="終了時間"
           rules={[
             {
               type: "object",
               required: true,
-              message: "Please input your E-mail!",
+              message: "終了時間を設定してください。",
             },
           ]}
         >
-          <TimePicker
-            format={"HH:mm"}
+          <DatePicker
+            showTime
             minuteStep={30}
+            format={"YYYY-MM-DD HH:mm"}
             needConfirm={false}
-            showNow={false}
+            disabledDate={(current) =>
+              current < dayjs().subtract(1, "day").endOf("day")
+            }
             className="tw-w-full"
           />
         </Form.Item>
@@ -232,12 +213,12 @@ const StudioShiftSlotModal = ({
         {isRepeat === true && (
           <Form.Item
             name="endDate"
-            label="日程"
+            label="終了日"
             rules={[
               {
                 type: "object",
                 required: true,
-                message: "Please input your E-mail!",
+                message: "終了日を設定してください。",
               },
             ]}
           >
