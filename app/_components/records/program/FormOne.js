@@ -19,6 +19,7 @@ const ProgramFormOne = ({
 
   useEffect(() => {
     if (data) {
+      const duration = dayjs.duration(data?.service_minutes, "minutes");
       setTimeout(() => {
         form.setFieldsValue({
           thumbnailCode: data?.thumbnail_code,
@@ -28,7 +29,7 @@ const ProgramFormOne = ({
             data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
           isTrial: data?.is_trial,
           description: data?.description,
-          serviceMinutes: data?.service_minutes,
+          serviceMinutes: dayjs(duration.format("HH:mm"), "HH:mm"),
         });
       }, 500);
     }
