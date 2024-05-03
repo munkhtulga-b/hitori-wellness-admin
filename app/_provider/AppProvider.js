@@ -6,10 +6,12 @@ import locale from "antd/locale/ja_JP";
 import dayjs from "dayjs";
 import updateLocale from "dayjs/plugin/updateLocale";
 import utc from "dayjs/plugin/utc";
+import duration from "dayjs/plugin/duration";
 
 dayjs.locale("ja");
 dayjs.extend(updateLocale);
 dayjs.extend(utc);
+dayjs.extend(duration);
 dayjs.updateLocale("ja", {
   weekStart: 0,
 });

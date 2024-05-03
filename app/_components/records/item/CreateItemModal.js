@@ -63,8 +63,8 @@ const CreateItemModal = ({
   };
 
   const beforeComplete = (params) => {
-    if (params.expireDays) {
-      params.expireDays = +params.expireDays;
+    if (params.expiresDays) {
+      params.expiresDays = +params.expiresDays;
     }
     params.price = +params.price;
     params.status =

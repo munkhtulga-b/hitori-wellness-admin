@@ -1,8 +1,9 @@
-import { Form, Input, Button, Switch, Radio } from "antd";
+import { Form, Input, Button, Switch, Radio, TimePicker } from "antd";
 import FileUploader from "../../custom/FileUploader";
 import { useEffect, useState } from "react";
 import TextEditor from "../../custom/TextEditor";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
+import dayjs from "dayjs";
 
 const ProgramFormOne = ({
   data,
@@ -57,6 +58,12 @@ const ProgramFormOne = ({
       params.status === true
         ? EEnumDatabaseStatus.ACTIVE.value
         : EEnumDatabaseStatus.INACTIVE.value;
+    const [hours, minutes] = dayjs(params.serviceMinutes)
+      .format("HH:mm")
+      .split(":")
+      .map(Number);
+    const serviceMinutes = hours * 60 + minutes;
+    params.serviceMinutes = serviceMinutes;
     onComplete(params);
   };
 
@@ -114,12 +121,19 @@ const ProgramFormOne = ({
           label="利用時間"
           rules={[
             {
+              type: "object",
               required: true,
               message: "利用時間を設定してください。",
             },
           ]}
         >
-          <Input type="number" placeholder="" style={{ width: 70 }} />
+          <TimePicker
+            format={"HH:mm"}
+            minuteStep={30}
+            needConfirm={false}
+            showNow={false}
+            className="tw-w-full"
+          />
         </Form.Item>
         <Form.Item
           name="isTrial"
