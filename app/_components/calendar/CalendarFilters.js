@@ -57,6 +57,26 @@ const CalendarFilters = ({
     }
     if (dateType === "day") {
       setSelectedDay(selectedDay[type](1, "day"));
+      if (selectedDay[type](1, "day").isAfter(selectedWeek.end)) {
+        setSelectedWeek({
+          start: selectedWeek.start.add(1, "week"),
+          end: selectedWeek.end.add(1, "week"),
+        });
+        onDateChange(
+          dayjs(selectedWeek.start[type](1, "week")).format("YYYY-MM-DD")
+        );
+      }
+    }
+  };
+
+  const handleDateReset = () => {
+    if (dateType === "week") {
+      onDateReset({
+        start: dayjs().startOf("week").format("YYYY-MM-DD"),
+        end: dayjs().endOf("week").format("YYYY-MM-DD"),
+      });
+    } else {
+      onDateReset(dayjs());
     }
   };
 
@@ -142,7 +162,7 @@ const CalendarFilters = ({
                   </span>
                   {dayjs(selectedDay)
                     .add(1, "day")
-                    .isBefore(selectedWeek.end) && (
+                    .isBefore(calendarDateLimit) && (
                     <Image
                       src="/assets/calendar/arrow-right.svg"
                       alt="next"
@@ -162,15 +182,7 @@ const CalendarFilters = ({
                 </div>
               )}
             </Button>
-            <Button
-              size="large"
-              onClick={() =>
-                onDateReset({
-                  start: dayjs().startOf("week").format("YYYY-MM-DD"),
-                  end: dayjs().endOf("week").format("YYYY-MM-DD"),
-                })
-              }
-            >
+            <Button size="large" onClick={() => handleDateReset()}>
               <div className="tw-flex tw-justify-center tw-items-center tw-gap-4">
                 <span className="tw-leading-[22px] tw-tracking-[0.14px] tw-text-secondary">
                   今日に戻る
