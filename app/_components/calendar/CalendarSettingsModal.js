@@ -5,21 +5,21 @@ import StudioShiftSlotModal from "./modals/StudioShiftSlotModal";
 
 const SettingsOptionsList = [
   {
-    label: "営業時間を設定する。",
+    label: "営業時間を設定する",
     description: "07:00-23:00",
     icon: "settings-clock.svg",
     alt: "clock",
     value: 1,
   },
   {
-    label: "一時閉店時間を設定する。",
+    label: "一時閉店時間を設定する",
     description: "2024-03-10（日） 01:00-02:00",
     icon: "settings-calendar.svg",
     alt: "calendar",
     value: 2,
   },
   {
-    label: "スタッフのシフトを入れる。",
+    label: "スタッフのシフトを入れる",
     description: null,
     icon: "settings-calendar.svg",
     alt: "calendar",
@@ -85,6 +85,7 @@ const CalendarSettingsModal = ({
           {selectedSettingsOption.value === 1 ? (
             <>
               <StudioBusinessHourModal
+                selectedStudio={selectedStudio}
                 closeModal={closeModal}
                 fetchStudios={fetchStudios}
               />

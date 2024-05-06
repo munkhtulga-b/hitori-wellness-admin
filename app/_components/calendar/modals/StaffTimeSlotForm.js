@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import $api from "@/app/_api";
 import _ from "lodash";
 import { toast } from "react-toastify";
+import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
 const StaffTimeSlotForm = ({
   data,
@@ -49,6 +50,7 @@ const StaffTimeSlotForm = ({
   const fetchStaff = async () => {
     const { isOk, data } = await $api.admin.staff.getMany({
       studioId: selectedStudio?.id,
+      status: EEnumDatabaseStatus.ACTIVE.value,
     });
     if (isOk) {
       const sorted = _.map(data, ({ id: value, name: label }) => ({

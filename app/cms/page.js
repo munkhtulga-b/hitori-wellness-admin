@@ -71,9 +71,9 @@ const CalendarPage = () => {
     const { isOk, data } = await $api.admin.studio.getMany();
     if (isOk) {
       setStudios(data);
-      setSelectedStudio(data[0]);
+      setSelectedStudio(selectedStudio ? selectedStudio : data[0]);
       setCalendarStore({
-        studioId: data[0].id,
+        studioId: selectedStudio ? selectedStudio.id : data[0].id,
       });
       fetchStaffTimeSlots({
         studioId: data[0].id,
@@ -118,21 +118,33 @@ const CalendarPage = () => {
 
   const onCalendarTypeChange = (type) => {
     setCalendarType(type);
-    setSelectedWeek({
-      start: dayjs().startOf("week"),
-      end: dayjs().endOf("week"),
-    });
-    setDateType("week");
+    // setSelectedWeek({
+    //   start: dayjs().startOf("week"),
+    //   end: dayjs().endOf("week"),
+    // });
+    // setDateType("week");
     if (type === "member") {
       fetchMemberTimeSlots(selectedStudio.id, {
-        startAt: dayjs().startOf("week").format("YYYY-MM-DD"),
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
       });
     }
     if (type === "staff") {
       fetchStaffTimeSlots({
         studioId: selectedStudio.id,
-        startAt: dayjs().startOf("week").format("YYYY-MM-DD"),
+        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
       });
+    }
+  };
+
+  const onDateReset = (value) => {
+    if (dateType === "week") {
+      setSelectedWeek(value);
+      handleFetch({
+        studioId: selectedStudio.id,
+        startAt: value.start,
+      });
+    } else {
+      setSelectedDay(value);
     }
   };
 
@@ -159,11 +171,7 @@ const CalendarPage = () => {
             });
           }}
           onDateReset={(value) => {
-            setSelectedWeek(value);
-            handleFetch({
-              studioId: selectedStudio.id,
-              startAt: value.start,
-            });
+            onDateReset(value);
           }}
           selectedDay={selectedDay}
           setSelectedDay={setSelectedDay}

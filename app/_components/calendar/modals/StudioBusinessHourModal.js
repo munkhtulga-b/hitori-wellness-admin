@@ -4,7 +4,11 @@ import { Form, Button, TimePicker, Radio } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
-const StudioBusinessHourModal = ({ closeModal, fetchStudios }) => {
+const StudioBusinessHourModal = ({
+  closeModal,
+  fetchStudios,
+  selectedStudio,
+}) => {
   const [form] = Form.useForm();
   const isTwentyFourHour = Form.useWatch("isTwentyFourHour", form);
   const calendarStore = useCalendarStore((state) => state.body);
@@ -13,15 +17,39 @@ const StudioBusinessHourModal = ({ closeModal, fetchStudios }) => {
   const [endHour, setEndHour] = useState("00:00");
 
   useEffect(() => {
+    if (selectedStudio?.timeperiod_details?.length) {
+      setStartHour(selectedStudio.timeperiod_details[0].start_hour);
+      setEndHour(selectedStudio.timeperiod_details[0].end_hour);
+      form.setFieldsValue({
+        startHour: dayjs(
+          selectedStudio.timeperiod_details[0].start_hour,
+          "HH:mm"
+        ),
+        endHour: dayjs(selectedStudio.timeperiod_details[0].end_hour, "HH:mm"),
+      });
+    }
+  }, [selectedStudio]);
+
+  useEffect(() => {
     if (isTwentyFourHour) {
       form.setFieldsValue({
         startHour: dayjs().startOf("day"),
-        endHour: dayjs().endOf("day").subtract(59, "minute"),
+        endHour: dayjs().endOf("day"),
       });
       setStartHour(dayjs().startOf("day").format("HH:mm"));
-      setEndHour(dayjs().endOf("day").subtract(59, "minute").format("HH:mm"));
+      setEndHour(dayjs().endOf("day").format("HH:mm"));
     }
   }, [isTwentyFourHour]);
+
+  useEffect(() => {
+    const timeDifference = dayjs(endHour, "HH:mm").diff(
+      dayjs(startHour, "HH:mm"),
+      "hour"
+    );
+    if (timeDifference >= 23) {
+      form.setFieldValue("isTwentyFourHour", true);
+    }
+  }, [startHour, endHour]);
 
   const updateStudioBusinessHour = async (body) => {
     setIsLoading(true);
@@ -48,6 +76,30 @@ const StudioBusinessHourModal = ({ closeModal, fetchStudios }) => {
       ],
     };
     updateStudioBusinessHour(body);
+  };
+
+  const disabledEndTime = () => {
+    let result = [];
+    if (startHour) {
+      for (let i = 0; i < 24; i++) {
+        if (i <= dayjs(startHour, "HH:mm").hour()) {
+          result.push(i);
+        }
+      }
+    }
+    return result;
+  };
+
+  const disabledStartTime = () => {
+    let result = [];
+    if (endHour) {
+      for (let i = 0; i < 24; i++) {
+        if (i >= dayjs(endHour, "HH:mm").hour()) {
+          result.push(i);
+        }
+      }
+    }
+    return result;
   };
 
   return (
@@ -88,6 +140,11 @@ const StudioBusinessHourModal = ({ closeModal, fetchStudios }) => {
               setStartHour(timeString);
               form.setFieldValue("isTwentyFourHour", false);
             }}
+            disabledTime={() => ({
+              disabledHours: () => {
+                return disabledStartTime();
+              },
+            })}
           />
         </Form.Item>
 
@@ -112,6 +169,11 @@ const StudioBusinessHourModal = ({ closeModal, fetchStudios }) => {
               setEndHour(timeString);
               form.setFieldValue("isTwentyFourHour", false);
             }}
+            disabledTime={() => ({
+              disabledHours: () => {
+                return disabledEndTime();
+              },
+            })}
           />
         </Form.Item>
 
