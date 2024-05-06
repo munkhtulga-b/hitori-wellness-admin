@@ -300,8 +300,12 @@ const CreateUserModal = ({
               whitespace: false,
             },
           ]}
+          getValueFromEvent={(e) => {
+            const value = e.target.value;
+            return value.replace(/[^0-9-]/g, "");
+          }}
         >
-          <Input placeholder="電話番号" type="number" />
+          <Input placeholder="電話番号" />
         </Form.Item>
 
         <section className="tw-flex tw-flex-col tw-gap-2">
@@ -316,8 +320,13 @@ const CreateUserModal = ({
                   whitespace: false,
                 },
               ]}
+              getValueFromEvent={(e) => {
+                const value = e.target.value;
+                const numberString = value.replace(/\D/g, "");
+                return numberString;
+              }}
             >
-              <Input placeholder="000" type="number" maxLength={3} />
+              <Input placeholder="000" maxLength={3} />
             </Form.Item>
             <Form.Item
               name="zipCode2"
@@ -328,10 +337,14 @@ const CreateUserModal = ({
                   whitespace: false,
                 },
               ]}
+              getValueFromEvent={(e) => {
+                const value = e.target.value;
+                const numberString = value.replace(/\D/g, "");
+                return numberString;
+              }}
             >
               <Input
                 placeholder="0000"
-                type="number"
                 maxLength={4}
                 suffix={
                   <Spin
@@ -415,8 +428,12 @@ const CreateUserModal = ({
               whitespace: false,
             },
           ]}
+          getValueFromEvent={(e) => {
+            const value = e.target.value;
+            return value.replace(/[^0-9-]/g, "");
+          }}
         >
-          <Input placeholder="電話番号" type="number" />
+          <Input placeholder="電話番号" />
         </Form.Item>
 
         <Form.Item>

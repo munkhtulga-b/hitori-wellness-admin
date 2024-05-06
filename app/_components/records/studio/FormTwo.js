@@ -58,9 +58,14 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
                   whitespace: false,
                 },
               ]}
+              getValueFromEvent={(e) => {
+                const value = e.target.value;
+                const numberString = value.replace(/\D/g, "");
+                return numberString;
+              }}
               style={{ flex: 1 }}
             >
-              <Input placeholder="000" type="number" maxLength={3} />
+              <Input placeholder="000" maxLength={3} />
             </Form.Item>
             <Form.Item
               name="zipCode2"
@@ -71,9 +76,14 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
                   whitespace: false,
                 },
               ]}
+              getValueFromEvent={(e) => {
+                const value = e.target.value;
+                const numberString = value.replace(/\D/g, "");
+                return numberString;
+              }}
               style={{ flex: 3 }}
             >
-              <Input placeholder="0000" type="number" maxLength={4} />
+              <Input placeholder="0000" maxLength={4} />
             </Form.Item>
           </section>
         </section>
