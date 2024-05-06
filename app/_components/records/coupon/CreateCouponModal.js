@@ -1,5 +1,6 @@
 import $api from "@/app/_api";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
+import { parseNumberString, thousandSeparator } from "@/app/_utils/helpers";
 import { Button, Form, Input, Switch, Select, Radio, DatePicker } from "antd";
 import dayjs from "dayjs";
 import _ from "lodash";
@@ -84,12 +85,12 @@ const CreateCouponModal = ({
         .endOf("day")
         .format("HH:mm:ss")}`,
       couponType: 1,
-      maxUseNum: +params.maxUseNum,
+      maxUseNum: parseNumberString(params.maxUseNum),
       targetStudioIds: params.targetStudioIds,
       discountDetails: _.map(params.items, (id) => ({
         itemId: id,
         discountType: params.discountType,
-        discountValue: +params.discountValue,
+        discountValue: parseNumberString(params.discountValue),
       })),
       status:
         params.status === true
@@ -142,8 +143,13 @@ const CreateCouponModal = ({
               required: true,
             },
           ]}
+          getValueFromEvent={(e) => {
+            const value = e.target.value;
+            const numberString = value.replace(/\D/g, "");
+            return thousandSeparator(numberString);
+          }}
         >
-          <Input type="number" placeholder="00" />
+          <Input placeholder="00" />
         </Form.Item>
 
         <div className="tw-flex tw-justify-start tw-gap-2">
@@ -256,9 +262,14 @@ const CreateCouponModal = ({
                 message: "割合を設定をしてください。",
               },
             ]}
+            getValueFromEvent={(e) => {
+              const value = e.target.value;
+              const numberString = value.replace(/\D/g, "");
+              return thousandSeparator(numberString);
+            }}
             style={{ flex: 1 }}
           >
-            <Input placeholder="" type="number" />
+            <Input placeholder="" />
           </Form.Item>
         </div>
 

@@ -1,4 +1,5 @@
 import EEnumReservableStudioType from "@/app/_enums/EEnumReservableStudioType";
+import { parseNumberString, thousandSeparator } from "@/app/_utils/helpers";
 import { Form, Button, Select, Input, Checkbox, Radio } from "antd";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -76,13 +77,24 @@ const PlanFormTwo = ({
     }
   }, [purchaseAllStudios]);
 
+  const beforeComplete = (params) => {
+    params.expireMonth = parseNumberString(params.expireMonth);
+    params.maxCcReservableNumByPlan = parseNumberString(
+      params.maxCcReservableNumByPlan
+    );
+    params.maxReservableNumAtDayByPlan = parseNumberString(
+      params.maxReservableNumAtDayByPlan
+    );
+    onComplete(params);
+  };
+
   return (
     <>
       <Form
         layout="vertical"
         form={form}
         name="plan-form-two"
-        onFinish={(params) => onComplete(params)}
+        onFinish={(params) => beforeComplete(params)}
         requiredMark={false}
         validateTrigger="onSubmit"
       >
@@ -128,9 +140,14 @@ const PlanFormTwo = ({
                   message: "Please input studio name",
                 },
               ]}
+              getValueFromEvent={(e) => {
+                const value = e.target.value;
+                const numberString = value.replace(/\D/g, "");
+                return thousandSeparator(numberString);
+              }}
               style={{ flex: 1 }}
             >
-              <Input type="number" placeholder="" />
+              <Input placeholder="" />
             </Form.Item>
           )}
         </div>
@@ -144,8 +161,13 @@ const PlanFormTwo = ({
               message: "1か月同時予約回数を設定してください。",
             },
           ]}
+          getValueFromEvent={(e) => {
+            const value = e.target.value;
+            const numberString = value.replace(/\D/g, "");
+            return thousandSeparator(numberString);
+          }}
         >
-          <Input type="number" placeholder="" style={{ width: 75 }} />
+          <Input placeholder="" style={{ width: 75 }} />
         </Form.Item>
 
         <Form.Item
@@ -157,8 +179,13 @@ const PlanFormTwo = ({
               message: "1日同時予約回数を設定してください。",
             },
           ]}
+          getValueFromEvent={(e) => {
+            const value = e.target.value;
+            const numberString = value.replace(/\D/g, "");
+            return thousandSeparator(numberString);
+          }}
         >
-          <Input type="number" placeholder="" style={{ width: 75 }} />
+          <Input placeholder="" style={{ width: 75 }} />
         </Form.Item>
 
         <div className="tw-flex tw-flex-col tw-gap-1">

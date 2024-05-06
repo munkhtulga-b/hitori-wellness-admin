@@ -72,12 +72,29 @@ export const createQueryString = (queryObject) => {
   return queryString;
 };
 
+/**
+ * Formats a number by adding thousand separators.
+ *
+ * @param {number|string|null|undefined} value - The value to be formatted.
+ * @return {string} The formatted value with thousand separators.
+ */
 export const thousandSeparator = (value) => {
   let result = "0";
   if (value !== null && value !== undefined) {
     result = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   return result;
+};
+
+/**
+ * Parses a string representation of a number and returns the corresponding number value.
+ *
+ * @param {string} value - The string representation of the number to be parsed.
+ * @return {number} The parsed number value.
+ */
+export const parseNumberString = (value) => {
+  const noCommaValue = value.replace(/,/g, "");
+  return Number(noCommaValue);
 };
 
 /**

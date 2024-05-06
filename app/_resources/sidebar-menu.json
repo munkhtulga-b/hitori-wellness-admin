@@ -15,8 +15,8 @@
       {
         "text": "購入履歴",
         "icon": "/assets/sidebar/sidebar-purchase-icon.svg",
-        "alt": "reservations",
-        "route": "/"
+        "alt": "purchase",
+        "route": "/cms/purchases"
       },
       {
         "text": "入館記録",

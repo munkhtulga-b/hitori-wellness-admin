@@ -4,6 +4,7 @@ import { Button, Form, Input, Switch, Select } from "antd";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import TextEditor from "../../custom/TextEditor";
+import { parseNumberString, thousandSeparator } from "@/app/_utils/helpers";
 
 const CreateItemModal = ({
   data,
@@ -64,9 +65,9 @@ const CreateItemModal = ({
 
   const beforeComplete = (params) => {
     if (params.expiresDays) {
-      params.expiresDays = +params.expiresDays;
+      params.expiresDays = parseNumberString(params.expiresDays);
     }
-    params.price = +params.price;
+    params.price = parseNumberString(params.price);
     params.status =
       params.status === true
         ? EEnumDatabaseStatus.ACTIVE.value
@@ -145,8 +146,13 @@ const CreateItemModal = ({
                   message: "金額を入力してください。",
                 },
               ]}
+              getValueFromEvent={(e) => {
+                const value = e.target.value;
+                const numberString = value.replace(/\D/g, "");
+                return thousandSeparator(numberString);
+              }}
             >
-              <Input type="number" placeholder="日" />
+              <Input placeholder="日" />
             </Form.Item>
 
             <Form.Item
@@ -182,12 +188,13 @@ const CreateItemModal = ({
               message: "金額を入力してください。",
             },
           ]}
+          getValueFromEvent={(e) => {
+            const value = e.target.value;
+            const numberString = value.replace(/\D/g, "");
+            return thousandSeparator(numberString);
+          }}
         >
-          <Input
-            disabled={isPriceReadOnly()}
-            type="number"
-            placeholder="0000"
-          />
+          <Input disabled={isPriceReadOnly()} placeholder="0000" />
         </Form.Item>
 
         <Form.Item
