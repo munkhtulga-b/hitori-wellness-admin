@@ -14,6 +14,7 @@ const StudioShiftSlotModal = ({
 }) => {
   const [form] = Form.useForm();
   const calendarStore = useCalendarStore((state) => state.body);
+  const startAt = Form.useWatch("startAt", form);
   const [isRepeat, setIsRepeat] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -104,6 +105,50 @@ const StudioShiftSlotModal = ({
     data ? updateShiftSlot(body) : createShiftSlot(body);
   };
 
+  const disabledDates = (current, type) => {
+    let result = current && current < dayjs().startOf("day");
+    if (type === "start") {
+      if (isRepeat) {
+        result =
+          current &&
+          (current < dayjs().startOf("day") || current > dayjs().endOf("week"));
+      }
+    } else {
+      if (isRepeat) {
+        result =
+          (current &&
+            (current < dayjs().startOf("day") ||
+              current > dayjs().endOf("week"))) ||
+          current < dayjs(startAt);
+      } else {
+        result =
+          current &&
+          (current < dayjs().startOf("day") || current < dayjs(startAt));
+      }
+    }
+    return result;
+  };
+
+  const disabledTimes = () => {
+    let result = [];
+    if (selectedStudio.timeperiod_details?.length) {
+      for (let i = 0; i < 24; i++) {
+        if (
+          i <
+            dayjs(
+              selectedStudio.timeperiod_details[0].start_hour,
+              "HH:mm"
+            ).hour() ||
+          i >
+            dayjs(selectedStudio.timeperiod_details[0].end_hour, "HH:mm").hour()
+        ) {
+          result.push(i);
+        }
+      }
+    }
+    return result;
+  };
+
   const resetForm = () => {
     form.resetFields();
     setIsRepeat(false);
@@ -155,9 +200,10 @@ const StudioShiftSlotModal = ({
             minuteStep={30}
             format={"YYYY-MM-DD HH:mm"}
             needConfirm={false}
-            disabledDate={(current) =>
-              current < dayjs().subtract(1, "day").endOf("day")
-            }
+            disabledDate={(current) => disabledDates(current, "start")}
+            disabledTime={() => ({
+              disabledHours: () => disabledTimes(),
+            })}
             className="tw-w-full"
           />
         </Form.Item>
@@ -178,9 +224,10 @@ const StudioShiftSlotModal = ({
             minuteStep={30}
             format={"YYYY-MM-DD HH:mm"}
             needConfirm={false}
-            disabledDate={(current) =>
-              current < dayjs().subtract(1, "day").endOf("day")
-            }
+            disabledDate={(current) => disabledDates(current, "end")}
+            disabledTime={() => ({
+              disabledHours: () => disabledTimes(),
+            })}
             className="tw-w-full"
           />
         </Form.Item>
