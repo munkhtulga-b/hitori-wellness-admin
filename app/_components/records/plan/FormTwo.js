@@ -78,7 +78,9 @@ const PlanFormTwo = ({
   }, [purchaseAllStudios]);
 
   const beforeComplete = (params) => {
-    params.expireMonth = parseNumberString(params.expireMonth);
+    if (params.expireMonth) {
+      params.expireMonth = parseNumberString(params.expireMonth);
+    }
     params.maxCcReservableNumByPlan = parseNumberString(
       params.maxCcReservableNumByPlan
     );

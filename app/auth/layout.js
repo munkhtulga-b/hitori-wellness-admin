@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 const AuthLayout = ({ children }) => {
   const cookieStore = cookies();
-  const token = cookieStore.get("token");
+  const token = cookieStore.get("cms-token");
 
   if (token) {
     redirect("/cms", "push");

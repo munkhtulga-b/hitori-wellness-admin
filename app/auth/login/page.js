@@ -27,7 +27,7 @@ const AuthLogin = () => {
         label,
       }));
       if (access) {
-        Cookies.set("token", data.tokens);
+        Cookies.set("cms-token", data.tokens);
         setUser(data.admin);
         setAccess(access);
         router.push("/cms");

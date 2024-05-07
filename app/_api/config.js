@@ -8,7 +8,9 @@ const fetchData = async (endpoint, method, body, serverToken) => {
       ? process.env.NEXT_PUBLIC_DEV_BASE_URL
       : process.env.NEXT_PUBLIC_PROD_BASE_URL;
 
-  const token = Cookies.get("token") ? Cookies.get("token") : serverToken;
+  const token = Cookies.get("cms-token")
+    ? Cookies.get("cms-token")
+    : serverToken;
 
   try {
     const requestHeaders = {
@@ -44,7 +46,7 @@ const fetchData = async (endpoint, method, body, serverToken) => {
 
       // Redirects the user back to login page if their token has expired
       if (status === 401) {
-        Cookies.remove("token");
+        Cookies.remove("cms-token");
         redirectUnauthorized();
       }
     }
