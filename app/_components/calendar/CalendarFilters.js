@@ -66,6 +66,15 @@ const CalendarFilters = ({
           dayjs(selectedWeek.start[type](1, "week")).format("YYYY-MM-DD")
         );
       }
+      if (selectedDay[type](1, "day").isBefore(selectedWeek.start)) {
+        setSelectedWeek({
+          start: selectedWeek.start.subtract(1, "week"),
+          end: selectedWeek.end.subtract(1, "week"),
+        });
+        onDateChange(
+          dayjs(selectedWeek.start[type](1, "week")).format("YYYY-MM-DD")
+        );
+      }
     }
   };
 
@@ -95,23 +104,21 @@ const CalendarFilters = ({
             <Button size="large" style={{ width: 180, position: "relative" }}>
               {dateType === "week" && (
                 <div className="tw-flex tw-justify-center tw-items-center tw-gap-4">
-                  {dayjs().startOf("week").isBefore(selectedWeek.start) && (
-                    <Image
-                      src="/assets/calendar/arrow-left.svg"
-                      alt="back"
-                      width={0}
-                      height={0}
-                      style={{
-                        height: "auto",
-                        width: "auto",
-                        position: "absolute",
-                        left: 12,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                      }}
-                      onClick={() => handleDateChange("subtract")}
-                    />
-                  )}
+                  <Image
+                    src="/assets/calendar/arrow-left.svg"
+                    alt="back"
+                    width={0}
+                    height={0}
+                    style={{
+                      height: "auto",
+                      width: "auto",
+                      position: "absolute",
+                      left: 12,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                    }}
+                    onClick={() => handleDateChange("subtract")}
+                  />
                   <span className="tw-leading-[22px] tw-tracking-[0.14px] tw-text-secondary">
                     {`${dayjs(selectedWeek.start).format("MM/DD")} - ${dayjs(
                       selectedWeek.end
@@ -140,23 +147,21 @@ const CalendarFilters = ({
               )}
               {dateType === "day" && (
                 <div className="tw-flex tw-justify-center tw-items-center tw-gap-4">
-                  {dayjs(selectedDay).isAfter(selectedWeek.start) && (
-                    <Image
-                      src="/assets/calendar/arrow-left.svg"
-                      alt="back"
-                      width={0}
-                      height={0}
-                      style={{
-                        height: "auto",
-                        width: "auto",
-                        position: "absolute",
-                        left: 12,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                      }}
-                      onClick={() => handleDateChange("subtract")}
-                    />
-                  )}
+                  <Image
+                    src="/assets/calendar/arrow-left.svg"
+                    alt="back"
+                    width={0}
+                    height={0}
+                    style={{
+                      height: "auto",
+                      width: "auto",
+                      position: "absolute",
+                      left: 12,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                    }}
+                    onClick={() => handleDateChange("subtract")}
+                  />
                   <span className="tw-leading-[22px] tw-tracking-[0.14px] tw-text-secondary">
                     {dayjs(selectedDay).format("MM/DD")}
                   </span>
