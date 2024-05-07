@@ -19,6 +19,7 @@ const ProgramFormOne = ({
 
   useEffect(() => {
     if (data) {
+      console.log(data.status, EEnumDatabaseStatus.ACTIVE.value);
       const duration = dayjs.duration(data?.service_minutes, "minutes");
       setTimeout(() => {
         form.setFieldsValue({

@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select, Spin } from "antd";
+import { Button, Form, Input, Select, Switch, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import {
@@ -45,6 +45,9 @@ const CreateUserModal = ({
           address3: data?.address3,
           prefecture: data?.prefecture,
           tel: data?.tel,
+          emergencyTel: data?.emergency_tel,
+          status:
+            data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
         setGenderValue(data?.gender);
       }, 500);
@@ -91,6 +94,8 @@ const CreateUserModal = ({
   }, [modalKey]);
 
   const beforeComplete = (params) => {
+    params.tel = formatPhoneNumber(params.tel);
+    params.emergencyTel = formatPhoneNumber(params.emergencyTel);
     const dateOfBirth = `${params.birthYear}-${params.birthMonth}-${params.birthDay}`;
     const omitted = _.omit(params, ["birthYear", "birthMonth", "birthDay"]);
     const body = {
@@ -105,6 +110,14 @@ const CreateUserModal = ({
     setGenderValue(value);
     form.setFieldValue("gender", value);
     form.validateFields(["gender"]);
+  };
+
+  const formatPhoneNumber = (value) => {
+    let result = "";
+    if (value) {
+      result = value.toString().replace("-", "");
+    }
+    return result;
   };
 
   return (
@@ -434,6 +447,20 @@ const CreateUserModal = ({
           }}
         >
           <Input placeholder="電話番号" />
+        </Form.Item>
+
+        <Form.Item
+          name="status"
+          label="ステータス"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+          valuePropName="checked"
+          initialValue={true}
+        >
+          <Switch />
         </Form.Item>
 
         <Form.Item>

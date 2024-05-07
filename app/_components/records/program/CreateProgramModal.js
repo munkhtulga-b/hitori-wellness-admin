@@ -56,10 +56,6 @@ const CreateProgramModal = ({
   };
 
   const handleFormOne = async (params) => {
-    params.status =
-      params.status === false
-        ? EEnumDatabaseStatus.INACTIVE.value
-        : EEnumDatabaseStatus.ACTIVE.value;
     formatRequestBody(params);
   };
 
