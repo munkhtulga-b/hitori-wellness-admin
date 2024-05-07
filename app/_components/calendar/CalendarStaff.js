@@ -274,6 +274,10 @@ const CalendarStaff = ({
                                       52
                                     }px`,
                                   }}
+                                  onClick={() => {
+                                    setSelectedSlot(item);
+                                    setIsModalOpen(true);
+                                  }}
                                 >
                                   <span className="tw-text-sm tw-tracking-[0.12px] tw-whitespace-nowrap">
                                     {item.instructor?.name}
