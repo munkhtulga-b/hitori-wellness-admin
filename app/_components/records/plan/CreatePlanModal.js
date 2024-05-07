@@ -42,18 +42,11 @@ const CreatePlanModal = ({
   };
 
   const handleFormOne = async (params) => {
-    params.status =
-      params.status === true
-        ? EEnumDatabaseStatus.ACTIVE.value
-        : EEnumDatabaseStatus.INACTIVE.value;
     setRequestBody(params);
     setActiveKey(2);
   };
 
   const handleFormTwo = async (params) => {
-    params.maxCcReservableNumByPlan = +params.maxCcReservableNumByPlan;
-    params.maxReservableNumAtDayByPlan = +params.maxReservableNumAtDayByPlan;
-    delete params.purchaseAllStudios;
     onComplete({ ...requestBody, ...params });
   };
 

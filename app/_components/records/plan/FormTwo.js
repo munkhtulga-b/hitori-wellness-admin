@@ -87,6 +87,7 @@ const PlanFormTwo = ({
     params.maxReservableNumAtDayByPlan = parseNumberString(
       params.maxReservableNumAtDayByPlan
     );
+    delete params.purchaseAllStudios;
     onComplete(params);
   };
 

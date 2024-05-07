@@ -2,6 +2,7 @@ import { Form, Button, Select, Input, Checkbox, Switch } from "antd";
 import { useEffect, useState } from "react";
 import TextEditor from "../../custom/TextEditor";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
+import _ from "lodash";
 
 const PlanFormOne = ({
   data,
@@ -20,6 +21,8 @@ const PlanFormOne = ({
         form.setFieldsValue({
           code: data?.code,
           name: data?.name,
+          firstMonthlyItemId: data?.first_monthly_item_id,
+          monthlyItemId: data?.monthly_item_id,
           description: data?.description,
           status:
             data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
@@ -34,6 +37,9 @@ const PlanFormOne = ({
   }, [modalKey]);
 
   const beforeComplete = (params) => {
+    if (data) {
+      params = _.omit(params, ["firstMonthlyItemId", "monthlyItemId"]);
+    }
     params.status =
       params.status === true
         ? EEnumDatabaseStatus.ACTIVE.value
