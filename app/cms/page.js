@@ -12,6 +12,7 @@ import CalendarSettingsModal from "../_components/calendar/CalendarSettingsModal
 import $api from "../_api";
 import { useCalendarStore } from "../_store/calendar";
 import dayjs from "dayjs";
+import _ from "lodash";
 
 const CalendarPage = () => {
   const setCalendarStore = useCalendarStore((state) => state.setBody);
@@ -71,7 +72,14 @@ const CalendarPage = () => {
     const { isOk, data } = await $api.admin.studio.getMany();
     if (isOk) {
       setStudios(data);
-      setSelectedStudio(selectedStudio ? selectedStudio : data[0]);
+      if (selectedStudio) {
+        const matched = _.find(data, { id: selectedStudio.id });
+        if (matched) {
+          setSelectedStudio(matched);
+        }
+      } else {
+        setSelectedStudio(data[0]);
+      }
       setCalendarStore({
         studioId: selectedStudio ? selectedStudio.id : data[0].id,
       });
