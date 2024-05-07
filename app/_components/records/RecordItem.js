@@ -98,7 +98,7 @@ const RecordItem = ({ studios }) => {
       await fetchItems();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
-      toast.success("Item created");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };
@@ -110,7 +110,7 @@ const RecordItem = ({ studios }) => {
       await fetchItems();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
-      toast.success("Item updated");
+      toast.success("更新されました。");
     }
     setIsRequesting(false);
   };
@@ -123,7 +123,7 @@ const RecordItem = ({ studios }) => {
     if (isOk) {
       await fetchItems();
       setCheckedRows([]);
-      toast.success("Items deleted");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };

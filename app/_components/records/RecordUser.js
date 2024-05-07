@@ -114,7 +114,7 @@ const RecordUser = ({ studios }) => {
       await fetchUsers();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
-      toast.success("User created");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };
@@ -132,7 +132,7 @@ const RecordUser = ({ studios }) => {
       await fetchUsers();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
-      toast.success("User updated");
+      toast.success("更新されました。");
     }
     setIsRequesting(false);
   };
@@ -145,7 +145,7 @@ const RecordUser = ({ studios }) => {
     if (isOk) {
       await fetchUsers(filters);
       setCheckedRows([]);
-      toast.success("Users deleted");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };

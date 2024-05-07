@@ -52,7 +52,7 @@ const StudioShiftSlotModal = ({
       });
       resetForm();
       closeModal();
-      toast.success("Shift slot created");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };
@@ -69,7 +69,7 @@ const StudioShiftSlotModal = ({
       });
       resetForm();
       closeModal();
-      toast.success("Shift slot created");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };
@@ -84,7 +84,7 @@ const StudioShiftSlotModal = ({
         startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
       });
       closeModal();
-      toast.success("Shift slot deleted");
+      toast.success("登録されました。");
     }
     setIsDeleting(false);
   };

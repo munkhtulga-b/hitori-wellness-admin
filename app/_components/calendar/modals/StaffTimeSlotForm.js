@@ -72,7 +72,7 @@ const StaffTimeSlotForm = ({
       });
       resetForm();
       closeModal(false);
-      toast.success("Staff slot created");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };
@@ -87,7 +87,7 @@ const StaffTimeSlotForm = ({
       });
       resetForm();
       closeModal(false);
-      toast.success("Staff slot updated");
+      toast.success("更新されました。");
     }
     setIsRequesting(false);
   };
@@ -101,7 +101,7 @@ const StaffTimeSlotForm = ({
         startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
       });
       closeModal();
-      toast.success("Staff slot deleted");
+      toast.success("登録されました。");
     }
     setIsDeleting(false);
   };

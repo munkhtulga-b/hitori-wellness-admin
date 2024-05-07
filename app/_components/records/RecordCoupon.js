@@ -67,7 +67,7 @@ const RecordCoupon = ({ studios }) => {
       await fetchCoupons(filters);
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
-      toast.success("Coupon created");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };
@@ -79,7 +79,7 @@ const RecordCoupon = ({ studios }) => {
       await fetchCoupons(filters);
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
-      toast.success("Coupon updated");
+      toast.success("更新されました。");
     }
     setIsRequesting(false);
   };
@@ -92,7 +92,7 @@ const RecordCoupon = ({ studios }) => {
     if (isOk) {
       await fetchCoupons(filters);
       setCheckedRows([]);
-      toast.success("Coupons deleted");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };

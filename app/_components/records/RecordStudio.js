@@ -96,7 +96,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
         await fetchStudios();
         setIsModalOpen(false);
         setModalKey((prev) => prev + 1);
-        toast.success("Studio Created Success");
+        toast.success("登録されました。");
       }
     } else {
       toast.error("An error occurred while uploading the image");
@@ -117,7 +117,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
           await fetchStudios();
           setIsModalOpen(false);
           setModalKey((prev) => prev + 1);
-          toast.success("Studio Updated Success");
+          toast.success("更新されました。");
         }
       } else {
         toast.error("An error occurred while uploading the image");
@@ -128,7 +128,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
         await fetchStudios();
         setIsModalOpen(false);
         setModalKey((prev) => prev + 1);
-        toast.success("Studio Updated Success");
+        toast.success("更新されました。");
       }
     }
     setIsRequesting(false);
@@ -142,7 +142,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
     if (isOk) {
       setCheckedRows([]);
       await fetchStudios();
-      toast.success("Studio Deleted Success");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };

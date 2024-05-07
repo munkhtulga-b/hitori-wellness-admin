@@ -79,7 +79,7 @@ const RecordProgram = () => {
       await fetchPrograms();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
-      toast.success("Program created");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };
@@ -91,7 +91,7 @@ const RecordProgram = () => {
       await fetchPrograms();
       setIsModalOpen(false);
       setModalKey((prev) => prev + 1);
-      toast.success("Program updated");
+      toast.success("更新されました。");
     }
     setIsRequesting(false);
   };
@@ -104,7 +104,7 @@ const RecordProgram = () => {
     if (isOk) {
       await fetchPrograms(filters);
       setCheckedRows([]);
-      toast.success("Programs deleted");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };

@@ -90,7 +90,7 @@ const RecordPlan = ({ studios }) => {
       await fetchPlans();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
-      toast.success("Plan created");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };
@@ -102,7 +102,7 @@ const RecordPlan = ({ studios }) => {
       await fetchPlans();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
-      toast.success("Plan updated");
+      toast.success("更新されました。");
     }
     setIsRequesting(false);
   };
