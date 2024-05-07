@@ -1,7 +1,7 @@
 import $api from "@/app/_api";
-import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
+// import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import { parseNumberString, thousandSeparator } from "@/app/_utils/helpers";
-import { Button, Form, Input, Switch, Select, Radio, DatePicker } from "antd";
+import { Button, Form, Input, Select, Radio, DatePicker } from "antd";
 import dayjs from "dayjs";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -38,8 +38,8 @@ const CreateCouponModal = ({
           items: _.map(data?.discounts, "item_id"),
           targetStudioIds: _.map(data?.studio_ids, "id"),
           noLimit: data?.target_studio_ids?.length === 0,
-          status:
-            data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
+          // status:
+          //   data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
         setNoLimit(data?.target_studio_ids?.length === 0);
       }, 500);
@@ -92,10 +92,10 @@ const CreateCouponModal = ({
         discountType: params.discountType,
         discountValue: parseNumberString(params.discountValue),
       })),
-      status:
-        params.status === true
-          ? EEnumDatabaseStatus.ACTIVE.value
-          : EEnumDatabaseStatus.INACTIVE.value,
+      // status:
+      //   params.status === true
+      //     ? EEnumDatabaseStatus.ACTIVE.value
+      //     : EEnumDatabaseStatus.INACTIVE.value,
     };
     onComplete(body);
   };
@@ -311,7 +311,7 @@ const CreateCouponModal = ({
           />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           name="status"
           label="ステータス"
           rules={[
@@ -323,7 +323,7 @@ const CreateCouponModal = ({
           valuePropName="checked"
         >
           <Switch />
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item>
           <div className="tw-flex tw-justify-end tw-gap-2">

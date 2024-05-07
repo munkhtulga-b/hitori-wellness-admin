@@ -93,7 +93,7 @@ export const thousandSeparator = (value) => {
  * @return {number} The parsed number value.
  */
 export const parseNumberString = (value) => {
-  const noCommaValue = value.replace(/,/g, "");
+  const noCommaValue = value.toString().replace(/,/g, "");
   return Number(noCommaValue);
 };
 

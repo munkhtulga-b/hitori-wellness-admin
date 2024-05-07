@@ -67,6 +67,7 @@ const RecordCoupon = ({ studios }) => {
       await fetchCoupons(filters);
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
+      toast.success("Coupon created");
     }
     setIsRequesting(false);
   };
@@ -78,6 +79,7 @@ const RecordCoupon = ({ studios }) => {
       await fetchCoupons(filters);
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
+      toast.success("Coupon updated");
     }
     setIsRequesting(false);
   };

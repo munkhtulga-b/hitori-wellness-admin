@@ -32,7 +32,7 @@ const AdminLayout = ({ children }) => {
   const clearAccess = useAdminAccessStore((state) => state.clearAccess);
 
   useLayoutEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("cms-token");
     if (!token) {
       redirect("/auth/login");
     }
@@ -58,7 +58,7 @@ const AdminLayout = ({ children }) => {
   const logOut = () => {
     clearUser();
     clearAccess();
-    Cookies.remove("token");
+    Cookies.remove("cms-token");
     router.push("/auth/login");
   };
 
