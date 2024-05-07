@@ -85,7 +85,7 @@ const RecordStaff = ({ studios }) => {
       await fetchStaff();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
-      toast.success("Staff created successfully");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };
@@ -97,7 +97,7 @@ const RecordStaff = ({ studios }) => {
       await fetchStaff();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
-      toast.success("Staff updated successfully");
+      toast.success("更新されました。");
     }
     setIsRequesting(false);
   };
@@ -110,7 +110,7 @@ const RecordStaff = ({ studios }) => {
     if (isOk) {
       setCheckedRows([]);
       await fetchStaff();
-      toast.success("Staff deleted successfully");
+      toast.success("登録されました。");
     }
     setIsRequesting(false);
   };

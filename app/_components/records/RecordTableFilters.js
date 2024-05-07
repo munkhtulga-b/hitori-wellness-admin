@@ -17,11 +17,14 @@ const RecordTableFilters = ({
   const [modal, contextHolder] = Modal.useModal();
   const showDeleteConfirm = () => {
     modal.confirm({
-      title: "This is a warning message",
-      content: "some messages...some messages...",
+      title: "注意事項",
+      content:
+        "データの完全削除は他のデータに異常な影響を及ぼす可能性があります。それでも削除しますか？",
       onOk() {
         onDelete();
       },
+      cancelText: "戻る",
+      okText: "削除する",
     });
   };
 
