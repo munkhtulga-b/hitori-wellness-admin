@@ -84,10 +84,10 @@ const CalendarPage = () => {
         studioId: selectedStudio ? selectedStudio.id : data[0].id,
       });
       fetchStaffTimeSlots({
-        studioId: data[0].id,
+        studioId: selectedStudio ? selectedStudio.id : data[0].id,
         startAt: dayjs().startOf("week").format("YYYY-MM-DD"),
       });
-      fetchMemberTimeSlots(data[0].id, {
+      fetchMemberTimeSlots(selectedStudio ? selectedStudio.id : data[0].id, {
         startAt: dayjs().startOf("week").format("YYYY-MM-DD"),
       });
     }

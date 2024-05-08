@@ -62,10 +62,8 @@ const columns = [
   },
 ];
 
-const RecordStudio = ({ studioCategoryNames }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const RecordStudio = ({ studioCategoryNames, list, fetchData, isLoading }) => {
   const [isRequesting, setIsRequesting] = useState(false);
-  const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,17 +72,8 @@ const RecordStudio = ({ studioCategoryNames }) => {
   const [uploadFile, setUploadFile] = useState(null);
 
   useEffect(() => {
-    fetchStudios();
+    fetchData();
   }, []);
-
-  const fetchStudios = async (filters) => {
-    setIsLoading(true);
-    const { isOk, data } = await $api.admin.studio.getMany(filters);
-    if (isOk) {
-      setList(data);
-    }
-    setIsLoading(false);
-  };
 
   const createStudio = async (body) => {
     setIsRequesting(true);
@@ -93,7 +82,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
       body.thumbnailCode = uploadData.url;
       const { isOk } = await $api.admin.studio.create(body);
       if (isOk) {
-        await fetchStudios();
+        await fetchData();
         setIsModalOpen(false);
         setModalKey((prev) => prev + 1);
         toast.success("登録されました。");
@@ -114,7 +103,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
         body.thumbnailCode = uploadData.url;
         const { isOk } = await $api.admin.studio.update(selectedRow.id, body);
         if (isOk) {
-          await fetchStudios();
+          await fetchData();
           setIsModalOpen(false);
           setModalKey((prev) => prev + 1);
           toast.success("更新されました。");
@@ -125,7 +114,7 @@ const RecordStudio = ({ studioCategoryNames }) => {
     } else {
       const { isOk } = await $api.admin.studio.update(selectedRow.id, body);
       if (isOk) {
-        await fetchStudios();
+        await fetchData();
         setIsModalOpen(false);
         setModalKey((prev) => prev + 1);
         toast.success("更新されました。");
@@ -141,8 +130,8 @@ const RecordStudio = ({ studioCategoryNames }) => {
     });
     if (isOk) {
       setCheckedRows([]);
-      await fetchStudios();
-      toast.success("登録されました。");
+      await fetchData();
+      toast.success("削除されました。");
     }
     setIsRequesting(false);
   };
@@ -150,14 +139,14 @@ const RecordStudio = ({ studioCategoryNames }) => {
   const onFilterChange = (filter) => {
     const shallow = _.merge(filters, filter);
     setFilters(shallow);
-    fetchStudios(shallow);
+    fetchData(shallow);
   };
 
   const onFilterClear = (filterKey) => {
     if (filters) {
       const shallow = _.omit(filters, filterKey);
       setFilters(shallow);
-      fetchStudios(shallow);
+      fetchData(shallow);
     }
   };
 

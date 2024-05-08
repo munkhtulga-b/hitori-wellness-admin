@@ -71,47 +71,30 @@ const columns = [
   },
 ];
 
-const RecordUser = ({ studios }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const RecordUser = ({
+  studios,
+  list,
+  fetchData,
+  isLoading,
+  pagination,
+  setPagination,
+}) => {
   const [isRequesting, setIsRequesting] = useState(false);
-  const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
-  const [pagination, setPagination] = useState({
-    current: 1,
-    count: 10,
-    total: 0,
-  });
 
   useEffect(() => {
-    fetchUsers();
+    fetchData();
   }, []);
-
-  const fetchUsers = async (queries) => {
-    setIsLoading(true);
-    const { isOk, data, range } = await $api.admin.user.getMany(
-      queries
-        ? queries
-        : {
-            page: pagination.current - 1,
-            limit: pagination.count,
-          }
-    );
-    if (isOk) {
-      setList(data);
-      setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
-    }
-    setIsLoading(false);
-  };
 
   const createUser = async (body) => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.user.create(body);
     if (isOk) {
-      await fetchUsers();
+      await fetchData();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("登録されました。");
@@ -129,7 +112,7 @@ const RecordUser = ({ studios }) => {
     }
     const { isOk } = await $api.admin.user.update(selectedRow.id, body);
     if (isOk) {
-      await fetchUsers();
+      await fetchData();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("更新されました。");
@@ -143,9 +126,9 @@ const RecordUser = ({ studios }) => {
       ids: _.map(checkedRows, "id"),
     });
     if (isOk) {
-      await fetchUsers(filters);
+      await fetchData(filters);
       setCheckedRows([]);
-      toast.success("登録されました。");
+      toast.success("削除されました。");
     }
     setIsRequesting(false);
   };
@@ -158,14 +141,14 @@ const RecordUser = ({ studios }) => {
     };
     const queries = _.merge(shallowFilters, shallowPagination);
     setFilters(queries);
-    fetchUsers(queries);
+    fetchData(queries);
   };
 
   const onFilterClear = (filterKey) => {
     if (filters) {
       const shallow = _.omit(filters, filterKey);
       setFilters(shallow);
-      fetchUsers(shallow);
+      fetchData(shallow);
     }
   };
 
@@ -176,7 +159,7 @@ const RecordUser = ({ studios }) => {
       setPagination((prev) => ({ ...prev, current: 0, count: pageSize }));
     }
     const queries = _.merge(filters, { page: page - 1, limit: pageSize });
-    fetchUsers(queries);
+    fetchData(queries);
   };
 
   return (
