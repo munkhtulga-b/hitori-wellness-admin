@@ -208,7 +208,11 @@ const RecordReservation = ({
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
       >
-        <ReservationDetailsModal data={selectedRow} />
+        <ReservationDetailsModal
+          data={selectedRow}
+          fetchList={fetchData}
+          closeModal={() => setIsModalOpen(false)}
+        />
       </Modal>
     </>
   );
