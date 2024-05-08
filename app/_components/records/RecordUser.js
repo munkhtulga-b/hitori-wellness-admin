@@ -128,7 +128,7 @@ const RecordUser = ({
     if (isOk) {
       await fetchData(filters);
       setCheckedRows([]);
-      toast.success("登録されました。");
+      toast.success("削除されました。");
     }
     setIsRequesting(false);
   };

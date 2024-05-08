@@ -99,7 +99,7 @@ const RecordStaff = ({ studios, list, fetchData, isLoading }) => {
     if (isOk) {
       setCheckedRows([]);
       await fetchData();
-      toast.success("登録されました。");
+      toast.success("削除されました。");
     }
     setIsRequesting(false);
   };

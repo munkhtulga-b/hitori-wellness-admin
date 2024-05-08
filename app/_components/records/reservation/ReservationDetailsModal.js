@@ -88,7 +88,6 @@ const ReservationDetailsModal = ({ data, closeModal, fetchList }) => {
       {data ? (
         <div className="tw-flex tw-flex-col tw-gap-10">
           <section className="tw-flex tw-justify-start tw-items-center tw-gap-3">
-            <div className="tw-bg-gray-200 tw-rounded-full tw-size-[60px]"></div>
             <div className="tw-flex tw-flex-col tw-gap-1">
               <span className="tw-leading-[22px] tw-tracking-[0.14px]">
                 {`${nullSafety(data?.member?.last_name)} ${nullSafety(
@@ -123,7 +122,7 @@ const ReservationDetailsModal = ({ data, closeModal, fetchList }) => {
               size="large"
               onClick={() => cancelReservation()}
             >
-              予約がキャンセルされました。
+              キャンセルする
             </Button>
           </section>
         </div>

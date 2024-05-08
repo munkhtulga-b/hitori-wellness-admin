@@ -194,7 +194,7 @@ const RecordReservation = ({
       </div>
 
       <Modal
-        title="店舗新規登録"
+        title="予約情報"
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}

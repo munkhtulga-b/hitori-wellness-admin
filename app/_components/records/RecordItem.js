@@ -112,7 +112,7 @@ const RecordItem = ({ studios, list, fetchData, isLoading }) => {
     if (isOk) {
       await fetchData();
       setCheckedRows([]);
-      toast.success("登録されました。");
+      toast.success("削除されました。");
     }
     setIsRequesting(false);
   };
