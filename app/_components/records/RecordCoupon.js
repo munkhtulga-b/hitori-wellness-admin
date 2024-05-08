@@ -37,10 +37,8 @@ const columns = [
   },
 ];
 
-const RecordCoupon = ({ studios }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const RecordCoupon = ({ studios, list, fetchData, isLoading }) => {
   const [isRequesting, setIsRequesting] = useState(false);
-  const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,23 +46,14 @@ const RecordCoupon = ({ studios }) => {
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
-    fetchCoupons();
+    fetchData();
   }, []);
-
-  const fetchCoupons = async (queries) => {
-    setIsLoading(true);
-    const { isOk, data } = await $api.admin.coupon.getMany(queries);
-    if (isOk) {
-      setList(data);
-    }
-    setIsLoading(false);
-  };
 
   const createCoupon = async (body) => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.coupon.create(body);
     if (isOk) {
-      await fetchCoupons(filters);
+      await fetchData(filters);
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("登録されました。");
@@ -76,7 +65,7 @@ const RecordCoupon = ({ studios }) => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.coupon.update(selectedRow.id, body);
     if (isOk) {
-      await fetchCoupons(filters);
+      await fetchData(filters);
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("更新されました。");
@@ -90,7 +79,7 @@ const RecordCoupon = ({ studios }) => {
       ids: _.map(checkedRows, "id"),
     });
     if (isOk) {
-      await fetchCoupons(filters);
+      await fetchData(filters);
       setCheckedRows([]);
       toast.success("登録されました。");
     }
@@ -100,14 +89,14 @@ const RecordCoupon = ({ studios }) => {
   const onFilterChange = (filter) => {
     const shallowFilters = _.merge(filters, filter);
     setFilters(shallowFilters);
-    fetchCoupons(shallowFilters);
+    fetchData(shallowFilters);
   };
 
   const onFilterClear = (filterKey) => {
     if (filters) {
       const shallow = _.omit(filters, filterKey);
       setFilters(shallow);
-      fetchCoupons(shallow);
+      fetchData(shallow);
     }
   };
 

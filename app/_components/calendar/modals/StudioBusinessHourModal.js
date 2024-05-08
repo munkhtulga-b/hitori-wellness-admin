@@ -1,5 +1,4 @@
 import $api from "@/app/_api";
-import { useCalendarStore } from "@/app/_store/calendar";
 import { Form, Button, TimePicker, Radio } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -11,7 +10,6 @@ const StudioBusinessHourModal = ({
 }) => {
   const [form] = Form.useForm();
   const isTwentyFourHour = Form.useWatch("isTwentyFourHour", form);
-  const calendarStore = useCalendarStore((state) => state.body);
   const [isLoading, setIsLoading] = useState(false);
   const [startHour, setStartHour] = useState("00:00");
   const [endHour, setEndHour] = useState("00:00");
@@ -53,10 +51,7 @@ const StudioBusinessHourModal = ({
 
   const updateStudioBusinessHour = async (body) => {
     setIsLoading(true);
-    const { isOk } = await $api.admin.studio.update(
-      calendarStore.studioId,
-      body
-    );
+    const { isOk } = await $api.admin.studio.update(selectedStudio.id, body);
     if (isOk) {
       await fetchStudios();
       form.resetFields();

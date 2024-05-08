@@ -1,5 +1,5 @@
 {
-    "admin": [
+    "admins": [
         {
             "label": "ID",
             "key": "id"
@@ -14,7 +14,9 @@
         },
         {
             "label": "店舗",
-            "key": "studios"
+            "key": "studios",
+            "itemKey": "name",
+            "type": "listItem"
         },
         {
             "label": "作成者",
@@ -30,7 +32,268 @@
         },
         {
             "label": "更新日時",
-            "key": "updated_at"
+            "key": "updated_at",
+            "type": "date"
+        }
+    ],
+    "studios": [
+        {
+            "label": "ID",
+            "key": "id"
+        },
+        {
+            "label": "名称",
+            "key": "name"
+        },
+        {
+            "label": "コード",
+            "key": "code"
+        },
+        {
+            "label": "ステータス",
+            "key": "status",
+            "type": "status"
+        },
+        {
+            "label": "エリア",
+            "key": "category_name"
+        },
+        {
+            "label": "営業時間",
+            "key": "timeperiod_details",
+            "type": "timePeriod"
+        },
+        {
+            "label": "更新日時",
+            "key": "updated_at",
+            "type": "date"
+        }
+    ],
+    "users": [
+        {
+            "label": "ID",
+            "key": "id"
+        },
+        {
+            "label": "氏名",
+            "key": "last_name"
+        },
+        {
+            "label": "氏名",
+            "key": "first_name"
+        },
+        {
+            "label": "ステータス",
+            "key": "status",
+            "type": "status"
+        },
+        {
+            "label": "登録店舗",
+            "key": "t_member_plan",
+            "obj": "studio",
+            "objKey": "name",
+            "type": "singleListObjectItem"
+        },
+        {
+            "label": "ブラン",
+            "key": "t_member_plan",
+            "obj": "plan",
+            "objKey": "name",
+            "type": "singleListObjectItem"
+        },
+        {
+            "label": "メールアドレス",
+            "key": "mail_address"
+        },
+        {
+            "label": "更新日時",
+            "key": "updated_at",
+            "type": "date"
+        }
+    ],
+    "programs": [
+        {
+            "label": "ID",
+            "key": "id"
+        },
+        {
+            "label": "コード",
+            "key": "code"
+        },
+        {
+            "label": "ステータス",
+            "key": "status",
+            "type": "status"
+        },
+        {
+            "label": "更新日時",
+            "key": "updated_at",
+            "type": "date"
+        }
+    ],
+    "staff": [
+        {
+            "label": "ID",
+            "key": "id"
+        },
+        {
+            "label": "氏名",
+            "key": "name"
+        },
+        {
+            "label": "ステータス",
+            "key": "status",
+            "type": "status"
+        },
+        {
+            "label": "登録店舗",
+            "key": "studio_ids",
+            "itemKey": "name",
+            "type": "listItem"
+        },
+        {
+            "label": "更新日時",
+            "key": "updated_at",
+            "type": "date"
+        }
+    ],
+    "items": [
+        {
+            "label": "ID",
+            "key": "id"
+        },
+        {
+            "label": "コード",
+            "key": "code"
+        },
+        {
+            "label": "名称",
+            "key": "name"
+        },
+        {
+            "label": "カテゴリー",
+            "key": "item_type"
+        },
+        {
+            "label": "ステータス",
+            "key": "status",
+            "type": "status"
+        },
+        {
+            "label": "金額（税込）",
+            "key": "prices",
+            "itemKey": "price",
+            "type": "singleListItem"
+        },
+        {
+            "label": "更新日時",
+            "key": "updated_at",
+            "type": "date"
+        }
+    ],
+    "plans": [
+        {
+            "label": "ID",
+            "key": "id"
+        },
+        {
+            "label": "コード",
+            "key": "code"
+        },
+        {
+            "label": "名称",
+            "key": "name"
+        },
+        {
+            "label": "ステータス",
+            "key": "status",
+            "type": "status"
+        },
+        {
+            "label": "初月会費（税込）",
+            "key": "first_month_price"
+        },
+        {
+            "label": "月会費（税込）",
+            "key": "monthly_price"
+        },
+        {
+            "label": "更新日時",
+            "key": "updated_at",
+            "type": "date"
+        }
+    ],
+    "coupons": [
+        {
+            "label": "ID",
+            "key": "id"
+        },
+        {
+            "label": "名称",
+            "key": "name"
+        },
+        {
+            "label": "コード",
+            "key": "code"
+        },
+        {
+            "label": "適用期間",
+            "key": "start_at",
+            "type": "date"
+        },
+        {
+            "label": "適用期間",
+            "key": "end_at",
+            "type": "date"
+        },
+        {
+            "label": "更新日時",
+            "key": "updated_at",
+            "type": "date"
+        }
+    ],
+    "reservations": [
+        {
+            "label": "ID",
+            "key": "id"
+        },
+        {
+            "label": "氏名",
+            "key": "member",
+            "objKey": ["last_name", "first_name"],
+            "type": "objectItem"
+        },
+        {
+            "label": "登録店舗",
+            "key": "m_studio",
+            "objKey": "name",
+            "type": "objectItem"
+        },
+        {
+            "label": "プログラム",
+            "key": "m_program",
+            "objKey": "name",
+            "type": "objectItem"
+        },
+        {
+            "label": "営業時間",
+            "key": "created_at",
+            "type": "date"
+        },
+        {
+            "label": "営業時間",
+            "key": "start_at",
+            "type": "date"
+        },
+        {
+            "label": "営業時間",
+            "key": "end_at",
+            "type": "date"
+        },
+        {
+            "label": "ステータス",
+            "key": "status",
+            "type": "reservationStatus"
         }
     ]
 }

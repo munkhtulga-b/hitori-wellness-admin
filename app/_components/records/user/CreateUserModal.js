@@ -335,7 +335,7 @@ const CreateUserModal = ({
               ]}
               getValueFromEvent={(e) => {
                 const value = e.target.value;
-                const numberString = value.replace(/\D/g, "");
+                const numberString = value.replace(/^\D*(\d{3})\D*$/, "$1");
                 return numberString;
               }}
             >
@@ -352,7 +352,7 @@ const CreateUserModal = ({
               ]}
               getValueFromEvent={(e) => {
                 const value = e.target.value;
-                const numberString = value.replace(/\D/g, "");
+                const numberString = value.replace(/^\D*(\d{4})\D*$/, "$1");
                 return numberString;
               }}
             >

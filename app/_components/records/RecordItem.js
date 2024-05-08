@@ -64,10 +64,8 @@ const columns = [
   },
 ];
 
-const RecordItem = ({ studios }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const RecordItem = ({ studios, list, fetchData, isLoading }) => {
   const [isRequesting, setIsRequesting] = useState(false);
-  const [list, setList] = useState(null);
   const itemTypes = _.map(EEnumItemTypes, (value) => ({
     value: value.value,
     label: value.label,
@@ -79,23 +77,14 @@ const RecordItem = ({ studios }) => {
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
-    fetchItems();
+    fetchData();
   }, []);
-
-  const fetchItems = async (queries) => {
-    setIsLoading(true);
-    const { isOk, data } = await $api.admin.item.getMany(queries);
-    if (isOk) {
-      setList(data);
-    }
-    setIsLoading(false);
-  };
 
   const createItem = async (body) => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.item.create(body);
     if (isOk) {
-      await fetchItems();
+      await fetchData();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("登録されました。");
@@ -107,7 +96,7 @@ const RecordItem = ({ studios }) => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.item.update(selectedRow.id, body);
     if (isOk) {
-      await fetchItems();
+      await fetchData();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("更新されました。");
@@ -121,7 +110,7 @@ const RecordItem = ({ studios }) => {
       ids: _.map(checkedRows, "id"),
     });
     if (isOk) {
-      await fetchItems();
+      await fetchData();
       setCheckedRows([]);
       toast.success("登録されました。");
     }
@@ -131,14 +120,14 @@ const RecordItem = ({ studios }) => {
   const onFilterChange = (filter) => {
     const shallowFilters = _.merge(filters, filter);
     setFilters(shallowFilters);
-    fetchItems(shallowFilters);
+    fetchData(shallowFilters);
   };
 
   const onFilterClear = (filterKey) => {
     if (filters) {
       const shallow = _.omit(filters, filterKey);
       setFilters(shallow);
-      fetchItems(shallow);
+      fetchData(shallow);
     }
   };
 

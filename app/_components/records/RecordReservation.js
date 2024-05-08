@@ -1,6 +1,5 @@
 "use client";
 
-import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
@@ -84,36 +83,22 @@ const columns = [
   },
 ];
 
-const RecordReservation = ({ studios }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [list, setList] = useState(null);
+const RecordReservation = ({
+  studios,
+  list,
+  fetchData,
+  isLoading,
+  pagination,
+  setPagination,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState({});
-  const [pagination, setPagination] = useState({
-    current: 1,
-    count: 10,
-    total: 0,
-  });
   const [selectedRow, setSelectedRow] = useState(null);
 
   useEffect(() => {
-    fetchReservations();
+    fetchData();
   }, []);
-
-  const fetchReservations = async (queries) => {
-    setIsLoading(true);
-    const { isOk, data, range } = await $api.admin.reservation.getMany(
-      queries
-        ? queries
-        : { page: pagination.current - 1, limit: pagination.count }
-    );
-    if (isOk) {
-      setList(data);
-      setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
-    }
-    setIsLoading(false);
-  };
 
   const onFilterChange = (filter) => {
     const shallowFilters = _.merge(filters, filter);
@@ -123,14 +108,14 @@ const RecordReservation = ({ studios }) => {
     };
     const queries = _.merge(shallowFilters, shallowPagination);
     setFilters(queries);
-    fetchReservations(queries);
+    fetchData(queries);
   };
 
   const onFilterClear = (filterKey) => {
     if (filters) {
       const shallow = _.omit(filters, filterKey);
       setFilters(shallow);
-      fetchReservations(shallow);
+      fetchData(shallow);
     }
   };
 
@@ -141,7 +126,7 @@ const RecordReservation = ({ studios }) => {
       setPagination((prev) => ({ ...prev, current: 0, count: pageSize }));
     }
     const queries = _.merge(filters, { page: page - 1, limit: pageSize });
-    fetchReservations(queries);
+    fetchData(queries);
   };
 
   return (

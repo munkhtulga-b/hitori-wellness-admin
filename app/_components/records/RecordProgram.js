@@ -49,10 +49,8 @@ const columns = [
   },
 ];
 
-const RecordProgram = () => {
-  const [isLoading, setIsLoading] = useState(false);
+const RecordProgram = ({ list, fetchData, isLoading }) => {
   const [isRequesting, setIsRequesting] = useState(false);
-  const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,23 +58,14 @@ const RecordProgram = () => {
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
-    fetchPrograms();
+    fetchData();
   }, []);
-
-  const fetchPrograms = async (queries) => {
-    setIsLoading(true);
-    const { isOk, data } = await $api.admin.program.getMany(queries);
-    if (isOk) {
-      setList(data);
-    }
-    setIsLoading(false);
-  };
 
   const createProgram = async (body) => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.program.create(body);
     if (isOk) {
-      await fetchPrograms();
+      await fetchData();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("登録されました。");
@@ -88,7 +77,7 @@ const RecordProgram = () => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.program.update(selectedRow.id, body);
     if (isOk) {
-      await fetchPrograms();
+      await fetchData();
       setIsModalOpen(false);
       setModalKey((prev) => prev + 1);
       toast.success("更新されました。");
@@ -102,7 +91,7 @@ const RecordProgram = () => {
       ids: _.map(checkedRows, "id"),
     });
     if (isOk) {
-      await fetchPrograms(filters);
+      await fetchData(filters);
       setCheckedRows([]);
       toast.success("登録されました。");
     }
@@ -112,14 +101,14 @@ const RecordProgram = () => {
   const onFilterChange = (filter) => {
     const shallowFilters = _.merge(filters, filter);
     setFilters(shallowFilters);
-    fetchPrograms(shallowFilters);
+    fetchData(shallowFilters);
   };
 
   const onFilterClear = (filterKey) => {
     if (filters) {
       const shallow = _.omit(filters, filterKey);
       setFilters(shallow);
-      fetchPrograms(shallow);
+      fetchData(shallow);
     }
   };
 

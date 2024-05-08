@@ -55,10 +55,8 @@ const columns = [
   },
 ];
 
-const RecordStaff = ({ studios }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const RecordStaff = ({ studios, list, fetchData, isLoading }) => {
   const [isRequesting, setIsRequesting] = useState(false);
-  const [list, setList] = useState(null);
   const [checkedRows, setCheckedRows] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -66,23 +64,14 @@ const RecordStaff = ({ studios }) => {
   const [filters, setFilters] = useState(null);
 
   useEffect(() => {
-    fetchStaff();
+    fetchData();
   }, []);
-
-  const fetchStaff = async (filters) => {
-    setIsLoading(true);
-    const { isOk, data } = await $api.admin.staff.getMany(filters);
-    if (isOk) {
-      setList(data);
-    }
-    setIsLoading(false);
-  };
 
   const createStaff = async (body) => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.staff.create(body);
     if (isOk) {
-      await fetchStaff();
+      await fetchData();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("登録されました。");
@@ -94,7 +83,7 @@ const RecordStaff = ({ studios }) => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.staff.update(selectedRow.id, body);
     if (isOk) {
-      await fetchStaff();
+      await fetchData();
       setModalKey((prev) => prev + 1);
       setIsModalOpen(false);
       toast.success("更新されました。");
@@ -109,7 +98,7 @@ const RecordStaff = ({ studios }) => {
     });
     if (isOk) {
       setCheckedRows([]);
-      await fetchStaff();
+      await fetchData();
       toast.success("登録されました。");
     }
     setIsRequesting(false);
@@ -118,14 +107,14 @@ const RecordStaff = ({ studios }) => {
   const onFilterChange = (filter) => {
     const shallow = _.merge(filters, filter);
     setFilters(shallow);
-    fetchStaff(shallow);
+    fetchData(shallow);
   };
 
   const onFilterClear = (filterKey) => {
     if (filters) {
       const shallow = _.omit(filters, filterKey);
       setFilters(shallow);
-      fetchStaff(shallow);
+      fetchData(shallow);
     }
   };
 

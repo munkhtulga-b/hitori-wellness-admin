@@ -123,7 +123,7 @@ const UsersPage = () => {
         <PageHeader
           title={`管理ユーザー`}
           isExportable={true}
-          exportKey="admin"
+          exportKey="admins"
           data={admins}
         />
         <AdminTableFilters
