@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Popconfirm } from "antd";
 import EEnumReservationStatus from "@/app/_enums/EEnumReservationStatus";
 import { nullSafety } from "@/app/_utils/helpers";
 import dayjs from "dayjs";
@@ -116,14 +116,23 @@ const ReservationDetailsModal = ({ data, closeModal, fetchList }) => {
             </ul>
           </section>
           <section className="tw-flex tw-justify-end">
-            <Button
-              loading={isLoading}
-              type="primary"
-              size="large"
-              onClick={() => cancelReservation()}
+            <Popconfirm
+              title="注意事項"
+              description={
+                <>
+                  通知メールが送られます。
+                  <br />
+                  本当にキャンセルしますか？
+                </>
+              }
+              onConfirm={() => cancelReservation()}
+              okText="はい"
+              cancelText="いいえ"
             >
-              キャンセルする
-            </Button>
+              <Button loading={isLoading} type="primary" size="large">
+                キャンセルする
+              </Button>
+            </Popconfirm>
           </section>
         </div>
       ) : null}
