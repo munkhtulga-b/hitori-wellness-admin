@@ -46,7 +46,7 @@ const ReservationDetailsModal = ({ data, closeModal, fetchList }) => {
     if (isOk) {
       await fetchList();
       closeModal();
-      toast.success("Reservation cancelled");
+      toast.success("キャンセルされました。");
     }
     setIsLoading(false);
   };
@@ -129,7 +129,12 @@ const ReservationDetailsModal = ({ data, closeModal, fetchList }) => {
               okText="はい"
               cancelText="いいえ"
             >
-              <Button loading={isLoading} type="primary" size="large">
+              <Button
+                disabled={data?.status !== EEnumReservationStatus.ACTIVE.value}
+                loading={isLoading}
+                type="primary"
+                size="large"
+              >
                 キャンセルする
               </Button>
             </Popconfirm>

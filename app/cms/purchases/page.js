@@ -14,7 +14,7 @@ const columns = [
   {
     title: "商品",
     dataIndex: ["id", "name"],
-    nestedDataIndex: "purchasedItem",
+    nestedDataIndex: ["t_member_plan", "t_member_ticket"],
     customStyle: "",
     type: "flexList",
   },

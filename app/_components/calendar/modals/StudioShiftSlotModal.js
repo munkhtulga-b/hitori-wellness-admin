@@ -84,7 +84,7 @@ const StudioShiftSlotModal = ({
         startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
       });
       closeModal();
-      toast.success("登録されました。");
+      toast.success("削除されました。");
     }
     setIsDeleting(false);
   };

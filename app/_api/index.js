@@ -17,6 +17,7 @@ import * as file from "./cms/FileUploadController";
 import * as staffSlot from "./cms/InstructorSlotController";
 import * as shiftSlot from "./cms/ShiftSlotController";
 import * as purchase from "./cms/PurchaseController";
+import * as post from "./cms/PostJPController";
 
 const $api = {
   auth: {
@@ -38,6 +39,7 @@ const $api = {
     staffSlot,
     shiftSlot,
     purchase,
+    post,
   },
 };
 

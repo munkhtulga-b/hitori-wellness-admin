@@ -152,15 +152,13 @@ const BaseTable = ({
     if (column.type === "flexList" && Array.isArray(column.dataIndex)) {
       result = (
         <>
-          {column.nestedDataIndex ? (
-            <div className="tw-flex tw-flex-wrap tw-justify-start tw-items-center tw-gap-2">
-              {column.dataIndex.map((i) => (
-                <span key={i}>
-                  {nullSafety(item[column.nestedDataIndex]?.i)}
-                </span>
-              ))}
-            </div>
-          ) : null}
+          <div className="tw-flex tw-flex-wrap tw-justify-start tw-items-center tw-gap-2">
+            {column.dataIndex.map((i) => (
+              <span key={i}>
+                {nullSafety(item[column.nestedDataIndex]?.[i])}
+              </span>
+            ))}
+          </div>
         </>
       );
     }
@@ -232,6 +230,26 @@ const BaseTable = ({
             </>
           ) : (
             <>-</>
+          )}
+        </>
+      );
+    }
+    if (column.type === "singleListItem") {
+      result = (
+        <>
+          {Array.isArray(column.dataIndex) ? (
+            <ul className="tw-flex tw-flex-col">
+              {column.dataIndex.map((i, idx) => (
+                <li key={i}>
+                  {column.prefixes ? `${column.prefixes[idx]} ` : ""}
+                  {nullSafety(item[column.nestedDataIndex][0]?.[i])}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <>
+              {nullSafety(item[column.nestedDataIndex][0]?.[column.dataIndex])}
+            </>
           )}
         </>
       );

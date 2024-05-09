@@ -64,6 +64,14 @@ const columns = [
     type: null,
   },
   {
+    title: "PAYMENT",
+    dataIndex: ["brand", "card_last4"],
+    nestedDataIndex: "t_member_card",
+    prefixes: ["", "XXXX XXXX XXXX"],
+    customStyle: "",
+    type: "singleListItem",
+  },
+  {
     title: "更新日時",
     dataIndex: "updated_at",
     customStyle: "",

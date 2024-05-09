@@ -32,8 +32,14 @@ const StaffTimeSlotForm = ({
     if (data) {
       form.setFieldsValue({
         instructorId: data?.instructor?.id,
-        startTime: dayjs.utc(data?.start_at),
-        endTime: dayjs.utc(data?.end_at),
+        startTime:
+          data?.start_period && data?.end_period
+            ? dayjs.utc(data?.start_period)
+            : dayjs.utc(data?.start_at),
+        endTime:
+          data?.end_period && data?.end_period
+            ? dayjs.utc(data?.end_period)
+            : dayjs.utc(data?.end_at),
         description: data?.description,
         isRepeat: data?.is_repeat,
       });
@@ -101,7 +107,7 @@ const StaffTimeSlotForm = ({
         startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
       });
       closeModal();
-      toast.success("登録されました。");
+      toast.success("削除されました。");
     }
     setIsDeleting(false);
   };
