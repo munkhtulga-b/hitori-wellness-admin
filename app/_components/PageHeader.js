@@ -37,7 +37,7 @@ const PageHeader = ({ title, isExportable, exportKey, data }) => {
           if (Array.isArray(objKey)) {
             row[key] = objKey.map((i) => item[key][i]).join(", ");
           } else {
-            row[key] = nullSafety(item[key][objKey]);
+            row[key] = nullSafety(item[key]?.[objKey]);
           }
         } else if (type === "date") {
           row[key] = nullSafety(dayjs(item[key]).format("YYYY-MM-DD HH:mm"));

@@ -55,7 +55,7 @@ const ReservationSlotModal = ({
         startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
       });
       closeModal();
-      toast.success("Reservation cancelled");
+      toast.success("キャンセルされました。");
     }
     setIsRequesting(false);
   };
@@ -139,7 +139,12 @@ const ReservationSlotModal = ({
               okText="はい"
               cancelText="いいえ"
             >
-              <Button loading={isRequesting} type="primary" size="large">
+              <Button
+                disabled={data?.status !== EEnumReservationStatus.ACTIVE.value}
+                loading={isRequesting}
+                type="primary"
+                size="large"
+              >
                 キャンセルする
               </Button>
             </Popconfirm>

@@ -31,7 +31,7 @@ const NavigationBar = ({ collapsed, setCollapsed }) => {
           <li onClick={() => router.push("/cms")} className="tw-cursor-pointer">
             <Image
               priority
-              src="/assets/logo-white.png"
+              src="/assets/logo-white.svg"
               alt="logo"
               width={188}
               height={0}
