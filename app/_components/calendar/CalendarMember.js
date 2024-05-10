@@ -64,12 +64,17 @@ const CalendarMember = ({
             selectedStudio.timeperiod_details[0]?.start_hour,
             "HH:mm"
           ).hour() === dayjs(currentHour, "HH:mm").hour(),
+        isStartHalf:
+          selectedStudio.timeperiod_details[0]?.start_hour.split(":")[1] ===
+          "30",
         isEndTime:
           dayjs(
             selectedStudio.timeperiod_details[0]?.end_hour,
             "HH:mm"
           ).hour() === dayjs(currentHour, "HH:mm").hour(),
         index: null,
+        isEndHalf:
+          selectedStudio.timeperiod_details[0]?.end_hour.split(":")[1] === "30",
       });
       currentHour = currentHour.add(1, "hour");
     }
@@ -162,11 +167,13 @@ const CalendarMember = ({
                       </span>
                       {hour.isStartTime && (
                         <BusinessHourIndicator
+                          isHalf={hour.isStartHalf}
                           indicatorWidth={businessHourIndicatorWidth}
                         />
                       )}
                       {hour.isEndTime && (
                         <BusinessHourIndicator
+                          isHalf={hour.isEndHalf}
                           indicatorWidth={businessHourIndicatorWidth}
                         />
                       )}
@@ -252,11 +259,13 @@ const CalendarMember = ({
                       </span>
                       {hour.isStartTime && (
                         <BusinessHourIndicator
+                          isHalf={hour.isStartHalf}
                           indicatorWidth={businessHourIndicatorWidth}
                         />
                       )}
                       {hour.isEndTime && (
                         <BusinessHourIndicator
+                          isHalf={hour.isEndHalf}
                           indicatorWidth={businessHourIndicatorWidth}
                         />
                       )}

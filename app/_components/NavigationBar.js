@@ -33,7 +33,7 @@ const NavigationBar = ({ collapsed, setCollapsed }) => {
               priority
               src="/assets/logo-white.svg"
               alt="logo"
-              width={188}
+              width={0}
               height={0}
               style={{ height: "auto", width: "auto" }}
             />
