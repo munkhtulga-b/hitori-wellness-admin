@@ -1,7 +1,7 @@
 import $api from "@/app/_api";
 // import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import { parseNumberString, thousandSeparator } from "@/app/_utils/helpers";
-import { Button, Form, Input, Select, Radio, DatePicker } from "antd";
+import { Button, Form, Input, Select, Radio, DatePicker, Checkbox } from "antd";
 import dayjs from "dayjs";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -17,6 +17,7 @@ const CreateCouponModal = ({
   const [form] = Form.useForm();
   const [items, setItems] = useState(null);
   const studioIds = Form.useWatch("targetStudioIds", form);
+  const noMaxNum = Form.useWatch("noMaxNum", form);
   const [noLimit, setNoLimit] = useState(true);
   const [discountType, setDiscountType] = useState(1);
 
@@ -85,7 +86,7 @@ const CreateCouponModal = ({
         .endOf("day")
         .format("HH:mm:ss")}`,
       couponType: 1,
-      maxUseNum: parseNumberString(params.maxUseNum),
+      maxUseNum: noMaxNum ? 0 : parseNumberString(params.maxUseNum),
       targetStudioIds: params.targetStudioIds,
       discountDetails: _.map(params.items, (id) => ({
         itemId: id,
@@ -135,22 +136,39 @@ const CreateCouponModal = ({
           <Input placeholder="名称" />
         </Form.Item>
 
-        <Form.Item
-          name="maxUseNum"
-          label="最大使用回数"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-          getValueFromEvent={(e) => {
-            const value = e.target.value;
-            const numberString = value.replace(/\D/g, "");
-            return thousandSeparator(numberString);
-          }}
-        >
-          <Input placeholder="00" />
-        </Form.Item>
+        <section className="tw-flex tw-flex-col tw-gap-2">
+          <label>最大使用回数</label>
+          <Form.Item
+            name="noMaxNum"
+            rules={[
+              {
+                required: false,
+              },
+            ]}
+            valuePropName="checked"
+            initialValue={false}
+          >
+            <Checkbox>無制限</Checkbox>
+          </Form.Item>
+
+          {!noMaxNum && (
+            <Form.Item
+              name="maxUseNum"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              getValueFromEvent={(e) => {
+                const value = e.target.value;
+                const numberString = value.replace(/\D/g, "");
+                return thousandSeparator(numberString);
+              }}
+            >
+              <Input placeholder="00" />
+            </Form.Item>
+          )}
+        </section>
 
         <div className="tw-flex tw-justify-start tw-gap-2">
           <Form.Item

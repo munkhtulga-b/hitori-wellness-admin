@@ -21,7 +21,8 @@ const RecordsPage = () => {
   const pathname = usePathname();
 
   const [activeKey, setActiveKey] = useState("studios");
-  const [studioOptions, setStudioOptions] = useState([]);
+  const [studioFilterOptions, setStudioFilterOptions] = useState([]);
+  const [studioEditOptions, setStudioEditOptions] = useState([]);
   const [studioCategoryNames, setStudioCategoryNames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pagination, setPagination] = useState({
@@ -63,7 +64,7 @@ const RecordsPage = () => {
   };
 
   const fetchStudioOptions = async () => {
-    const { isOk, data } = await $api.admin.studio.getMany();
+    const { isOk, data } = await $api.admin.studio.getMany({ list: true });
     if (isOk && data?.length) {
       const studios = _.map(data, ({ id: value, name: label }) => ({
         value,
@@ -78,7 +79,7 @@ const RecordsPage = () => {
       );
       const categoryNamesSorted = _.uniqBy(categoryNames, "value");
       setStudioCategoryNames(categoryNamesSorted);
-      setStudioOptions(studios);
+      setStudioEditOptions(studios);
     }
   };
 
@@ -87,6 +88,13 @@ const RecordsPage = () => {
     const { isOk, data } = await $api.admin.studio.getMany(queries);
     if (isOk) {
       setStudios(data);
+      if (!studioFilterOptions?.length) {
+        const options = _.map(data, ({ id: value, name: label }) => ({
+          value,
+          label,
+        }));
+        setStudioFilterOptions(options);
+      }
     }
     setIsLoading(false);
   };
@@ -195,7 +203,8 @@ const RecordsPage = () => {
       label: "メンバー",
       children: (
         <RecordUser
-          studios={studioOptions}
+          studioEditOptions={studioEditOptions}
+          studioFilterOptions={studioFilterOptions}
           fetchData={fetchUsers}
           isLoading={isLoading}
           list={users}
@@ -209,7 +218,8 @@ const RecordsPage = () => {
       label: "プログラム",
       children: (
         <RecordProgram
-          studios={studioOptions}
+          studioEditOptions={studioEditOptions}
+          studioFilterOptions={studioFilterOptions}
           fetchData={fetchPrograms}
           isLoading={isLoading}
           list={programs}
@@ -221,7 +231,8 @@ const RecordsPage = () => {
       label: "スタッフ",
       children: (
         <RecordStaff
-          studios={studioOptions}
+          studioEditOptions={studioEditOptions}
+          studioFilterOptions={studioFilterOptions}
           fetchData={fetchStaff}
           isLoading={isLoading}
           list={staff}
@@ -233,7 +244,8 @@ const RecordsPage = () => {
       label: "商品",
       children: (
         <RecordItem
-          studios={studioOptions}
+          studioEditOptions={studioEditOptions}
+          studioFilterOptions={studioFilterOptions}
           fetchData={fetchItems}
           list={items}
           isLoading={isLoading}
@@ -245,7 +257,8 @@ const RecordsPage = () => {
       label: "プラン",
       children: (
         <RecordPlan
-          studios={studioOptions}
+          studioEditOptions={studioEditOptions}
+          studioFilterOptions={studioFilterOptions}
           fetchData={fetchPlans}
           list={plans}
           isLoading={isLoading}
@@ -257,7 +270,8 @@ const RecordsPage = () => {
       label: "クーポン",
       children: (
         <RecordCoupon
-          studios={studioOptions}
+          studioEditOptions={studioEditOptions}
+          studioFilterOptions={studioFilterOptions}
           fetchData={fetchCoupons}
           list={coupons}
           isLoading={isLoading}
@@ -269,7 +283,8 @@ const RecordsPage = () => {
       label: "予約",
       children: (
         <RecordReservation
-          studios={studioOptions}
+          studioEditOptions={studioEditOptions}
+          studioFilterOptions={studioFilterOptions}
           list={reservations}
           isLoading={isLoading}
           fetchData={fetchReservations}

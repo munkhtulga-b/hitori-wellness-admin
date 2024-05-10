@@ -1,26 +1,13 @@
 import { nullSafety } from "@/app/_utils/helpers";
-import { Button, Form, Switch } from "antd";
-import { useEffect, useState } from "react";
+import { Button, Form, Popconfirm } from "antd";
+import { useState } from "react";
 
-const PlanDetailsForm = ({ data, onBack, modalKey }) => {
+const PlanDetailsForm = ({ data }) => {
   const [form] = Form.useForm();
   const [isRequesting, setIsRequesting] = useState(false);
 
-  useEffect(() => {
-    if (data) {
-      setTimeout(() => {
-        form.setFieldsValue({});
-      }, 500);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    form.resetFields();
-  }, [modalKey]);
-
-  const cancelMemberPlan = async (params) => {
+  const cancelMemberPlan = async () => {
     setIsRequesting(true);
-    console.log(params);
     setIsRequesting(false);
   };
 
@@ -40,23 +27,8 @@ const PlanDetailsForm = ({ data, onBack, modalKey }) => {
         requiredMark={false}
         form={form}
         name="change-plan-form"
-        onFinish={(params) => cancelMemberPlan(params)}
         layout="vertical"
       >
-        <Form.Item
-          name="status"
-          label="ステータス"
-          rules={[
-            {
-              required: false,
-            },
-          ]}
-          valuePropName="checked"
-          initialValue={true}
-        >
-          <Switch />
-        </Form.Item>
-
         <Form.Item label="登録店舗">
           <ListContainer>
             <span className="tw-leading-[22px] tw-tracking-[0.14px]">
@@ -71,13 +43,31 @@ const PlanDetailsForm = ({ data, onBack, modalKey }) => {
 
         <Form.Item label="プラン">
           <ListContainer>
-            <span className="tw-leading-[22px] tw-tracking-[0.14px]">
-              {nullSafety(
-                data?.t_member_plan?.length
-                  ? data?.t_member_plan[0]?.plan?.name
-                  : "-"
-              )}
-            </span>
+            <div className="tw-flex tw-justify-between tw-items-center tw-gap-4">
+              <span className="tw-leading-[22px] tw-tracking-[0.14px]">
+                {nullSafety(
+                  data?.t_member_plan?.length
+                    ? data?.t_member_plan[0]?.plan?.name
+                    : "-"
+                )}
+              </span>
+              <Popconfirm
+                title="Cancel plan"
+                description="Are you sure to cancel?"
+                onConfirm={() => cancelMemberPlan()}
+                okText="はい"
+                cancelText="いいえ"
+              >
+                <Button
+                  loading={isRequesting}
+                  disabled={data?.t_member_plan[0]?.end_date}
+                  type="primary"
+                  danger
+                >
+                  キャンセル
+                </Button>
+              </Popconfirm>
+            </div>
           </ListContainer>
         </Form.Item>
 
@@ -101,7 +91,7 @@ const PlanDetailsForm = ({ data, onBack, modalKey }) => {
           </ListContainer>
         </Form.Item>
 
-        <Form.Item>
+        {/* <Form.Item>
           <div className="tw-flex tw-justify-end tw-gap-2">
             <Button size="large" onClick={() => onBack()}>
               戻す
@@ -115,7 +105,7 @@ const PlanDetailsForm = ({ data, onBack, modalKey }) => {
               保存
             </Button>
           </div>
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </>
   );

@@ -84,7 +84,7 @@ const columns = [
 ];
 
 const RecordReservation = ({
-  studios,
+  studioFilterOptions,
   list,
   fetchData,
   isLoading,
@@ -139,13 +139,13 @@ const RecordReservation = ({
         >
           <>
             <Select
-              disabled={!studios}
+              disabled={!studioFilterOptions}
               allowClear
               size="large"
               style={{
                 width: 120,
               }}
-              options={studios}
+              options={studioFilterOptions}
               onChange={(value) => {
                 value
                   ? onFilterChange({ studioId: value })

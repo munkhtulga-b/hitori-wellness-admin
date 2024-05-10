@@ -80,7 +80,7 @@ const columns = [
 ];
 
 const RecordUser = ({
-  studios,
+  studioFilterOptions,
   list,
   fetchData,
   isLoading,
@@ -179,7 +179,7 @@ const RecordUser = ({
             setIsModalOpen(true);
           }}
           onDelete={deleteUsers}
-          studios={studios}
+          studios={studioFilterOptions}
           onSearch={(value) => onFilterChange({ name: value })}
           onSearchClear={() => onFilterClear("name")}
           checkedRows={checkedRows}
@@ -187,13 +187,13 @@ const RecordUser = ({
         >
           <>
             <Select
-              disabled={!studios}
+              disabled={!studioFilterOptions}
               allowClear
               size="large"
               style={{
                 width: 120,
               }}
-              options={studios}
+              options={studioFilterOptions}
               onChange={(value) => {
                 value
                   ? onFilterChange({ studioId: value })

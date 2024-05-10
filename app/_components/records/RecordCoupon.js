@@ -37,7 +37,7 @@ const columns = [
   },
 ];
 
-const RecordCoupon = ({ studios, list, fetchData, isLoading }) => {
+const RecordCoupon = ({ studioEditOptions, list, fetchData, isLoading }) => {
   const [isRequesting, setIsRequesting] = useState(false);
   const [checkedRows, setCheckedRows] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -177,7 +177,7 @@ const RecordCoupon = ({ studios, list, fetchData, isLoading }) => {
           onCancel={() => setIsModalOpen(false)}
           modalKey={modalKey}
           isRequesting={isRequesting}
-          studios={studios}
+          studios={studioEditOptions}
         />
       </Modal>
     </>

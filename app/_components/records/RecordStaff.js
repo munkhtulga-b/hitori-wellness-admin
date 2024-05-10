@@ -55,7 +55,13 @@ const columns = [
   },
 ];
 
-const RecordStaff = ({ studios, list, fetchData, isLoading }) => {
+const RecordStaff = ({
+  studioEditOptions,
+  studioFilterOptions,
+  list,
+  fetchData,
+  isLoading,
+}) => {
   const [isRequesting, setIsRequesting] = useState(false);
   const [checkedRows, setCheckedRows] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -126,7 +132,7 @@ const RecordStaff = ({ studios, list, fetchData, isLoading }) => {
             setSelectedRow(null);
             setIsModalOpen(true);
           }}
-          studios={studios}
+          studios={studioFilterOptions}
           checkedRows={checkedRows}
           onDelete={deleteStaff}
           onSearch={(value) => onFilterChange({ name: value })}
@@ -135,13 +141,13 @@ const RecordStaff = ({ studios, list, fetchData, isLoading }) => {
         >
           <>
             <Select
-              disabled={!studios}
+              disabled={!studioFilterOptions}
               allowClear
               size="large"
               style={{
                 width: 120,
               }}
-              options={studios}
+              options={studioFilterOptions}
               onChange={(value) => {
                 value
                   ? onFilterChange({ studioId: value })
@@ -209,7 +215,7 @@ const RecordStaff = ({ studios, list, fetchData, isLoading }) => {
           data={selectedRow}
           modalKey={modalKey}
           onCancel={() => setIsModalOpen(false)}
-          studios={studios}
+          studios={studioEditOptions}
           isRequesting={isRequesting}
           onConfirm={selectedRow ? updateStaff : createStaff}
         />

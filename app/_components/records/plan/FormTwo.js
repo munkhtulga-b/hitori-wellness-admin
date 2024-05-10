@@ -29,6 +29,7 @@ const PlanFormTwo = ({
       setTimeout(() => {
         form.setFieldsValue({
           isEnabledWithdraw: data?.is_enabled_withdraw,
+          isEnabledChangePlan: data?.is_enabled_change_plan,
           isExpire: data?.is_expire,
           maxCcReservableNumByPlan: data?.max_cc_reservable_num_by_plan,
           maxReservableNumAtDayByPlan: data?.max_reservable_num_at_day_by_plan,
@@ -104,12 +105,15 @@ const PlanFormTwo = ({
         <Form.Item
           name="isEnabledWithdraw"
           label="メンバーサイトからのキャンセル制限"
-          rules={[
-            {
-              required: false,
-              message: "Please input studio name",
-            },
-          ]}
+          initialValue={false}
+          valuePropName="checked"
+        >
+          <Checkbox />
+        </Form.Item>
+
+        <Form.Item
+          name="isEnabledChangePlan"
+          label="プラン変更の制限"
           initialValue={false}
           valuePropName="checked"
         >

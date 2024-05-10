@@ -12,6 +12,7 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
     if (data) {
       form.setFieldsValue({
         categoryName: data?.category_name,
+        maxCapacity: data?.max_capacity,
         prefecture: data?.prefecture,
         zipCode1: data?.zip_code1,
         zipCode2: data?.zip_code2,
@@ -43,6 +44,23 @@ const StudioFormTwo = ({ data, onComplete, onBack, modalKey }) => {
           ]}
         >
           <Input placeholder="関東" />
+        </Form.Item>
+        <Form.Item
+          name="maxCapacity"
+          label="最大収容人数"
+          rules={[
+            {
+              required: true,
+              message: "最大収容人数を設定してください。",
+            },
+          ]}
+          getValueFromEvent={(e) => {
+            const value = e.target.value;
+            const numberString = value.replace(/\D/g, "");
+            return numberString;
+          }}
+        >
+          <Input placeholder="00" />
         </Form.Item>
         <section className="tw-flex tw-flex-col">
           <label className="tw-leading-[22px] tw-tracking-[0.14px]">
