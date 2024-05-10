@@ -17,7 +17,7 @@ const AuthLayout = ({ children }) => {
           <Image
             src="/assets/logo-white.svg"
             alt="logo"
-            width={188}
+            width={0}
             height={0}
             style={{ height: "auto", width: "auto" }}
             priority
