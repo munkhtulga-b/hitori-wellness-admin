@@ -60,7 +60,7 @@ const columns = [
   },
 ];
 
-const RecordPlan = ({ studios, list, fetchData, isLoading }) => {
+const RecordPlan = ({ studioEditOptions, list, fetchData, isLoading }) => {
   const [isRequesting, setIsRequesting] = useState(false);
   const [checkedRows, setCheckedRows] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -180,7 +180,7 @@ const RecordPlan = ({ studios, list, fetchData, isLoading }) => {
       >
         <CreatePlanModal
           data={selectedRow}
-          studios={studios}
+          studios={studioEditOptions}
           modalKey={modalKey}
           isRequesting={isRequesting}
           onComplete={selectedRow ? updatePlan : createPlan}

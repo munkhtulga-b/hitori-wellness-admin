@@ -4,7 +4,8 @@ import PartialLoading from "../PartialLoading";
 import { Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import StaffTimeSlotForm from "./modals/StaffTimeSlotForm";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import BusinessHourIndicator from "../custom/BusinessHourIndicator";
 
 const CalendarStaff = ({
   isFetching,
@@ -18,11 +19,29 @@ const CalendarStaff = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
 
+  const calendarSlotContainerRef = useRef(null);
+  const [businessHourIndicatorWidth, setBusinessHourIndicatorWidth] =
+    useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (calendarSlotContainerRef.current) {
+        clearInterval(interval);
+        // Element is not null, trigger your function here
+        setBusinessHourIndicatorWidth(
+          calendarSlotContainerRef.current.offsetWidth
+        );
+      }
+    }, 100); // Check every 100 milliseconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+
   const generateHoursInDay = () => {
     const hours = [];
     const currentDay = dayjs();
-    const startTime = selectedStudio.timeperiod_details[0].start_hour;
-    const endTime = selectedStudio.timeperiod_details[0].end_hour;
+    const startTime = "00:00";
+    const endTime = "23:00";
     let currentHour = dayjs(
       `${currentDay.format("YYYY-MM-DD")} ${startTime}`,
       "YYYY-MM-DD HH:mm"
@@ -37,18 +56,28 @@ const CalendarStaff = ({
     ) {
       hours.push({
         hour: currentHour.format("HH:mm"),
-        data: [],
+        isStartTime:
+          dayjs(
+            selectedStudio.timeperiod_details[0]?.start_hour,
+            "HH:mm"
+          ).hour() === dayjs(currentHour, "HH:mm").hour(),
+        isEndTime:
+          dayjs(
+            selectedStudio.timeperiod_details[0]?.end_hour,
+            "HH:mm"
+          ).hour() === dayjs(currentHour, "HH:mm").hour(),
         index: null,
       });
       currentHour = currentHour.add(1, "hour");
     }
+    console.log(hours);
     return hours;
   };
 
   const generateCalendarSlots = (currentDay) => {
     const hours = [];
-    const startTime = selectedStudio.timeperiod_details[0].start_hour;
-    const endTime = selectedStudio.timeperiod_details[0].end_hour;
+    const startTime = "00:00";
+    const endTime = "23:00";
     let currentHour = dayjs(
       `${currentDay.format("YYYY-MM-DD")} ${startTime}`,
       "YYYY-MM-DD HH:mm"
@@ -121,10 +150,23 @@ const CalendarStaff = ({
                       <span className="tw-absolute tw-left-0 tw-top-[-12px] tw-leading-[22px] tw-tracking-[0.14px]">
                         {hour.hour}
                       </span>
+                      {hour.isStartTime && (
+                        <BusinessHourIndicator
+                          indicatorWidth={businessHourIndicatorWidth}
+                        />
+                      )}
+                      {hour.isEndTime && (
+                        <BusinessHourIndicator
+                          indicatorWidth={businessHourIndicatorWidth}
+                        />
+                      )}
                     </div>
                   ))}
                 </section>
-                <section className="tw-grow tw-flex tw-justify-start xl:tw-grid xl:tw-grid-cols-7 xl:tw-auto-rows-auto">
+                <section
+                  ref={calendarSlotContainerRef}
+                  className="tw-grow tw-flex tw-justify-start xl:tw-grid xl:tw-grid-cols-7 xl:tw-auto-rows-auto"
+                >
                   {generateDaysInWeek().map(({ day, hours }, dayIndex) => (
                     <div
                       id={`week-day-${dayIndex}`}
@@ -218,6 +260,16 @@ const CalendarStaff = ({
                       <span className="tw-absolute tw-left-0 tw-top-[-12px] tw-leading-[22px] tw-tracking-[0.14px]">
                         {hour.hour}
                       </span>
+                      {hour.isStartTime && (
+                        <BusinessHourIndicator
+                          indicatorWidth={businessHourIndicatorWidth}
+                        />
+                      )}
+                      {hour.isEndTime && (
+                        <BusinessHourIndicator
+                          indicatorWidth={businessHourIndicatorWidth}
+                        />
+                      )}
                     </div>
                   ))}
                 </section>

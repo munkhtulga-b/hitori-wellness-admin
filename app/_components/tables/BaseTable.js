@@ -226,7 +226,12 @@ const BaseTable = ({
                 item[column.dataIndex][0][column.nestedObject][
                   column.nestedDataIndex
                 ]
-              )}
+              )}{" "}
+              <br />
+              {column.nestedObject === "plan" &&
+              item[column.dataIndex][0]?.end_date
+                ? `(${item[column.dataIndex][0]?.end_date})`
+                : ""}
             </>
           ) : (
             <>-</>

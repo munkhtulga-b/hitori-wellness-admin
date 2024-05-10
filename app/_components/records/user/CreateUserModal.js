@@ -29,6 +29,7 @@ const CreateUserModal = ({
       key: 2,
       label: "基本情報",
       children: <PlanDetailsForm data={data} onBack={onBack} />,
+      disabled: !data ? true : false,
     },
   ];
 

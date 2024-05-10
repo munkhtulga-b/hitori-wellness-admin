@@ -64,7 +64,7 @@ const columns = [
   },
 ];
 
-const RecordItem = ({ studios, list, fetchData, isLoading }) => {
+const RecordItem = ({ studioEditOptions, list, fetchData, isLoading }) => {
   const [isRequesting, setIsRequesting] = useState(false);
   const itemTypes = _.map(EEnumItemTypes, (value) => ({
     value: value.value,
@@ -219,7 +219,7 @@ const RecordItem = ({ studios, list, fetchData, isLoading }) => {
         <CreateItemModal
           data={selectedRow}
           modalKey={modalKey}
-          studios={studios}
+          studios={studioEditOptions}
           onComplete={selectedRow ? updateItem : createItem}
           onBack={() => setIsModalOpen(false)}
           isRequesting={isRequesting}
