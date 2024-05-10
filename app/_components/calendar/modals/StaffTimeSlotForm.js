@@ -142,11 +142,12 @@ const StaffTimeSlotForm = ({
           (current &&
             (current < dayjs().startOf("day") ||
               current > dayjs().endOf("week"))) ||
-          current < dayjs(startTime);
+          current < dayjs(startTime).subtract(1, "day");
       } else {
         result =
           current &&
-          (current < dayjs().startOf("day") || current < dayjs(startTime));
+          (current < dayjs().startOf("day") ||
+            current < dayjs(startTime).subtract(1, "day"));
       }
     }
     return result;
