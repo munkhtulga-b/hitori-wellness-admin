@@ -1,7 +1,12 @@
 import Image from "next/image";
 import { useWindowWidth } from "../_utils/custom-hooks";
 import { useRouter } from "next/navigation";
-import { DownOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+  DownOutlined,
+  LoadingOutlined,
+  UnlockOutlined,
+  PoweroffOutlined,
+} from "@ant-design/icons";
 import { Dropdown, Spin } from "antd";
 import { useUserStore } from "../_store/user";
 import { useState } from "react";
@@ -15,7 +20,12 @@ const NavigationBar = ({ collapsed, setCollapsed, onLogOut }) => {
 
   const items = [
     {
-      label: <span>パスワードを変更する</span>,
+      label: (
+        <div className="tw-flex tw-justify-start tw-items-center tw-gap-2">
+          <UnlockOutlined style={{ fontSize: 16 }} />
+          <span>パスワードを変更する</span>
+        </div>
+      ),
       key: "0",
     },
     {
@@ -23,7 +33,8 @@ const NavigationBar = ({ collapsed, setCollapsed, onLogOut }) => {
     },
     {
       label: (
-        <span
+        <div
+          className="tw-flex tw-justify-start tw-items-center tw-gap-2"
           onClick={() => {
             setIsLoggingOut(true);
             setTimeout(() => {
@@ -31,8 +42,9 @@ const NavigationBar = ({ collapsed, setCollapsed, onLogOut }) => {
             }, 1500);
           }}
         >
-          ログアウト
-        </span>
+          <PoweroffOutlined style={{ fontSize: 16 }} />
+          <span>ログアウト</span>
+        </div>
       ),
       key: "1",
     },
@@ -79,7 +91,7 @@ const NavigationBar = ({ collapsed, setCollapsed, onLogOut }) => {
           className="tw-self-center"
         >
           <div className="tw-cursor-pointer tw-flex tw-justify-start tw-items-center tw-gap-2">
-            <span className="tw-leading-[22px] tw-tracking-[0.14px]">
+            <span className="tw-leading-[22px] tw-tracking-[0.14px] tw-underline tw-underline-offset-4">
               {user?.mail_address ?? "-"}
             </span>
             <DownOutlined style={{ fontSize: 12 }} />
