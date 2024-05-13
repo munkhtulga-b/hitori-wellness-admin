@@ -85,9 +85,17 @@ const PurchaseHistory = () => {
 
   const fetchPurchases = async (queries) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.purchase.getMany(queries);
+    const { isOk, data, range } = await $api.admin.purchase.getMany(
+      queries
+        ? queries
+        : {
+            page: pagination.current - 1,
+            limit: pagination.count,
+          }
+    );
     if (isOk) {
       setList(data);
+      setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
     }
     setIsLoading(false);
   };
