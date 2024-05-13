@@ -8,6 +8,7 @@ import ReservationSlotModal from "./modals/ReservationSlotModal";
 import StudioShiftSlotModal from "./modals/StudioShiftSlotModal";
 import CalendarSlotCard from "./CalendarSlotCard";
 import BusinessHourIndicator from "../custom/BusinessHourIndicator";
+import { useSidebarStore } from "@/app/_store/siderbar";
 
 const CalendarMember = ({
   isFetching,
@@ -21,6 +22,7 @@ const CalendarMember = ({
   const [modalType, setModalType] = useState("member");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const sidebar = useSidebarStore((state) => state.body);
 
   const calendarSlotContainerRef = useRef(null);
   const [businessHourIndicatorWidth, setBusinessHourIndicatorWidth] =
@@ -35,10 +37,10 @@ const CalendarMember = ({
           calendarSlotContainerRef.current.offsetWidth
         );
       }
-    }, 100); // Check every 100 milliseconds
+    }, 300); // Check every 300 milliseconds
 
     return () => clearInterval(interval); // Cleanup on unmount
-  }, []);
+  }, [sidebar?.isCollapsed]);
 
   const generateHoursInDay = () => {
     const hours = [];

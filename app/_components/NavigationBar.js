@@ -18,36 +18,21 @@ const NavigationBar = ({ collapsed, setCollapsed, onLogOut }) => {
       label: <span>パスワードを変更する</span>,
       key: "0",
     },
-
     {
       type: "divider",
     },
     {
       label: (
-        <div className="tw-flex tw-justify-start tw-items-center tw-gap-2">
-          <span
-            onClick={() => {
-              setIsLoggingOut(true);
-              setTimeout(() => {
-                onLogOut();
-              }, 1500);
-            }}
-          >
-            ログアウト
-          </span>
-          {isLoggingOut && (
-            <Spin
-              indicator={
-                <LoadingOutlined
-                  style={{
-                    fontSize: 14,
-                  }}
-                  spin
-                />
-              }
-            />
-          )}
-        </div>
+        <span
+          onClick={() => {
+            setIsLoggingOut(true);
+            setTimeout(() => {
+              onLogOut();
+            }, 1500);
+          }}
+        >
+          ログアウト
+        </span>
       ),
       key: "1",
     },
@@ -100,6 +85,19 @@ const NavigationBar = ({ collapsed, setCollapsed, onLogOut }) => {
             <DownOutlined style={{ fontSize: 12 }} />
           </div>
         </Dropdown>
+        {isLoggingOut && (
+          <Spin
+            fullscreen
+            indicator={
+              <LoadingOutlined
+                style={{
+                  fontSize: 40,
+                }}
+                spin
+              />
+            }
+          />
+        )}
       </nav>
     </>
   );
