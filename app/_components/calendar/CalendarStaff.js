@@ -6,6 +6,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import StaffTimeSlotForm from "./modals/StaffTimeSlotForm";
 import { useEffect, useRef, useState } from "react";
 import BusinessHourIndicator from "../custom/BusinessHourIndicator";
+import { useSidebarStore } from "@/app/_store/siderbar";
 
 const CalendarStaff = ({
   isFetching,
@@ -18,6 +19,7 @@ const CalendarStaff = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const sidebar = useSidebarStore((state) => state.body);
 
   const calendarSlotContainerRef = useRef(null);
   const [businessHourIndicatorWidth, setBusinessHourIndicatorWidth] =
@@ -32,10 +34,10 @@ const CalendarStaff = ({
           calendarSlotContainerRef.current.offsetWidth
         );
       }
-    }, 100); // Check every 100 milliseconds
+    }, 300); // Check every 300 milliseconds
 
     return () => clearInterval(interval); // Cleanup on unmount
-  }, []);
+  }, [sidebar?.isCollapsed]);
 
   const generateHoursInDay = () => {
     const hours = [];

@@ -10,6 +10,7 @@ import SideBar from "@/app/_components/SideBar";
 import { motion } from "framer-motion";
 import { useWindowWidth } from "../_utils/custom-hooks";
 import { useAdminAccessStore } from "../_store/admin-access";
+import { useSidebarStore } from "../_store/siderbar";
 
 const { Header, Content, Sider } = Layout;
 
@@ -30,6 +31,7 @@ const AdminLayout = ({ children }) => {
   const windowWidth = useWindowWidth();
   const clearUser = useUserStore((state) => state.clearUser);
   const clearAccess = useAdminAccessStore((state) => state.clearAccess);
+  const setSidebar = useSidebarStore((state) => state.setBody);
 
   useLayoutEffect(() => {
     const token = Cookies.get("cms-token");
@@ -54,6 +56,12 @@ const AdminLayout = ({ children }) => {
       }
     };
   }, [isMounted]);
+
+  useEffect(() => {
+    setSidebar({
+      isCollapsed: collapsed,
+    });
+  }, [collapsed]);
 
   const logOut = () => {
     clearUser();
