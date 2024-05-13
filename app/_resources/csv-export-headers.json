@@ -36,6 +36,64 @@
             "type": "date"
         }
     ],
+    "purchases": [
+        {
+            "label": "ID",
+            "key": "id",
+            "obj": "item",
+            "objKey": "id",
+            "type": "objectItem"
+        },
+        {
+            "label": "コード",
+            "key": "code",
+            "obj": "item",
+            "objKey": "code",
+            "type": "objectItem"
+        },
+        {
+            "label": "商品",
+            "key": "name",
+            "obj": "item",
+            "objKey": "name",
+            "type": "objectItem"
+        },
+        {
+            "label": "日時",
+            "key": "purchased_at",
+            "type": "date"
+        },
+        {
+            "label": "ステータス",
+            "key": "payment_type",
+            "type": "paymentStatus"
+        },
+        {
+            "label": "メンバー",
+            "key": "member",
+            "obj": "member",
+            "objKey": ["last_name", "first_name"],
+            "type": "objectItem"
+        },
+        {
+            "label": "登録店舗",
+            "key": "studio_name",
+            "obj": "studio",
+            "objKey": "name",
+            "type": "objectItem"
+        },
+        {
+            "label": "支払い方法",
+            "key": "payment_card_details",
+            "obj": "payment_card_details",
+            "objKey": ["brand", "card_last4"],
+            "type": "objectItem"
+        },
+        {
+            "label": "合計",
+            "key": "price"
+        }
+    ],
     "studios": [
         {
             "label": "ID",
@@ -260,18 +318,21 @@
         {
             "label": "氏名",
             "key": "member",
+            "obj": "member",
             "objKey": ["last_name", "first_name"],
             "type": "objectItem"
         },
         {
             "label": "登録店舗",
-            "key": "m_studio",
+            "key": "studio_name",
+            "obj": "m_studio",
             "objKey": "name",
             "type": "objectItem"
         },
         {
             "label": "プログラム",
-            "key": "m_program",
+            "key": "program_name",
+            "obj": "m_program",
             "objKey": "name",
             "type": "objectItem"
         },

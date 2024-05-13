@@ -35,9 +35,9 @@ const PageHeader = ({ title, isExportable, exportKey, data }) => {
           );
         } else if (type === "objectItem" && objKey) {
           if (Array.isArray(objKey)) {
-            row[key] = objKey.map((i) => item[key][i]).join(", ");
+            row[key] = objKey.map((i) => item[obj]?.[i]).join(", ");
           } else {
-            row[key] = nullSafety(item[key]?.[objKey]);
+            row[key] = nullSafety(item[obj]?.[objKey]);
           }
         } else if (type === "date") {
           row[key] = nullSafety(dayjs(item[key]).format("YYYY-MM-DD HH:mm"));
