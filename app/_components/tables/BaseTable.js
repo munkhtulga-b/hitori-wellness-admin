@@ -155,7 +155,7 @@ const BaseTable = ({
           <div className="tw-flex tw-flex-wrap tw-justify-start tw-items-center tw-gap-2">
             {column.dataIndex.map((i) => (
               <span key={i}>
-                {nullSafety(item[column.nestedDataIndex]?.[i])}
+                {nullSafety(item[column.nestedDataIndex[0]][0]?.[i])}
               </span>
             ))}
           </div>
