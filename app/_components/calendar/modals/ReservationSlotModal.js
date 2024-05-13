@@ -140,7 +140,10 @@ const ReservationSlotModal = ({
               cancelText="いいえ"
             >
               <Button
-                disabled={data?.status !== EEnumReservationStatus.ACTIVE.value}
+                disabled={
+                  data?.detailed?.reservation_status !==
+                  EEnumReservationStatus.ACTIVE.value
+                }
                 loading={isRequesting}
                 type="primary"
                 size="large"

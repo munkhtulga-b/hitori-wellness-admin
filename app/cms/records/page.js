@@ -355,7 +355,12 @@ const RecordsPage = () => {
           exportKey={activeKey}
           data={exportData()}
         />
-        <Tabs activeKey={activeKey} items={tabItems} onChange={onTabChange} />
+        <Tabs
+          destroyInactiveTabPane
+          activeKey={activeKey}
+          items={tabItems}
+          onChange={onTabChange}
+        />
       </div>
     </>
   );
