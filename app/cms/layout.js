@@ -89,7 +89,7 @@ const AdminLayout = ({ children }) => {
                 backgroundColor: "#FFF",
               }}
             >
-              <SideBar setCollapsed={setCollapsed} onLogOut={logOut} />
+              <SideBar setCollapsed={setCollapsed} />
             </Sider>
             <Layout>
               <Header
@@ -106,6 +106,7 @@ const AdminLayout = ({ children }) => {
                 <NavigationBar
                   setCollapsed={setCollapsed}
                   collapsed={collapsed}
+                  onLogOut={logOut}
                 />
               </Header>
               <Content
