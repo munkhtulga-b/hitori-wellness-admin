@@ -149,14 +149,12 @@ const BaseTable = ({
         </div>
       );
     }
-    if (column.type === "flexList" && Array.isArray(column.dataIndex)) {
+    if (column.type === "flexList" && Array.isArray(column.nestedDataIndex)) {
       result = (
         <>
           <div className="tw-flex tw-flex-wrap tw-justify-start tw-items-center tw-gap-2">
-            {column.dataIndex.map((i) => (
-              <span key={i}>
-                {nullSafety(item[column.nestedDataIndex[0]][0]?.[i])}
-              </span>
+            {column.nestedDataIndex.map((i) => (
+              <span key={i}>{nullSafety(item[column.dataIndex]?.[i])}</span>
             ))}
           </div>
         </>
@@ -209,7 +207,21 @@ const BaseTable = ({
       result = (
         <>
           {item[column.dataIndex] ? (
-            <>{nullSafety(item[column.dataIndex][column.nestedDataIndex])}</>
+            <>
+              {Array.isArray(column.nestedDataIndex) ? (
+                <div className="tw-flex tw-justify-start tw-gap-2">
+                  {column.nestedDataIndex.map((i) => (
+                    <span key={i}>
+                      {nullSafety(item[column.dataIndex]?.[i])}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  {nullSafety(item[column.dataIndex][column.nestedDataIndex])}
+                </>
+              )}
+            </>
           ) : (
             <>-</>
           )}
@@ -307,7 +319,7 @@ const BaseTable = ({
           <table id={tableId ? tableId : ""} className="tw-w-full">
             {columns ? (
               <thead>
-                <tr className="tw-border-b tw-border-tableHeader">
+                <tr className="tw-border-b tw-border-tableHeader tw-bg-graySoft">
                   {isCheckable ? <th></th> : null}
                   {columns.map((column) => (
                     <th

@@ -164,7 +164,7 @@ const RecordUser = ({
     if (pagination.count == pageSize) {
       setPagination((prev) => ({ ...prev, current: page }));
     } else {
-      setPagination((prev) => ({ ...prev, current: 0, count: pageSize }));
+      setPagination((prev) => ({ ...prev, current: 1, count: pageSize }));
     }
     const queries = _.merge(filters, { page: page - 1, limit: pageSize });
     fetchData(queries);

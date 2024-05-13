@@ -13,8 +13,8 @@ import PageHeader from "@/app/_components/PageHeader";
 const columns = [
   {
     title: "商品",
-    dataIndex: ["id", "name"],
-    nestedDataIndex: ["t_member_plan", "t_member_ticket"],
+    dataIndex: "item",
+    nestedDataIndex: ["code", "name"],
     customStyle: "",
     type: "flexList",
   },
@@ -43,8 +43,15 @@ const columns = [
     type: "status",
   },
   {
-    title: "メンバー・登録店舗",
-    dataIndex: "m_program",
+    title: "メンバー",
+    dataIndex: "member",
+    nestedDataIndex: ["last_name", "first_name"],
+    customStyle: "",
+    type: "nestedObjectItem",
+  },
+  {
+    title: "登録店舗",
+    dataIndex: "studio",
     nestedDataIndex: "name",
     customStyle: "",
     type: "nestedObjectItem",
@@ -71,6 +78,7 @@ const PurchaseHistory = () => {
   const [list, setList] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
+  const [studios, setStudios] = useState(null);
   const [filters, setFilters] = useState({});
   const [pagination, setPagination] = useState({
     current: 1,
@@ -81,6 +89,7 @@ const PurchaseHistory = () => {
 
   useEffect(() => {
     fetchPurchases();
+    fetchStudios();
   }, []);
 
   const fetchPurchases = async (queries) => {
@@ -98,6 +107,15 @@ const PurchaseHistory = () => {
       setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
     }
     setIsLoading(false);
+  };
+
+  const fetchStudios = async () => {
+    const { isOk, data } = await $api.admin.studio.getMany();
+    if (isOk) {
+      setStudios(
+        _.map(data, ({ id: value, name: label }) => ({ value, label }))
+      );
+    }
   };
 
   const onFilterChange = (filter) => {
@@ -123,7 +141,7 @@ const PurchaseHistory = () => {
     if (pagination.count == pageSize) {
       setPagination((prev) => ({ ...prev, current: page }));
     } else {
-      setPagination((prev) => ({ ...prev, current: 0, count: pageSize }));
+      setPagination((prev) => ({ ...prev, current: 1, count: pageSize }));
     }
     const queries = _.merge(filters, { page: page - 1, limit: pageSize });
     fetchPurchases(queries);
@@ -132,7 +150,12 @@ const PurchaseHistory = () => {
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
-        <PageHeader title={`購入履歴`} />
+        <PageHeader
+          title={`購入履歴`}
+          isExportable={true}
+          exportKey={"purchases"}
+          data={list}
+        />
         <RecordTableFilters
           onAdd={null}
           onSearch={(value) => onFilterChange({ name: value })}
@@ -155,6 +178,21 @@ const PurchaseHistory = () => {
                   : onFilterClear("status")
               }
               placeholder="ステータス"
+            />
+            <Select
+              disabled={!studios}
+              allowClear
+              size="large"
+              style={{
+                width: 120,
+              }}
+              options={studios}
+              onChange={(value) => {
+                value
+                  ? onFilterChange({ studioId: value })
+                  : onFilterClear("studioId");
+              }}
+              placeholder="登録店舗"
             />
           </>
         </RecordTableFilters>
