@@ -33,7 +33,7 @@ const PageHeader = ({ title, isExportable, exportKey, data }) => {
           row[key] = nullSafety(
             item[key]?.length ? item[key][0][itemKey] : "-"
           );
-        } else if (type === "objectItem" && objKey) {
+        } else if (type === "objectItem" && objKey && obj) {
           if (Array.isArray(objKey)) {
             row[key] = objKey.map((i) => item[obj]?.[i]).join(", ");
           } else {

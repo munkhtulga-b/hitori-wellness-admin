@@ -144,7 +144,7 @@ const AdminLayout = ({ children }) => {
                   }}
                   transition={{ duration: 0.5 }}
                   className="tw-p-6 tw-bg-white tw-rounded-[14px] tw-shadow tw-overflow-auto"
-                  style={{ minHeight: "50vh" }}
+                  style={{ minHeight: "70vh" }}
                 >
                   <Suspense fallback={<></>}>{children}</Suspense>
                 </motion.div>

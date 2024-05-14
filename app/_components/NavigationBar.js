@@ -21,7 +21,10 @@ const NavigationBar = ({ collapsed, setCollapsed, onLogOut }) => {
   const items = [
     {
       label: (
-        <div className="tw-flex tw-justify-start tw-items-center tw-gap-2">
+        <div
+          className="tw-flex tw-justify-start tw-items-center tw-gap-2"
+          onClick={() => router.push("/cms/password")}
+        >
           <UnlockOutlined style={{ fontSize: 16 }} />
           <span>パスワードを変更する</span>
         </div>

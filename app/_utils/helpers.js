@@ -29,6 +29,31 @@ export const nullSafety = (value) => {
 };
 
 /**
+ * Validate if the input value is a valid password.
+ *
+ * @param {string} value - The value to be validated
+ * @return {boolean} Whether the value is a valid password or not
+ */
+export const isValidPassword = (value) => {
+  // Regular expressions to check for symbol, uppercase character, and number
+  const symbolRegex = /[!@#$%^&*(),.?":{}|<>-_+=]/;
+  const uppercaseRegex = /[A-Z]/;
+  const numberRegex = /[0-9]/;
+
+  // Check if the string meets the length requirement
+  const isLongEnough = value.length >= 8;
+
+  // Count how many criteria the password meets
+  let criteriaMet = 0;
+  if (symbolRegex.test(value)) criteriaMet++;
+  if (uppercaseRegex.test(value)) criteriaMet++;
+  if (numberRegex.test(value)) criteriaMet++;
+
+  // Check if the password meets the criteria
+  return isLongEnough && criteriaMet >= 2;
+};
+
+/**
  * Creates a query string from the given query object.
  *
  * @param {Object} queryObject - the object containing key-value pairs for the query parameters
