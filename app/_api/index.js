@@ -1,5 +1,6 @@
 // Auth API
 import login from "./auth/LoginController";
+import password from "./auth/PasswordController";
 
 // Admin API
 import * as admin from "./cms/AdminController";
@@ -22,6 +23,7 @@ import * as post from "./cms/PostJPController";
 const $api = {
   auth: {
     login,
+    password,
   },
   admin: {
     admin,
