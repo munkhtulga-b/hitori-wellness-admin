@@ -120,44 +120,41 @@ const PlanFormTwo = ({
           <Checkbox />
         </Form.Item>
 
-        <div className="tw-flex tw-justify-start tw-gap-2">
+        <Form.Item
+          name="isExpire"
+          label="有効期限制限"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+          valuePropName="checked"
+          initialValue={false}
+          style={{ flex: 1 }}
+        >
+          <Checkbox onChange={(e) => setHasExpirationDate(e.target.checked)}>
+            期限内はキャンセル不可となります。
+          </Checkbox>
+        </Form.Item>
+        {hasExpirationDate && (
           <Form.Item
-            name="isExpire"
-            label="有効期限制限"
+            name="expireMonth"
             rules={[
               {
-                required: false,
+                required: true,
+                message: "Please input studio name",
               },
             ]}
-            valuePropName="checked"
-            initialValue={false}
+            getValueFromEvent={(e) => {
+              const value = e.target.value;
+              const numberString = value.replace(/\D/g, "");
+              return thousandSeparator(numberString);
+            }}
             style={{ flex: 1 }}
           >
-            <Checkbox onChange={(e) => setHasExpirationDate(e.target.checked)}>
-              期限内はキャンセル不可となります。
-            </Checkbox>
+            <Input placeholder="月" style={{ width: 75 }} />
           </Form.Item>
-          {hasExpirationDate && (
-            <Form.Item
-              name="expireMonth"
-              label="メンバーサイトからのキャンセル制限"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input studio name",
-                },
-              ]}
-              getValueFromEvent={(e) => {
-                const value = e.target.value;
-                const numberString = value.replace(/\D/g, "");
-                return thousandSeparator(numberString);
-              }}
-              style={{ flex: 1 }}
-            >
-              <Input placeholder="" />
-            </Form.Item>
-          )}
-        </div>
+        )}
 
         <Form.Item
           name="maxCcReservableNumByPlan"

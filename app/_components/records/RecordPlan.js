@@ -152,7 +152,7 @@ const RecordPlan = ({ studioEditOptions, list, fetchData, isLoading }) => {
           columns={columns}
           data={list}
           isLoading={isLoading}
-          isCheckable={true}
+          isCheckable={false}
           checkedRows={checkedRows}
           onRowCheck={(rows) => setCheckedRows(rows)}
           onClickName={(row) => {
