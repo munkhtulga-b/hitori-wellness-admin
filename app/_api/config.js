@@ -49,12 +49,15 @@ const fetchData = async (endpoint, method, body, serverToken) => {
             Authorization: `Bearer ${refreshToken}`,
           },
         });
-        if (accessResponse.ok && accessResponse.status !== 401) {
+
+        if (accessResponse.ok) {
           const { data } = await accessResponse.json();
           Cookies.set("token", data?.tokens?.access_token);
-        } else {
+        } else if( accessResponse.status === 401){
           Cookies.remove("token");
           redirectUnauthorized();
+        } else{
+          toast.error("An error occurred while refreshing token");
         }
       } else {
         toast.error(data?.error?.message || "An error occurred");
