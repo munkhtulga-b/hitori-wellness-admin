@@ -121,7 +121,7 @@ const AdminLayout = ({ children }) => {
                 style={{
                   padding: "24px",
                   marginLeft: windowWidth < 1024 || collapsed ? 0 : 275,
-                  overflow: "hidden",
+                  overflow: "visible",
                   backgroundColor: "#EBEBEB",
                   transitionProperty: "all",
                   transitionDuration: "0.2s",
@@ -143,7 +143,7 @@ const AdminLayout = ({ children }) => {
                     opacity: 1,
                   }}
                   transition={{ duration: 0.5 }}
-                  className="tw-p-6 tw-bg-white tw-rounded-[14px] tw-shadow tw-overflow-auto"
+                  className="tw-p-6 tw-bg-white tw-rounded-[14px] tw-shadow tw-overflow-visible"
                   style={{ minHeight: "70vh" }}
                 >
                   <Suspense fallback={<></>}>{children}</Suspense>

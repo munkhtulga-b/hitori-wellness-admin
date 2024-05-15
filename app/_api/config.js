@@ -20,10 +20,7 @@ const fetchData = async (endpoint, method, body, serverToken) => {
     const init = {
       method: method,
       headers: requestHeaders,
-      cache: "no-store",
-      next: {
-        revalidate: 0,
-      },
+      cache: "default",
     };
 
     if (body) {
@@ -42,12 +39,13 @@ const fetchData = async (endpoint, method, body, serverToken) => {
     const range = response.headers.get("Content-Range");
 
     if (!isOk) {
-      toast.error(data?.error?.message || "An error occured");
-
       // Redirects the user back to login page if their token has expired
       if (status === 401) {
+        toast.info("Session expired");
         Cookies.remove("cms-token");
         redirectUnauthorized();
+      } else {
+        toast.error(data?.error?.message ?? "An error occured");
       }
     }
 

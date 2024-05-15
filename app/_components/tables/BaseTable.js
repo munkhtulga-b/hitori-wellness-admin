@@ -319,7 +319,7 @@ const BaseTable = ({
           <table id={tableId ? tableId : ""} className="tw-w-full">
             {columns ? (
               <thead>
-                <tr className="tw-border-b tw-border-tableHeader tw-bg-graySoft">
+                <tr className="tw-border-b tw-border-tableHeader tw-bg-graySoft tw-sticky tw-top-[84px] tw-z-[99] tw-shadow">
                   {isCheckable ? <th></th> : null}
                   {columns.map((column) => (
                     <th

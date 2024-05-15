@@ -205,31 +205,33 @@ const PlanFormTwo = ({
             initialValue={true}
             style={{ marginBottom: 0 }}
           >
-            <Radio>全店舗利用</Radio>
+            <Checkbox>全店舗利用</Checkbox>
           </Form.Item>
-          <Form.Item
-            name="studioIds"
-            rules={[
-              {
-                required: purchaseAllStudios ? false : true,
-                message: "Please input studio name",
-              },
-            ]}
-          >
-            <Select
-              disabled={!studios}
-              size="large"
-              mode="multiple"
-              style={{
-                width: "100%",
-              }}
-              placeholder="店舗を選択"
-              options={studios}
-            />
-          </Form.Item>
+          {!purchaseAllStudios && (
+            <Form.Item
+              name="studioIds"
+              rules={[
+                {
+                  required: purchaseAllStudios ? false : true,
+                  message: "店舗を選択してください。",
+                },
+              ]}
+            >
+              <Select
+                disabled={!studios}
+                size="large"
+                mode="multiple"
+                style={{
+                  width: "100%",
+                }}
+                placeholder="店舗を選択"
+                options={studios}
+              />
+            </Form.Item>
+          )}
         </div>
 
-        <div className="tw-flex tw-flex-col tw-gap-1">
+        <div className="tw-flex tw-flex-col tw-gap-1 tw-mt-4">
           <label>利用可能店舗</label>
           <Form.Item
             name="reservableStudioType"

@@ -1,6 +1,6 @@
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import EEnumItemTypes from "@/app/_enums/EEnumItemTypes";
-import { Button, Form, Input, Switch, Select } from "antd";
+import { Button, Form, Input, Switch, Select, Checkbox } from "antd";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import TextEditor from "../../custom/TextEditor";
@@ -17,6 +17,7 @@ const CreateItemModal = ({
   const [form] = Form.useForm();
   const [itemType, setItemType] = useState(null);
   const [description, setDescription] = useState("");
+  const isAllStudios = Form.useWatch("isAllStudios", form);
 
   useEffect(() => {
     if (data) {
@@ -67,6 +68,10 @@ const CreateItemModal = ({
     if (params.expiresDays) {
       params.expiresDays = parseNumberString(params.expiresDays);
     }
+    if (params.isAllStudios) {
+      params.studioIds = [];
+    }
+    delete params.isAllStudios;
     params.price = parseNumberString(params.price);
     params.status =
       params.status === true
@@ -155,27 +160,38 @@ const CreateItemModal = ({
               <Input placeholder="日" />
             </Form.Item>
 
-            <Form.Item
-              name="studioIds"
-              label="利用可能店舗"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input studio name",
-                },
-              ]}
-            >
-              <Select
-                disabled={!studios}
-                size="large"
-                mode="multiple"
-                style={{
-                  width: "100%",
-                }}
-                placeholder="店舗を選択"
-                options={studios}
-              />
-            </Form.Item>
+            <div className="tw-flex tw-flex-col tw-gap-4">
+              <Form.Item
+                name="isAllStudios"
+                valuePropName="checked"
+                initialValue={false}
+              >
+                <Checkbox>全店舗</Checkbox>
+              </Form.Item>
+              {!isAllStudios && (
+                <Form.Item
+                  name="studioIds"
+                  label="利用可能店舗"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input studio name",
+                    },
+                  ]}
+                >
+                  <Select
+                    disabled={!studios}
+                    size="large"
+                    mode="multiple"
+                    style={{
+                      width: "100%",
+                    }}
+                    placeholder="店舗を選択"
+                    options={studios}
+                  />
+                </Form.Item>
+              )}
+            </div>
           </>
         )}
 

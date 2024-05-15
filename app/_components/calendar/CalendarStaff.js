@@ -83,7 +83,7 @@ const CalendarStaff = ({
   const generateCalendarSlots = (currentDay) => {
     const hours = [];
     const startTime = "00:00";
-    const endTime = "23:00";
+    const endTime = "23:30";
     let currentHour = dayjs(
       `${currentDay.format("YYYY-MM-DD")} ${startTime}`,
       "YYYY-MM-DD HH:mm"
@@ -181,9 +181,9 @@ const CalendarStaff = ({
                       key={dayjs(day).format("ddd")}
                       className={`tw-flex tw-flex-col tw-min-w-[200px] tw-max-w-[200px] xl:tw-min-w-[100%] xl:tw-max-w-[100%] ${
                         dayIndex === 0 ? "tw-border-x" : "tw-border-r"
-                      } tw-border-divider tw-overflow-hidden`}
+                      } tw-border-divider`}
                     >
-                      <div className="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-mb-2">
+                      <div className="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-mb-2 tw-sticky tw-top-[84px] tw-z-[99] tw-bg-white">
                         <span className="tw-leading-[26px] tw-tracking-[0.14px]">
                           {dayjs(day).format("DD")}
                         </span>
