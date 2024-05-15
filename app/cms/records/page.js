@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Tabs } from "antd";
+import { Tabs, FloatButton } from "antd";
+import { VerticalAlignTopOutlined } from "@ant-design/icons";
 import PageHeader from "@/app/_components/PageHeader";
 import RecordStudio from "@/app/_components/records/RecordStudio";
 import RecordPlan from "@/app/_components/records/RecordPlan";
@@ -20,6 +21,7 @@ const RecordsPage = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
+  const [isScrollTopVisible, setIsScrollTopVisible] = useState(false);
   const [activeKey, setActiveKey] = useState("studios");
   const [studioFilterOptions, setStudioFilterOptions] = useState([]);
   const [studioEditOptions, setStudioEditOptions] = useState([]);
@@ -51,6 +53,13 @@ const RecordsPage = () => {
 
   useEffect(() => {
     fetchStudioOptions();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", toggleVisibility);
+    return () => {
+      window.removeEventListener("scroll", toggleVisibility);
+    };
   }, []);
 
   const onTabChange = (key) => {
@@ -346,6 +355,24 @@ const RecordsPage = () => {
     return result;
   };
 
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  // Show button when user scrolls to bottom
+  const toggleVisibility = () => {
+    if (window.scrollY > 100) {
+      // Show button after scrolling down 300px
+      setIsScrollTopVisible(true);
+    } else {
+      setIsScrollTopVisible(false);
+    }
+  };
+
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
@@ -361,6 +388,12 @@ const RecordsPage = () => {
           items={tabItems}
           onChange={onTabChange}
         />
+        {isScrollTopVisible && (
+          <FloatButton
+            icon={<VerticalAlignTopOutlined />}
+            onClick={() => scrollToTop()}
+          />
+        )}
       </div>
     </>
   );

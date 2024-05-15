@@ -18,7 +18,7 @@ const CreateCouponModal = ({
   const [items, setItems] = useState(null);
   const studioIds = Form.useWatch("targetStudioIds", form);
   const noMaxNum = Form.useWatch("noMaxNum", form);
-  const [noLimit, setNoLimit] = useState(true);
+  const noLimit = Form.useWatch("noLimit", form);
   const [discountType, setDiscountType] = useState(1);
 
   useEffect(() => {
@@ -27,6 +27,7 @@ const CreateCouponModal = ({
 
   useEffect(() => {
     if (data) {
+      console.log(data);
       setTimeout(() => {
         form.setFieldsValue({
           code: data?.code,
@@ -37,12 +38,11 @@ const CreateCouponModal = ({
           discountType: data?.discounts[0]?.discount_type,
           discountValue: data?.discounts[0]?.discount_value,
           items: _.map(data?.discounts, "item_id"),
-          targetStudioIds: _.map(data?.studio_ids, "id"),
-          noLimit: data?.target_studio_ids?.length === 0,
+          studioIds: _.map(data?.studio_ids, "id"),
+          noLimit: data?.studio_ids?.length === 0,
           // status:
           //   data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
-        setNoLimit(data?.target_studio_ids?.length === 0);
       }, 500);
     }
   }, [data]);
@@ -59,7 +59,6 @@ const CreateCouponModal = ({
 
   useEffect(() => {
     if (studioIds?.length) {
-      setNoLimit(false);
       form.setFieldValue("noLimit", false);
     }
   }, [studioIds]);
@@ -87,7 +86,7 @@ const CreateCouponModal = ({
         .format("HH:mm:ss")}`,
       couponType: 1,
       maxUseNum: noMaxNum ? 0 : parseNumberString(params.maxUseNum),
-      targetStudioIds: params.targetStudioIds,
+      studioIds: !noLimit ? params.studioIds : [],
       discountDetails: _.map(params.items, (id) => ({
         itemId: id,
         discountType: params.discountType,
@@ -293,7 +292,7 @@ const CreateCouponModal = ({
 
         <Form.Item
           name="noLimit"
-          label="指定の店舗"
+          label="利用可能店舗"
           rules={[
             {
               required: true,
@@ -301,33 +300,34 @@ const CreateCouponModal = ({
             },
           ]}
           valuePropName="checked"
-          initialValue={noLimit}
+          initialValue={false}
         >
-          <Radio checked={noLimit} onChange={() => setNoLimit(true)}>
-            全店舗利用
-          </Radio>
+          <Checkbox>全店舗利用</Checkbox>
         </Form.Item>
 
-        <Form.Item
-          name="targetStudioIds"
-          label="指定の店舗"
-          rules={[
-            {
-              required: false,
-            },
-          ]}
-        >
-          <Select
-            disabled={!studios}
-            size="large"
-            mode="multiple"
-            style={{
-              width: "100%",
-            }}
-            placeholder="店舗を選択"
-            options={studios}
-          />
-        </Form.Item>
+        {!noLimit && (
+          <Form.Item
+            name="studioIds"
+            label="指定の店舗"
+            rules={[
+              {
+                required: true,
+                message: "店舗を選択してください。",
+              },
+            ]}
+          >
+            <Select
+              disabled={!studios}
+              size="large"
+              mode="multiple"
+              style={{
+                width: "100%",
+              }}
+              placeholder="店舗を選択"
+              options={studios}
+            />
+          </Form.Item>
+        )}
 
         {/* <Form.Item
           name="status"
