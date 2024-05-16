@@ -40,18 +40,19 @@ const fetchData = async (endpoint, method, body, serverToken) => {
 
     if (!isOk) {
       if (status === 401) {
-        const refreshToken =
-          localStorage.getItem("user-storage")?.state?.user?.token;
+        const refreshToken = JSON.parse(localStorage.getItem("user-storage"))
+          ?.state?.user?.token;
         const accessResponse = await fetch(`${baseURL}/auth/refresh-token`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${refreshToken}`,
           },
+          body: JSON.stringify({ refreshToken: refreshToken }),
         });
         if (accessResponse.ok && accessResponse.status !== 401) {
-          const { data } = await accessResponse.json();
-          Cookies.set("token", data?.tokens?.access_token);
+          const { access_token } = await accessResponse.json();
+          Cookies.set("cms-token", access_token);
+          window.location.reload();
         } else {
           Cookies.remove("token");
           redirectUnauthorized();
