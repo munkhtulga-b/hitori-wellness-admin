@@ -41,6 +41,7 @@ const CreateCouponModal = ({
           // status:
           //   data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
+        setNoMaxNum(data?.max_use_num === 0);
         setIsAllStudios(data?.studio_ids?.length === 0);
       }, 500);
     }
@@ -79,7 +80,7 @@ const CreateCouponModal = ({
         .format("HH:mm:ss")}`,
       couponType: 1,
       maxUseNum: noMaxNum ? 0 : parseNumberString(params.maxUseNum),
-      studioIds: !isAllStudios ? [params.studioIds] : [],
+      studioIds: !isAllStudios ? params.studioIds : [],
       discountDetails: _.map(params.items, (id) => ({
         itemId: id,
         discountType: params.discountType,
@@ -312,6 +313,7 @@ const CreateCouponModal = ({
             >
               <Select
                 disabled={!studios}
+                mode="multiple"
                 size="large"
                 style={{
                   width: "100%",
