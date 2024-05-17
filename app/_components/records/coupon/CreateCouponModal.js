@@ -18,7 +18,7 @@ const CreateCouponModal = ({
   const [items, setItems] = useState(null);
   const studioIds = Form.useWatch("targetStudioIds", form);
   const noMaxNum = Form.useWatch("noMaxNum", form);
-  const noLimit = Form.useWatch("noLimit", form);
+  const [isAllStudios, setIsAllStudios] = useState(false);
   const [discountType, setDiscountType] = useState(1);
 
   useEffect(() => {
@@ -39,10 +39,10 @@ const CreateCouponModal = ({
           discountValue: data?.discounts[0]?.discount_value,
           items: _.map(data?.discounts, "item_id"),
           studioIds: _.map(data?.studio_ids, "id"),
-          noLimit: data?.studio_ids?.length === 0,
           // status:
           //   data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
+        setIsAllStudios(data?.studio_ids?.length === 0);
       }, 500);
     }
   }, [data]);
@@ -50,12 +50,6 @@ const CreateCouponModal = ({
   useEffect(() => {
     form.resetFields();
   }, [modalKey]);
-
-  useEffect(() => {
-    if (noLimit) {
-      form.setFieldValue("targetStudioIds", []);
-    }
-  }, [noLimit]);
 
   useEffect(() => {
     if (studioIds?.length) {
@@ -86,7 +80,7 @@ const CreateCouponModal = ({
         .format("HH:mm:ss")}`,
       couponType: 1,
       maxUseNum: noMaxNum ? 0 : parseNumberString(params.maxUseNum),
-      studioIds: !noLimit ? params.studioIds : [],
+      studioIds: !isAllStudios ? [params.studioIds] : [],
       discountDetails: _.map(params.items, (id) => ({
         itemId: id,
         discountType: params.discountType,
@@ -290,44 +284,46 @@ const CreateCouponModal = ({
           </Form.Item>
         </div>
 
-        <Form.Item
-          name="noLimit"
-          label="利用可能店舗"
-          rules={[
-            {
-              required: true,
-              message: "Please input studio name",
-            },
-          ]}
-          valuePropName="checked"
-          initialValue={false}
-        >
-          <Checkbox>全店舗利用</Checkbox>
-        </Form.Item>
-
-        {!noLimit && (
-          <Form.Item
-            name="studioIds"
-            label="指定の店舗"
-            rules={[
-              {
-                required: true,
-                message: "店舗を選択してください。",
-              },
-            ]}
-          >
-            <Select
-              disabled={!studios}
-              size="large"
-              mode="multiple"
-              style={{
-                width: "100%",
-              }}
-              placeholder="店舗を選択"
-              options={studios}
-            />
+        <div className="tw-flex tw-flex-col tw-gap-1">
+          <label className="tw-mb-2">利用可能店舗</label>
+          <Form.Item style={{ marginBottom: 4 }}>
+            <div className="tw-flex tw-flex-col tw-gap-2">
+              <Radio
+                checked={isAllStudios}
+                onChange={() => setIsAllStudios(true)}
+              >
+                全店舗利用
+              </Radio>
+              <Radio
+                checked={!isAllStudios}
+                onChange={() => setIsAllStudios(false)}
+              >
+                指定の店舗のみ
+              </Radio>
+            </div>
           </Form.Item>
-        )}
+          {!isAllStudios && (
+            <Form.Item
+              name="studioIds"
+              rules={[
+                {
+                  required: true,
+                  message: "店舗を選択してください。",
+                },
+              ]}
+            >
+              <Select
+                disabled={!studios}
+                size="large"
+                style={{
+                  width: "100%",
+                }}
+                placeholder="店舗を選択"
+                options={studios}
+              />
+            </Form.Item>
+          )}
+        </div>
 
         {/* <Form.Item
           name="status"

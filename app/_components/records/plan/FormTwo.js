@@ -15,7 +15,7 @@ const PlanFormTwo = ({
   const [form] = Form.useForm();
   const [hasExpirationDate, setHasExpirationDate] = useState(false);
   const studioIds = Form.useWatch("studioIds", form);
-  const purchaseAllStudios = Form.useWatch("purchaseAllStudios", form);
+  const [purchaseAllStudios, setPurchaseAllStudios] = useState(false);
   const [reservableStudioType, setReservableStudioType] = useState(
     EEnumReservableStudioType.ALL
   );
@@ -72,15 +72,14 @@ const PlanFormTwo = ({
     }
   }, [reservableStudioType]);
 
-  useEffect(() => {
-    if (purchaseAllStudios) {
-      form.setFieldValue("studioIds", []);
-    }
-  }, [purchaseAllStudios]);
-
   const beforeComplete = (params) => {
     if (params.expireMonth) {
       params.expireMonth = parseNumberString(params.expireMonth);
+    }
+    if (purchaseAllStudios) {
+      params.studioIds = [];
+    } else {
+      params.studioIds = [params.studioIds];
     }
     params.maxCcReservableNumByPlan = parseNumberString(
       params.maxCcReservableNumByPlan
@@ -88,7 +87,6 @@ const PlanFormTwo = ({
     params.maxReservableNumAtDayByPlan = parseNumberString(
       params.maxReservableNumAtDayByPlan
     );
-    delete params.purchaseAllStudios;
     onComplete(params);
   };
 
@@ -193,26 +191,29 @@ const PlanFormTwo = ({
         </Form.Item>
 
         <div className="tw-flex tw-flex-col tw-gap-1">
-          <label>所属可能店舗</label>
-          <Form.Item
-            name="purchaseAllStudios"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-            valuePropName="checked"
-            initialValue={true}
-            style={{ marginBottom: 0 }}
-          >
-            <Checkbox>全店舗利用</Checkbox>
+          <label>登録可能店舗</label>
+          <Form.Item style={{ marginBottom: 4 }}>
+            <div className="tw-flex tw-flex-col tw-gap-1">
+              <Radio
+                checked={purchaseAllStudios}
+                onChange={() => setPurchaseAllStudios(true)}
+              >
+                全店舗利用
+              </Radio>
+              <Radio
+                checked={!purchaseAllStudios}
+                onChange={() => setPurchaseAllStudios(false)}
+              >
+                指定の店舗のみ
+              </Radio>
+            </div>
           </Form.Item>
           {!purchaseAllStudios && (
             <Form.Item
               name="studioIds"
               rules={[
                 {
-                  required: purchaseAllStudios ? false : true,
+                  required: true,
                   message: "店舗を選択してください。",
                 },
               ]}
@@ -220,7 +221,6 @@ const PlanFormTwo = ({
               <Select
                 disabled={!studios}
                 size="large"
-                mode="multiple"
                 style={{
                   width: "100%",
                 }}
@@ -232,7 +232,7 @@ const PlanFormTwo = ({
         </div>
 
         <div className="tw-flex tw-flex-col tw-gap-1 tw-mt-4">
-          <label>利用可能店舗</label>
+          <label>予約可能店舗</label>
           <Form.Item
             name="reservableStudioType"
             rules={[

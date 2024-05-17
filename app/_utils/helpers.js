@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import dayjs from "dayjs";
 
 export const uploadImage = async (file) => {
@@ -36,7 +37,7 @@ export const nullSafety = (value) => {
  */
 export const isValidPassword = (value) => {
   // Regular expressions to check for symbol, uppercase character, and number
-  const symbolRegex = /[!@#$%^&*(),.?":{}|<>-_+=]/;
+  const symbolRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
   const uppercaseRegex = /[A-Z]/;
   const numberRegex = /[0-9]/;
 

@@ -1,13 +1,21 @@
+import $api from "@/app/_api";
 import { nullSafety } from "@/app/_utils/helpers";
 import { Button, Form, Popconfirm } from "antd";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
-const PlanDetailsForm = ({ data }) => {
+const PlanDetailsForm = ({ data, closeModal, fetchData }) => {
   const [form] = Form.useForm();
   const [isRequesting, setIsRequesting] = useState(false);
 
   const cancelMemberPlan = async () => {
     setIsRequesting(true);
+    const { isOk } = await $api.admin.plan.cancel(data?.t_member_plan[0].id);
+    if (isOk) {
+      await fetchData();
+      closeModal();
+      toast.success("解約されました。");
+    }
     setIsRequesting(false);
   };
 
@@ -52,19 +60,25 @@ const PlanDetailsForm = ({ data }) => {
                 )}
               </span>
               <Popconfirm
-                title="Cancel plan"
-                description="Are you sure to cancel?"
+                title="注意事項"
+                description={
+                  <>
+                    通知メールが送られます。
+                    <br />
+                    本当に解約しますか？
+                  </>
+                }
                 onConfirm={() => cancelMemberPlan()}
                 okText="はい"
                 cancelText="いいえ"
               >
                 <Button
                   loading={isRequesting}
-                  disabled={data?.t_member_plan[0]?.end_date}
+                  disabled={data?.t_member_plan[0]?.status !== "ACTIVE"}
                   type="primary"
                   danger
                 >
-                  キャンセル
+                  解約
                 </Button>
               </Popconfirm>
             </div>

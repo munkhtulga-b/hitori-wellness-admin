@@ -9,6 +9,7 @@ const CreateUserModal = ({
   onBack,
   modalKey,
   isRequesting,
+  fetchData,
 }) => {
   const [activeKey, setActiveKey] = useState(1);
   const items = [
@@ -28,7 +29,13 @@ const CreateUserModal = ({
     {
       key: 2,
       label: "基本情報",
-      children: <PlanDetailsForm data={data} onBack={onBack} />,
+      children: (
+        <PlanDetailsForm
+          data={data}
+          closeModal={onBack}
+          fetchData={fetchData}
+        />
+      ),
       disabled: !data ? true : false,
     },
   ];

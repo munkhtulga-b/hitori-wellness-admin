@@ -1,6 +1,6 @@
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import EEnumItemTypes from "@/app/_enums/EEnumItemTypes";
-import { Button, Form, Input, Switch, Select, Checkbox } from "antd";
+import { Button, Form, Input, Switch, Select, Radio } from "antd";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import TextEditor from "../../custom/TextEditor";
@@ -17,7 +17,7 @@ const CreateItemModal = ({
   const [form] = Form.useForm();
   const [itemType, setItemType] = useState(null);
   const [description, setDescription] = useState("");
-  const isAllStudios = Form.useWatch("isAllStudios", form);
+  const [isAllStudios, setIsAllStudios] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -37,6 +37,7 @@ const CreateItemModal = ({
             expiresDays: data?.m_ticket?.expires_days,
             studioIds: _.map(data?.m_ticket?.studio_ids, "id"),
           });
+          setIsAllStudios(data?.m_ticket?.studio_ids?.length === 0);
         }
       }, 500);
     }
@@ -68,8 +69,13 @@ const CreateItemModal = ({
     if (params.expiresDays) {
       params.expiresDays = parseNumberString(params.expiresDays);
     }
-    if (params.isAllStudios) {
+    if (
+      params.isAllStudios &&
+      params.itemType === EEnumItemTypes.TICKET.value
+    ) {
       params.studioIds = [];
+    } else {
+      params.studioIds = [params.studioIds];
     }
     delete params.isAllStudios;
     params.price = parseNumberString(params.price);
@@ -77,6 +83,7 @@ const CreateItemModal = ({
       params.status === true
         ? EEnumDatabaseStatus.ACTIVE.value
         : EEnumDatabaseStatus.INACTIVE.value;
+
     onComplete(params);
   };
 
@@ -160,29 +167,37 @@ const CreateItemModal = ({
               <Input placeholder="日" />
             </Form.Item>
 
-            <div className="tw-flex tw-flex-col tw-gap-4">
-              <Form.Item
-                name="isAllStudios"
-                valuePropName="checked"
-                initialValue={false}
-              >
-                <Checkbox>全店舗</Checkbox>
+            <div className="tw-flex tw-flex-col tw-gap-1">
+              <label className="tw-mb-2">利用可能店舗</label>
+              <Form.Item style={{ marginBottom: 4 }}>
+                <div className="tw-flex tw-flex-col tw-gap-2">
+                  <Radio
+                    checked={isAllStudios}
+                    onChange={() => setIsAllStudios(true)}
+                  >
+                    全店舗利用
+                  </Radio>
+                  <Radio
+                    checked={!isAllStudios}
+                    onChange={() => setIsAllStudios(false)}
+                  >
+                    指定の店舗のみ
+                  </Radio>
+                </div>
               </Form.Item>
               {!isAllStudios && (
                 <Form.Item
                   name="studioIds"
-                  label="利用可能店舗"
                   rules={[
                     {
                       required: true,
-                      message: "Please input studio name",
+                      message: "店舗を選択してください。",
                     },
                   ]}
                 >
                   <Select
                     disabled={!studios}
                     size="large"
-                    mode="multiple"
                     style={{
                       width: "100%",
                     }}
