@@ -1,7 +1,7 @@
 import $api from "@/app/_api";
 // import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import { parseNumberString, thousandSeparator } from "@/app/_utils/helpers";
-import { Button, Form, Input, Select, Radio, DatePicker, Checkbox } from "antd";
+import { Button, Form, Input, Select, Radio, DatePicker } from "antd";
 import dayjs from "dayjs";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ const CreateCouponModal = ({
   const [form] = Form.useForm();
   const [items, setItems] = useState(null);
   const studioIds = Form.useWatch("targetStudioIds", form);
-  const noMaxNum = Form.useWatch("noMaxNum", form);
+  const [noMaxNum, setNoMaxNum] = useState(false);
   const [isAllStudios, setIsAllStudios] = useState(false);
   const [discountType, setDiscountType] = useState(1);
 
@@ -27,7 +27,6 @@ const CreateCouponModal = ({
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       setTimeout(() => {
         form.setFieldsValue({
           code: data?.code,
@@ -129,27 +128,25 @@ const CreateCouponModal = ({
           <Input placeholder="名称" />
         </Form.Item>
 
-        <section className="tw-flex tw-flex-col tw-gap-2">
+        <div className="tw-flex tw-flex-col tw-gap-1 tw-mb-4">
           <label>最大使用回数</label>
-          <Form.Item
-            name="noMaxNum"
-            rules={[
-              {
-                required: false,
-              },
-            ]}
-            valuePropName="checked"
-            initialValue={false}
-          >
-            <Checkbox>無制限</Checkbox>
+          <Form.Item style={{ marginBottom: 4 }}>
+            <div className="tw-flex tw-flex-col tw-gap-2">
+              <Radio checked={noMaxNum} onChange={() => setNoMaxNum(true)}>
+                無制限
+              </Radio>
+              <Radio checked={!noMaxNum} onChange={() => setNoMaxNum(false)}>
+                回数に制限をかける
+              </Radio>
+            </div>
           </Form.Item>
-
           {!noMaxNum && (
             <Form.Item
               name="maxUseNum"
               rules={[
                 {
                   required: true,
+                  message: "回数を設定してください。",
                 },
               ]}
               getValueFromEvent={(e) => {
@@ -157,11 +154,12 @@ const CreateCouponModal = ({
                 const numberString = value.replace(/\D/g, "");
                 return thousandSeparator(numberString);
               }}
+              style={{ marginBottom: 0 }}
             >
               <Input placeholder="00" />
             </Form.Item>
           )}
-        </section>
+        </div>
 
         <div className="tw-flex tw-justify-start tw-gap-2">
           <Form.Item
@@ -241,7 +239,7 @@ const CreateCouponModal = ({
             style={{ flex: 1 }}
             initialValue={discountType}
           >
-            <section className="tw-flex tw-flex-col tw-gap-6">
+            <section className="tw-flex tw-flex-col tw-gap-2">
               <Radio
                 value={1}
                 checked={discountType === 1}

@@ -1,3 +1,4 @@
+import EEnumAdminLevelTypes from "@/app/_enums/EEnumAdminLevelTypes";
 import { useAdminAccessStore } from "@/app/_store/admin-access";
 import { Form, Input, Select, Button } from "antd";
 import { useEffect } from "react";
@@ -11,11 +12,12 @@ const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
     form.resetFields();
   }, [modalKey]);
 
-  useEffect(() => {
-    if (levelType == 1) {
-      form.setFieldValue("studioIds", []);
+  const beforeComplete = (params) => {
+    if (levelType === EEnumAdminLevelTypes.type1.value) {
+      params.studios = [];
     }
-  }, [levelType]);
+    onConfirm(params);
+  };
 
   return (
     <>
@@ -25,7 +27,7 @@ const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
             layout="vertical"
             form={form}
             name="register"
-            onFinish={(params) => onConfirm(params)}
+            onFinish={(params) => beforeComplete(params)}
             requiredMark={false}
             validateTrigger="onSubmit"
           >
@@ -65,27 +67,29 @@ const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
                 options={getLevelTypes}
               />
             </Form.Item>
-            <Form.Item
-              name="studios"
-              label="登録店舗"
-              rules={[
-                {
-                  required: levelType == 1 ? false : true,
-                  message: "登録店舗を選択してください。",
-                },
-              ]}
-            >
-              <Select
-                disabled={!studios}
-                size="large"
-                mode="multiple"
-                style={{
-                  width: "100%",
-                }}
-                placeholder="店舗を選択する"
-                options={studios}
-              />
-            </Form.Item>
+            {levelType !== EEnumAdminLevelTypes.type1.value && (
+              <Form.Item
+                name="studios"
+                label="登録店舗"
+                rules={[
+                  {
+                    required: levelType == 1 ? false : true,
+                    message: "登録店舗を選択してください。",
+                  },
+                ]}
+              >
+                <Select
+                  disabled={!studios}
+                  size="large"
+                  mode="multiple"
+                  style={{
+                    width: "100%",
+                  }}
+                  placeholder="店舗を選択する"
+                  options={studios}
+                />
+              </Form.Item>
+            )}
             <Form.Item
               className="tw-flex tw-justify-center"
               style={{ marginTop: 24, marginBottom: 0 }}
