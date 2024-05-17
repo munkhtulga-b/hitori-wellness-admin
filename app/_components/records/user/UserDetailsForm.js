@@ -92,6 +92,7 @@ const UserDetailsForm = ({
   const beforeComplete = (params) => {
     params.tel = formatPhoneNumber(params.tel);
     params.emergencyTel = formatPhoneNumber(params.emergencyTel);
+    params.mailAddress = params.mailAddress.toLowerCase();
     const dateOfBirth = `${params.birthYear}-${params.birthMonth}-${params.birthDay}`;
     const omitted = _.omit(params, ["birthYear", "birthMonth", "birthDay"]);
     const body = {
