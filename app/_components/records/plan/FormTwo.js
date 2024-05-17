@@ -37,6 +37,7 @@ const PlanFormTwo = ({
           studioIds: _.map(data?.studios, "id"),
           reservableStudioDetails: _.map(data?.reservable_studios, "id"),
         });
+        setPurchaseAllStudios(data?.studios?.length === 0);
       }, 500);
     }
   }, [data]);

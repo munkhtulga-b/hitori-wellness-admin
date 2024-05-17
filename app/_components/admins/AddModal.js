@@ -16,6 +16,7 @@ const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
     if (levelType === EEnumAdminLevelTypes.type1.value) {
       params.studios = [];
     }
+    params.mailAddress = params.mailAddress.toLowerCase();
     onConfirm(params);
   };
 

@@ -20,6 +20,7 @@ const AuthLogin = () => {
 
   const login = async (params) => {
     setIsLoading(true);
+    params.email = params.email.toLowerCase();
     const { isOk, data } = await $api.auth.login(params);
     if (isOk) {
       const access = _.map(EEnumAdminLevelTypes, ({ value, label }) => ({
