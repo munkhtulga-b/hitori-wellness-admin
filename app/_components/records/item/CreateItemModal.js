@@ -69,13 +69,8 @@ const CreateItemModal = ({
     if (params.expiresDays) {
       params.expiresDays = parseNumberString(params.expiresDays);
     }
-    if (
-      params.isAllStudios &&
-      params.itemType === EEnumItemTypes.TICKET.value
-    ) {
+    if (isAllStudios && params.itemType === EEnumItemTypes.TICKET.value) {
       params.studioIds = [];
-    } else {
-      params.studioIds = [params.studioIds];
     }
     delete params.isAllStudios;
     params.price = parseNumberString(params.price);
@@ -197,6 +192,7 @@ const CreateItemModal = ({
                 >
                   <Select
                     disabled={!studios}
+                    mode="multiple"
                     size="large"
                     style={{
                       width: "100%",

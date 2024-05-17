@@ -79,8 +79,6 @@ const PlanFormTwo = ({
     }
     if (purchaseAllStudios) {
       params.studioIds = [];
-    } else {
-      params.studioIds = [params.studioIds];
     }
     params.maxCcReservableNumByPlan = parseNumberString(
       params.maxCcReservableNumByPlan
@@ -221,6 +219,7 @@ const PlanFormTwo = ({
             >
               <Select
                 disabled={!studios}
+                mode="multiple"
                 size="large"
                 style={{
                   width: "100%",
