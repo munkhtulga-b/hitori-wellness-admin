@@ -83,7 +83,7 @@ const CreateCouponModal = ({
       studioIds: !isAllStudios ? params.studioIds : [],
       discountDetails: _.map(params.items, (id) => ({
         itemId: id,
-        discountType: params.discountType,
+        discountType: parseNumberString(params.discountType),
         discountValue: parseNumberString(params.discountValue),
       })),
       // status:
