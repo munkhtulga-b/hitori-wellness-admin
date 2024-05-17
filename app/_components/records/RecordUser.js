@@ -271,6 +271,7 @@ const RecordUser = ({
           onBack={() => setIsModalOpen(false)}
           onComplete={selectedRow ? updateUser : createUser}
           isRequesting={isRequesting}
+          fetchData={fetchData}
         />
       </Modal>
     </>

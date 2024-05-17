@@ -54,7 +54,7 @@ const fetchData = async (endpoint, method, body, serverToken) => {
           Cookies.set("cms-token", access_token);
           window.location.reload();
         } else {
-          Cookies.remove("token");
+          Cookies.remove("cms-token");
           redirectUnauthorized();
         }
       } else {

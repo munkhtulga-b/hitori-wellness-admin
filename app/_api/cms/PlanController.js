@@ -13,3 +13,7 @@ export const create = (body) => {
 export const update = (id, body) => {
   return fetchData(`plans/${id}`, "PATCH", body);
 };
+
+export const cancel = (id) => {
+  return fetchData(`memberplans/cancel/${id}`, "DELETE");
+};
