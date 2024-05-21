@@ -107,7 +107,6 @@ const StudioFormThree = ({
               <TimePicker
                 format="HH:mm"
                 showNow={false}
-                needConfirm={false}
                 minuteStep={30}
                 className="tw-w-full"
               />
@@ -127,7 +126,6 @@ const StudioFormThree = ({
               <TimePicker
                 format="HH:mm"
                 showNow={false}
-                needConfirm={false}
                 minuteStep={30}
                 className="tw-w-full"
               />

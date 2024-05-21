@@ -222,7 +222,7 @@ const CalendarFilters = ({
               <Button size="large" onClick={() => setIsSettingsModalOpen(true)}>
                 <div className="tw-flex tw-justify-center tw-items-center tw-gap-2">
                   <span className="tw-text-secondary tw-leading-[22px] tw-tracking-[0.14px]">
-                    設定
+                    店舗メニュー
                   </span>
                   <Image
                     src="/assets/calendar/settings-icon.svg"

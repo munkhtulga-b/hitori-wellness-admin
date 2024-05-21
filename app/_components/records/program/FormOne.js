@@ -132,7 +132,6 @@ const ProgramFormOne = ({
           <TimePicker
             format={"HH:mm"}
             minuteStep={30}
-            needConfirm={false}
             showNow={false}
             className="tw-w-full"
           />

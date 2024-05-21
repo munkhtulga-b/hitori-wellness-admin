@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Modal } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
+import { Modal, FloatButton } from "antd";
+import { CloseOutlined, VerticalAlignTopOutlined } from "@ant-design/icons";
 import PageHeader from "../_components/PageHeader";
 import CalendarFilters from "../_components/calendar/CalendarFilters";
 import CalendarMember from "../_components/calendar/CalendarMember";
@@ -16,6 +16,7 @@ import _ from "lodash";
 
 const CalendarPage = () => {
   const setCalendarStore = useCalendarStore((state) => state.setBody);
+  const [isScrollTopVisible, setIsScrollTopVisible] = useState(false);
   const [studios, setStudios] = useState(null);
   const [slotListMember, setSlotListMember] = useState(null);
   const [slotListStaff, setSlotListStaff] = useState(null);
@@ -36,6 +37,13 @@ const CalendarPage = () => {
 
   useEffect(() => {
     fetchStudios();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", toggleVisibility);
+    return () => {
+      window.removeEventListener("scroll", toggleVisibility);
+    };
   }, []);
 
   const fetchStaffTimeSlots = async (queries) => {
@@ -156,6 +164,24 @@ const CalendarPage = () => {
     }
   };
 
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  // Show button when user scrolls to bottom
+  const toggleVisibility = () => {
+    if (window.scrollY > 100) {
+      // Show button after scrolling down 300px
+      setIsScrollTopVisible(true);
+    } else {
+      setIsScrollTopVisible(false);
+    }
+  };
+
   return (
     <>
       <div className="tw-flex tw-flex-col">
@@ -261,6 +287,13 @@ const CalendarPage = () => {
           selectedWeek={selectedWeek}
         />
       </Modal>
+
+      {isScrollTopVisible && (
+        <FloatButton
+          icon={<VerticalAlignTopOutlined />}
+          onClick={() => scrollToTop()}
+        />
+      )}
     </>
   );
 };

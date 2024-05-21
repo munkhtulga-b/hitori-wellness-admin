@@ -84,7 +84,7 @@ const CreateCouponModal = ({
       discountDetails: _.map(params.items, (id) => ({
         itemId: id,
         discountType: parseNumberString(params.discountType),
-        discountValue: parseNumberString(params.discountValue),
+        discountValue: parseNumberString(params.discountValue.slice(0, -1)),
       })),
       // status:
       //   params.status === true
@@ -230,7 +230,7 @@ const CreateCouponModal = ({
         <div className="tw-flex tw-justify-start tw-gap-2">
           <Form.Item
             name="discountType"
-            label="割合タイプ"
+            label="割引タイプ"
             rules={[
               {
                 required: true,
@@ -274,7 +274,15 @@ const CreateCouponModal = ({
             ]}
             getValueFromEvent={(e) => {
               const value = e.target.value;
-              const numberString = value.replace(/\D/g, "");
+              let numberString = value.replace(/\D/g, "");
+              if (discountType === 2) {
+                if (+numberString > 100) {
+                  numberString = "100";
+                }
+                numberString = `${numberString}%`;
+              } else {
+                numberString = `${numberString}円`;
+              }
               return thousandSeparator(numberString);
             }}
             style={{ flex: 1 }}

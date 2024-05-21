@@ -101,14 +101,13 @@ const RecordReservation = ({
   }, []);
 
   const onFilterChange = (filter) => {
-    const shallowFilters = _.merge(filters, filter);
-    const shallowPagination = {
+    const shallowFilters = _.merge(filters, filter, {
+      page: 0,
       limit: pagination.count,
-      page: pagination.current - 1,
-    };
-    const queries = _.merge(shallowFilters, shallowPagination);
-    setFilters(queries);
-    fetchData(queries);
+    });
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    setFilters(shallowFilters);
+    fetchData(shallowFilters);
   };
 
   const onFilterClear = (filterKey) => {
