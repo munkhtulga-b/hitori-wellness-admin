@@ -41,6 +41,7 @@ const CreateCouponModal = ({
           // status:
           //   data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
+        setDiscountType(data?.discounts[0]?.discount_type);
         setNoMaxNum(data?.max_use_num === 0);
         setIsAllStudios(data?.studio_ids?.length === 0);
       }, 500);
@@ -88,7 +89,7 @@ const CreateCouponModal = ({
       discountDetails: _.map(params.items, (id) => ({
         itemId: id,
         discountType: parseNumberString(params.discountType),
-        discountValue: parseNumberString(params.discountValue.slice(0, -1)),
+        discountValue: parseNumberString(params.discountValue),
       })),
       // status:
       //   params.status === true
@@ -269,7 +270,7 @@ const CreateCouponModal = ({
           </Form.Item>
           <Form.Item
             name="discountValue"
-            label="割合値"
+            label={`割合値 (${discountType === 1 ? "円" : "%"})`}
             rules={[
               {
                 required: true,
@@ -279,11 +280,6 @@ const CreateCouponModal = ({
             getValueFromEvent={(e) => {
               const value = e.target.value;
               let numberString = value.replace(/\D/g, "");
-              if (discountType === 2 && numberString.length) {
-                numberString = `${numberString}%`;
-              } else {
-                numberString = `${numberString}円`;
-              }
               return thousandSeparator(numberString);
             }}
             style={{ flex: 1 }}
