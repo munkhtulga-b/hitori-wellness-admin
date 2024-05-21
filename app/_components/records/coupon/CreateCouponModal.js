@@ -52,6 +52,10 @@ const CreateCouponModal = ({
   }, [modalKey]);
 
   useEffect(() => {
+    form.setFieldValue("discountValue", "");
+  }, [discountType]);
+
+  useEffect(() => {
     if (studioIds?.length) {
       form.setFieldValue("noLimit", false);
     }
@@ -275,10 +279,7 @@ const CreateCouponModal = ({
             getValueFromEvent={(e) => {
               const value = e.target.value;
               let numberString = value.replace(/\D/g, "");
-              if (discountType === 2) {
-                if (+numberString > 100) {
-                  numberString = "100";
-                }
+              if (discountType === 2 && numberString.length) {
                 numberString = `${numberString}%`;
               } else {
                 numberString = `${numberString}円`;
