@@ -173,13 +173,13 @@ const CalendarStaff = ({
                 </section>
                 <section
                   ref={calendarSlotContainerRef}
-                  className="tw-grow tw-flex tw-justify-start xl:tw-grid xl:tw-grid-cols-7 xl:tw-auto-rows-auto"
+                  className="tw-grow tw-grid tw-grid-cols-7 tw-auto-rows-auto tw-overflow-clip"
                 >
                   {generateDaysInWeek().map(({ day, hours }, dayIndex) => (
                     <div
                       id={`week-day-${dayIndex}`}
                       key={dayjs(day).format("ddd")}
-                      className={`tw-flex tw-flex-col tw-min-w-[200px] tw-max-w-[200px] xl:tw-min-w-[100%] xl:tw-max-w-[100%] ${
+                      className={`tw-flex tw-flex-col ${
                         dayIndex === 0 ? "tw-border-x" : "tw-border-r"
                       } tw-border-divider`}
                     >

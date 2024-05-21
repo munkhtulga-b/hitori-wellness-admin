@@ -4,7 +4,7 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal, Select } from "antd";
+import { Modal, Select, Pagination } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import CreateProgramModal from "./program/CreateProgramModal";
 import { toast } from "react-toastify";
@@ -49,7 +49,13 @@ const columns = [
   },
 ];
 
-const RecordProgram = ({ list, fetchData, isLoading }) => {
+const RecordProgram = ({
+  list,
+  fetchData,
+  isLoading,
+  pagination,
+  setPagination,
+}) => {
   const [isRequesting, setIsRequesting] = useState(false);
   const [checkedRows, setCheckedRows] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -99,7 +105,11 @@ const RecordProgram = ({ list, fetchData, isLoading }) => {
   };
 
   const onFilterChange = (filter) => {
-    const shallowFilters = _.merge(filters, filter);
+    const shallowFilters = _.merge(filters, filter, {
+      page: 0,
+      limit: pagination.count,
+    });
+    setPagination((prev) => ({ ...prev, current: 1 }));
     setFilters(shallowFilters);
     fetchData(shallowFilters);
   };
@@ -110,6 +120,16 @@ const RecordProgram = ({ list, fetchData, isLoading }) => {
       setFilters(shallow);
       fetchData(shallow);
     }
+  };
+
+  const onPaginationChange = (page, pageSize) => {
+    if (pagination.count == pageSize) {
+      setPagination((prev) => ({ ...prev, current: page }));
+    } else {
+      setPagination((prev) => ({ ...prev, current: 1, count: pageSize }));
+    }
+    const queries = _.merge(filters, { page: page - 1, limit: pageSize });
+    fetchData(queries);
   };
 
   return (
@@ -165,6 +185,14 @@ const RecordProgram = ({ list, fetchData, isLoading }) => {
             setIsModalOpen(true);
           }}
         />
+        <section className="tw-flex tw-justify-center">
+          <Pagination
+            current={pagination.current}
+            pageSize={pagination.count}
+            total={pagination.total}
+            onChange={(page, pageSize) => onPaginationChange(page, pageSize)}
+          />
+        </section>
       </div>
 
       <Modal
