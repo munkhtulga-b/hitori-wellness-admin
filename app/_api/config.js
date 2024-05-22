@@ -1,16 +1,11 @@
 import { toast } from "react-toastify";
-import Cookies from "js-cookie";
 import { redirectUnauthorized } from "./actions";
 
-const fetchData = async (endpoint, method, body, serverToken) => {
+const fetchData = async (endpoint, method, body) => {
   const baseURL =
     process.env.NODE_ENV === "development"
       ? process.env.NEXT_PUBLIC_DEV_BASE_URL
       : process.env.NEXT_PUBLIC_PROD_BASE_URL;
-
-  const token = Cookies.get("cms-token")
-    ? Cookies.get("cms-token")
-    : serverToken;
 
   try {
     const requestHeaders = {
@@ -20,15 +15,12 @@ const fetchData = async (endpoint, method, body, serverToken) => {
     const init = {
       method: method,
       headers: requestHeaders,
+      credentials: "include",
       cache: "default",
     };
 
     if (body) {
       init["body"] = JSON.stringify(body);
-    }
-
-    if (token) {
-      requestHeaders["Authorization"] = `Bearer ${token}`;
     }
 
     const response = await fetch(`${baseURL}/${endpoint}`, init);
@@ -40,20 +32,16 @@ const fetchData = async (endpoint, method, body, serverToken) => {
 
     if (!isOk) {
       if (status === 401) {
-        const refreshToken = Cookies.get("token");
         const accessResponse = await fetch(`${baseURL}/auth/refresh-token`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ refreshToken: refreshToken }),
+          credentials: "include",
         });
         if (accessResponse.ok && accessResponse.status !== 401) {
-          const { access_token } = await accessResponse.json();
-          Cookies.set("cms-token", access_token);
           window.location.reload();
         } else {
-          Cookies.remove("cms-token");
           redirectUnauthorized();
         }
       } else {

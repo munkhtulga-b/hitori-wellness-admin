@@ -1,13 +1,11 @@
 "use client";
 
 import $api from "@/app/_api";
-import Cookies from "js-cookie";
 import { useUserStore } from "@/app/_store/user";
 import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAdminAccessStore } from "@/app/_store/admin-access";
 import _ from "lodash";
 import EEnumAdminLevelTypes from "@/app/_enums/EEnumAdminLevelTypes";
 
@@ -16,7 +14,6 @@ const AuthLogin = () => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const setUser = useUserStore((state) => state.setUser);
-  const setAccess = useAdminAccessStore((state) => state.setAccess);
 
   const login = async (params) => {
     setIsLoading(true);
@@ -28,10 +25,7 @@ const AuthLogin = () => {
         label,
       }));
       if (access) {
-        Cookies.set("cms-token", data?.tokens?.access_token);
-        Cookies.set("token", data?.tokens?.refresh_token);
         setUser({ ...data.admin });
-        setAccess(access);
         router.push("/cms");
       }
     }

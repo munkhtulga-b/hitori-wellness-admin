@@ -1,11 +1,10 @@
 import EEnumAdminLevelTypes from "@/app/_enums/EEnumAdminLevelTypes";
-import { useAdminAccessStore } from "@/app/_store/admin-access";
 import { Form, Input, Select, Button } from "antd";
+import _ from "lodash";
 import { useEffect } from "react";
 
 const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
   const [form] = Form.useForm();
-  const getLevelTypes = useAdminAccessStore((state) => state.getAccess());
   const levelType = Form.useWatch("levelType", form);
 
   useEffect(() => {
@@ -59,13 +58,15 @@ const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
               ]}
             >
               <Select
-                disabled={!getLevelTypes}
                 size="large"
                 placeholder="タイプを選択する"
                 style={{
                   width: "100%",
                 }}
-                options={getLevelTypes}
+                options={_.map(EEnumAdminLevelTypes, (item) => ({
+                  label: item.label,
+                  value: item.value,
+                }))}
               />
             </Form.Item>
             {levelType !== EEnumAdminLevelTypes.type1.value && (
