@@ -37,6 +37,7 @@ const fetchData = async (endpoint, method, body) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "X-User-Type": "0",
           },
           credentials: "include",
         });
