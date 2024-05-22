@@ -77,6 +77,7 @@ const CalendarMember = ({
         index: null,
         isEndHalf:
           selectedStudio.timeperiod_details[0]?.end_hour.split(":")[1] === "30",
+        isDayEnd: selectedStudio.timeperiod_details[0]?.end_hour === "23:59",
       });
       currentHour = currentHour.add(1, "hour");
     }
@@ -175,6 +176,7 @@ const CalendarMember = ({
                       )}
                       {hour.isEndTime && (
                         <BusinessHourIndicator
+                          isDayEnd={hour.isDayEnd}
                           isHalf={hour.isEndHalf}
                           indicatorWidth={businessHourIndicatorWidth}
                         />
@@ -184,13 +186,13 @@ const CalendarMember = ({
                 </section>
                 <section
                   ref={calendarSlotContainerRef}
-                  className="tw-grow tw-flex tw-justify-start xl:tw-grid xl:tw-grid-cols-7 xl:tw-auto-rows-auto"
+                  className="tw-grow tw-grid tw-grid-cols-7 tw-auto-rows-auto tw-overflow-clip"
                 >
                   {generateDaysInWeek().map(({ day, hours }, dayIndex) => (
                     <div
                       id={`week-day-${dayIndex}`}
                       key={dayjs(day).format("ddd")}
-                      className={`tw-flex tw-flex-col tw-min-w-[200px] tw-max-w-[200px] xl:tw-min-w-[100%] xl:tw-max-w-[100%] ${
+                      className={`tw-flex tw-flex-col ${
                         dayIndex === 0 ? "tw-border-x" : "tw-border-r"
                       } tw-border-divider`}
                     >

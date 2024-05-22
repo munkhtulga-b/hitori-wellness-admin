@@ -41,6 +41,7 @@ const CreateCouponModal = ({
           // status:
           //   data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
+        setDiscountType(data?.discounts[0]?.discount_type);
         setNoMaxNum(data?.max_use_num === 0);
         setIsAllStudios(data?.studio_ids?.length === 0);
       }, 500);
@@ -50,6 +51,10 @@ const CreateCouponModal = ({
   useEffect(() => {
     form.resetFields();
   }, [modalKey]);
+
+  useEffect(() => {
+    form.setFieldValue("discountValue", "");
+  }, [discountType]);
 
   useEffect(() => {
     if (studioIds?.length) {
@@ -230,7 +235,7 @@ const CreateCouponModal = ({
         <div className="tw-flex tw-justify-start tw-gap-2">
           <Form.Item
             name="discountType"
-            label="割合タイプ"
+            label="割引タイプ"
             rules={[
               {
                 required: true,
@@ -265,7 +270,7 @@ const CreateCouponModal = ({
           </Form.Item>
           <Form.Item
             name="discountValue"
-            label="割合値"
+            label={`割合値 (${discountType === 1 ? "円" : "%"})`}
             rules={[
               {
                 required: true,
@@ -274,7 +279,7 @@ const CreateCouponModal = ({
             ]}
             getValueFromEvent={(e) => {
               const value = e.target.value;
-              const numberString = value.replace(/\D/g, "");
+              let numberString = value.replace(/\D/g, "");
               return thousandSeparator(numberString);
             }}
             style={{ flex: 1 }}

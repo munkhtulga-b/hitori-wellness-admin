@@ -94,7 +94,7 @@ const RecordsPage = () => {
 
   const fetchStudios = async (queries) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.studio.getMany(queries);
+    const { isOk, data, range } = await $api.admin.studio.getMany(queries);
     if (isOk) {
       setStudios(data);
       if (!studioFilterOptions?.length) {
@@ -104,6 +104,8 @@ const RecordsPage = () => {
         }));
         setStudioFilterOptions(options);
       }
+      console.log(range, "asdasd");
+      setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
     }
     setIsLoading(false);
   };
@@ -127,27 +129,30 @@ const RecordsPage = () => {
 
   const fetchPrograms = async (queries) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.program.getMany(queries);
+    const { isOk, data, range } = await $api.admin.program.getMany(queries);
     if (isOk) {
       setPrograms(data);
+      setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
     }
     setIsLoading(false);
   };
 
   const fetchStaff = async (filters) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.staff.getMany(filters);
+    const { isOk, data, range } = await $api.admin.staff.getMany(filters);
     if (isOk) {
       setStaff(data);
+      setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
     }
     setIsLoading(false);
   };
 
   const fetchItems = async (queries) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.item.getMany(queries);
+    const { isOk, data, range } = await $api.admin.item.getMany(queries);
     if (isOk) {
       setItems(data);
+      setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
     }
     setIsLoading(false);
   };
@@ -163,9 +168,10 @@ const RecordsPage = () => {
 
   const fetchCoupons = async (queries) => {
     setIsLoading(true);
-    const { isOk, data } = await $api.admin.coupon.getMany(queries);
+    const { isOk, data, range } = await $api.admin.coupon.getMany(queries);
     if (isOk) {
       setCoupons(data);
+      setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
     }
     setIsLoading(false);
   };
@@ -204,6 +210,8 @@ const RecordsPage = () => {
           list={studios}
           fetchData={fetchStudios}
           isLoading={isLoading}
+          pagination={pagination}
+          setPagination={setPagination}
         />
       ),
     },
@@ -232,6 +240,8 @@ const RecordsPage = () => {
           fetchData={fetchPrograms}
           isLoading={isLoading}
           list={programs}
+          pagination={pagination}
+          setPagination={setPagination}
         />
       ),
     },
@@ -245,6 +255,8 @@ const RecordsPage = () => {
           fetchData={fetchStaff}
           isLoading={isLoading}
           list={staff}
+          pagination={pagination}
+          setPagination={setPagination}
         />
       ),
     },
@@ -258,6 +270,8 @@ const RecordsPage = () => {
           fetchData={fetchItems}
           list={items}
           isLoading={isLoading}
+          pagination={pagination}
+          setPagination={setPagination}
         />
       ),
     },
@@ -271,6 +285,8 @@ const RecordsPage = () => {
           fetchData={fetchPlans}
           list={plans}
           isLoading={isLoading}
+          pagination={pagination}
+          setPagination={setPagination}
         />
       ),
     },
@@ -284,6 +300,8 @@ const RecordsPage = () => {
           fetchData={fetchCoupons}
           list={coupons}
           isLoading={isLoading}
+          pagination={pagination}
+          setPagination={setPagination}
         />
       ),
     },

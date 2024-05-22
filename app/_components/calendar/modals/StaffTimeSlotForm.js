@@ -224,7 +224,6 @@ const StaffTimeSlotForm = ({
             showTime
             minuteStep={30}
             format={"YYYY-MM-DD HH:mm"}
-            needConfirm={false}
             disabledDate={(current) => disabledDates(current, "start")}
             disabledTime={() => ({
               disabledHours: () => disabledTimes(),
@@ -248,7 +247,6 @@ const StaffTimeSlotForm = ({
             showTime
             minuteStep={30}
             format={"YYYY-MM-DD HH:mm"}
-            needConfirm={false}
             disabledDate={(current) => disabledDates(current, "end")}
             disabledTime={() => ({
               disabledHours: () => disabledTimes(),

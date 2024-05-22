@@ -128,7 +128,6 @@ const StudioBusinessHourModal = ({
           <TimePicker
             format={"HH:mm"}
             minuteStep={30}
-            needConfirm={false}
             showNow={false}
             className="tw-w-full"
             onChange={(time, timeString) => {
@@ -157,7 +156,6 @@ const StudioBusinessHourModal = ({
           <TimePicker
             format={"HH:mm"}
             minuteStep={30}
-            needConfirm={false}
             showNow={false}
             className="tw-w-full"
             onChange={(time, timeString) => {

@@ -40,8 +40,7 @@ const fetchData = async (endpoint, method, body, serverToken) => {
 
     if (!isOk) {
       if (status === 401) {
-        const refreshToken = JSON.parse(localStorage.getItem("user-storage"))
-          ?.state?.user?.token;
+        const refreshToken = Cookies.get("token");
         const accessResponse = await fetch(`${baseURL}/auth/refresh-token`, {
           method: "POST",
           headers: {
