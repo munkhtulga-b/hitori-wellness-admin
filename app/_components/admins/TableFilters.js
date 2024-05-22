@@ -4,7 +4,8 @@ import {
   DeleteOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { useAdminAccessStore } from "@/app/_store/admin-access";
+import _ from "lodash";
+import EEnumAdminLevelTypes from "@/app/_enums/EEnumAdminLevelTypes";
 
 const AdminTableFilters = ({
   onSearch,
@@ -17,7 +18,6 @@ const AdminTableFilters = ({
   studios,
   checkedRows,
 }) => {
-  const getLevelTypes = useAdminAccessStore((state) => state.getAccess());
   return (
     <>
       <section className="tw-flex tw-flex-col tw-items-end xl:tw-flex-row xl:tw-justify-between xl:tw-items-start tw-gap-10">
@@ -38,12 +38,14 @@ const AdminTableFilters = ({
           />
           <Select
             allowClear
-            disabled={!getLevelTypes}
             size="large"
             style={{
               width: 120,
             }}
-            options={getLevelTypes}
+            options={_.map(EEnumAdminLevelTypes, (item) => ({
+              value: item.value,
+              label: item.label,
+            }))}
             onChange={(value) =>
               value ? onLevelTypeChange(value) : onFilterClear("levelType")
             }

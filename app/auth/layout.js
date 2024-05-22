@@ -1,15 +1,6 @@
 import Image from "next/image";
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 
 const AuthLayout = ({ children }) => {
-  const cookieStore = cookies();
-  const token = cookieStore.get("cms-token");
-
-  if (token) {
-    redirect("/cms", "push");
-  }
-
   return (
     <>
       <main className="tw-min-h-screen tw-grid tw-place-items-center tw-relative">
