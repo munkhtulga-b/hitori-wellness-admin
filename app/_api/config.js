@@ -10,7 +10,7 @@ const fetchData = async (endpoint, method, body) => {
   try {
     const requestHeaders = {
       "Content-Type": "application/json",
-      "X-User-Type": "2",
+      "X-User-Type": "0",
     };
 
     const init = {
