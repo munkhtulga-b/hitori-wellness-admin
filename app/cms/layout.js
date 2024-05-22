@@ -1,6 +1,5 @@
 "use client";
 
-import Cookies from "js-cookie";
 import NavigationBar from "@/app/_components/NavigationBar";
 import { useEffect, useState, Suspense } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -29,7 +28,6 @@ const AdminLayout = ({ children }) => {
 
   const logOut = () => {
     clearUser();
-    Cookies.remove("cms-token");
     router.push("/auth/login");
   };
 

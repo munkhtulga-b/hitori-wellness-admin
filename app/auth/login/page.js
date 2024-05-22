@@ -6,8 +6,6 @@ import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import _ from "lodash";
-import EEnumAdminLevelTypes from "@/app/_enums/EEnumAdminLevelTypes";
 
 const AuthLogin = () => {
   const router = useRouter();
@@ -20,14 +18,8 @@ const AuthLogin = () => {
     params.email = params.email.toLowerCase();
     const { isOk, data } = await $api.auth.login(params);
     if (isOk) {
-      const access = _.map(EEnumAdminLevelTypes, ({ value, label }) => ({
-        value,
-        label,
-      }));
-      if (access) {
-        setUser({ ...data.admin });
-        router.push("/cms");
-      }
+      setUser({ ...data.admin });
+      router.push("/cms");
     }
     setIsLoading(false);
   };
