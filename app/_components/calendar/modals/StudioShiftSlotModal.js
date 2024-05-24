@@ -124,6 +124,7 @@ const StudioShiftSlotModal = ({
         result =
           current &&
           (current < dayjs().startOf("day") ||
+            current > dayjs().add(6, "day").add(23, "hour").add(59, "minute") ||
             current < dayjs(startAt).subtract(1, "day"));
       }
     }
@@ -197,6 +198,8 @@ const StudioShiftSlotModal = ({
           ]}
         >
           <DatePicker
+            placement="bottomLeft"
+            inputReadOnly
             showTime
             minuteStep={30}
             format={"YYYY-MM-DD HH:mm"}
@@ -220,6 +223,8 @@ const StudioShiftSlotModal = ({
           ]}
         >
           <DatePicker
+            placement="bottomLeft"
+            inputReadOnly
             showTime
             minuteStep={30}
             format={"YYYY-MM-DD HH:mm"}

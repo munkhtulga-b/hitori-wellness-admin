@@ -35,7 +35,6 @@ const CreateCouponModal = ({
           endAt: dayjs(data?.end_at),
           maxUseNum: data?.max_use_num,
           discountType: data?.discounts[0]?.discount_type,
-          discountValue: data?.discounts[0]?.discount_value,
           items: _.map(data?.discounts, "item_id"),
           studioIds: _.map(data?.studio_ids, "id"),
           // status:
@@ -45,6 +44,9 @@ const CreateCouponModal = ({
         setNoMaxNum(data?.max_use_num === 0);
         setIsAllStudios(data?.studio_ids?.length === 0);
       }, 500);
+      setTimeout(() => {
+        form.setFieldValue("discountValue", data?.discounts[0]?.discount_value);
+      }, 200);
     }
   }, [data]);
 
@@ -182,9 +184,9 @@ const CreateCouponModal = ({
           >
             <DatePicker
               format={"YYYY/MM/DD"}
-              disabledDate={(current) =>
-                current < dayjs().subtract(1, "day").startOf("day")
-              }
+              disabledDate={(current) => {
+                return current < dayjs().subtract(1, "day").startOf("day");
+              }}
               className="tw-w-full"
             />
           </Form.Item>
@@ -202,9 +204,9 @@ const CreateCouponModal = ({
           >
             <DatePicker
               format={"YYYY/MM/DD"}
-              disabledDate={(current) =>
-                current < dayjs().subtract(1, "day").startOf("day")
-              }
+              disabledDate={(current) => {
+                return current < dayjs().subtract(1, "day").startOf("day");
+              }}
               className="tw-w-full"
             />
           </Form.Item>

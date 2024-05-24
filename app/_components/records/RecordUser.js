@@ -60,11 +60,12 @@ const columns = [
   {
     title: "メールアドレス",
     dataIndex: "mail_address",
+    verifyIndex: "is_mail_address_confirmed",
     customStyle: "",
-    type: null,
+    type: "emailVerified",
   },
   {
-    title: "PAYMENT",
+    title: "支払い方法",
     dataIndex: ["brand", "card_last4"],
     nestedDataIndex: "t_member_card",
     prefixes: ["", "XXXX XXXX XXXX"],
@@ -190,7 +191,7 @@ const RecordUser = ({
               allowClear
               size="large"
               style={{
-                width: 120,
+                width: 240,
               }}
               options={studioFilterOptions}
               onChange={(value) => {

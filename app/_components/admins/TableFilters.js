@@ -1,4 +1,4 @@
-import { Input, Button, Select } from "antd";
+import { Input, Button, Select, Modal } from "antd";
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -18,8 +18,23 @@ const AdminTableFilters = ({
   studios,
   checkedRows,
 }) => {
+  const [modal, contextHolder] = Modal.useModal();
+  const showDeleteConfirm = () => {
+    modal.confirm({
+      title: "注意事項",
+      content:
+        "本当に消去しますか？消去すると紐づいている他の情報に影響を与える可能性がありますので、ご注意ください。",
+      onOk() {
+        onDelete();
+      },
+      cancelText: "戻る",
+      okText: "削除する",
+    });
+  };
+
   return (
     <>
+      {contextHolder}
       <section className="tw-flex tw-flex-col tw-items-end xl:tw-flex-row xl:tw-justify-between xl:tw-items-start tw-gap-10">
         <div className="tw-self-start tw-flex tw-justify-start tw-items-center tw-gap-3">
           <Input
@@ -40,7 +55,7 @@ const AdminTableFilters = ({
             allowClear
             size="large"
             style={{
-              width: 120,
+              width: 212,
             }}
             options={_.map(EEnumAdminLevelTypes, (item) => ({
               value: item.value,
@@ -78,7 +93,7 @@ const AdminTableFilters = ({
             size="large"
             type="primary"
             danger
-            onClick={() => onDelete()}
+            onClick={() => showDeleteConfirm()}
           >
             {!isRequesting ? (
               <div className="tw-flex tw-justify-start tw-items-center tw-gap-1">

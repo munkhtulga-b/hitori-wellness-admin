@@ -142,7 +142,7 @@ const RecordReservation = ({
               allowClear
               size="large"
               style={{
-                width: 120,
+                width: 240,
               }}
               options={studioFilterOptions}
               onChange={(value) => {

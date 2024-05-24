@@ -116,7 +116,7 @@ const CreateStaffModal = ({
           label="コメント"
           rules={[
             {
-              required: true,
+              required: false,
               message: "コメントを入力してください。",
             },
           ]}
