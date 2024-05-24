@@ -185,9 +185,7 @@ const CreateCouponModal = ({
             <DatePicker
               format={"YYYY/MM/DD"}
               disabledDate={(current) => {
-                return (
-                  current && current < dayjs().subtract(1, "day").startOf("day")
-                );
+                return current && current < dayjs().startOf("day");
               }}
               className="tw-w-full"
             />
@@ -207,9 +205,7 @@ const CreateCouponModal = ({
             <DatePicker
               format={"YYYY/MM/DD"}
               disabledDate={(current) => {
-                return (
-                  current && current < dayjs().subtract(1, "day").startOf("day")
-                );
+                return current && current < dayjs().startOf("day");
               }}
               className="tw-w-full"
             />
