@@ -6,6 +6,7 @@ import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const AuthLogin = () => {
   const router = useRouter();
@@ -18,6 +19,7 @@ const AuthLogin = () => {
     params.email = params.email.toLowerCase();
     const { isOk, data } = await $api.auth.login(params);
     if (isOk) {
+      Cookies.set("session", true);
       setUser({ ...data.admin });
       router.push("/cms");
     }

@@ -4,11 +4,14 @@ import NavigationBar from "@/app/_components/NavigationBar";
 import { useEffect, useState, Suspense } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Layout } from "antd";
+import { CloseCircleOutlined } from "@ant-design/icons";
 import { useUserStore } from "../_store/user";
 import SideBar from "@/app/_components/SideBar";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useWindowWidth } from "../_utils/custom-hooks";
 import { useSidebarStore } from "../_store/siderbar";
+import Cookies from "js-cookie";
+import { isMobile } from "react-device-detect";
 
 const { Header, Content, Sider } = Layout;
 
@@ -19,6 +22,16 @@ const AdminLayout = ({ children }) => {
   const windowWidth = useWindowWidth();
   const clearUser = useUserStore((state) => state.clearUser);
   const setSidebar = useSidebarStore((state) => state.setBody);
+  const [isMounted, setIsMounted] = useState(false);
+
+  const [showMobileWarning, setShowMobileWarning] = useState(false);
+
+  useEffect(() => {
+    if (windowWidth) {
+      setShowMobileWarning(isMobile);
+      setIsMounted(true);
+    }
+  }, [windowWidth]);
 
   useEffect(() => {
     setSidebar({
@@ -27,13 +40,14 @@ const AdminLayout = ({ children }) => {
   }, [collapsed]);
 
   const logOut = () => {
+    Cookies.remove("session");
     clearUser();
     router.push("/auth/login");
   };
 
   return (
     <div className="tw-flex tw-flex-col">
-      <>
+      {isMounted ? (
         <Layout
           style={{
             minHeight: "100svh",
@@ -93,6 +107,36 @@ const AdminLayout = ({ children }) => {
                   className="tw-fixed tw-top-0 tw-bottom-0 tw-left-0 tw-right-0 tw-bg-black/20 tw-z-[9999]"
                 ></div>
               )}
+              <AnimatePresence>
+                {showMobileWarning && (
+                  <motion.div
+                    initial={{ opacity: 0, x: "100%" }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: "-100%" }}
+                    transition={{ duration: 0.2 }}
+                    className="tw-fixed tw-top-6 tw-left-6 tw-right-6 tw-z-[1000]"
+                  >
+                    <section
+                      onClick={() => setShowMobileWarning(false)}
+                      className="tw-bg-white tw-shadow tw-rounded-xl tw-p-4 tw-relative"
+                    >
+                      <span
+                        onClick={() => setShowMobileWarning(false)}
+                        className="tw-bg-white tw-absolute tw-top-[-4px] tw-right-[-4px] tw-rounded-full"
+                      >
+                        <CloseCircleOutlined
+                          style={{
+                            fontSize: 20,
+                          }}
+                        />
+                      </span>
+                      <p className="tw-leading-[22px] tw-tracking-[0.14px] tw-text-support">
+                        最適な環境で利用するにはパソコンでアクセスください。
+                      </p>
+                    </section>
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <motion.div
                 id="scrollable-container"
                 key={pathName}
@@ -103,7 +147,7 @@ const AdminLayout = ({ children }) => {
                   opacity: 1,
                 }}
                 transition={{ duration: 0.5 }}
-                className="tw-p-6 tw-bg-white tw-rounded-[14px] tw-shadow tw-overflow-visible"
+                className="tw-p-6 tw-bg-white tw-rounded-[14px] tw-shadow tw-overflow-clip"
                 style={{ minHeight: "70vh" }}
               >
                 <Suspense fallback={<></>}>{children}</Suspense>
@@ -111,7 +155,7 @@ const AdminLayout = ({ children }) => {
             </Content>
           </Layout>
         </Layout>
-      </>
+      ) : null}
     </div>
   );
 };

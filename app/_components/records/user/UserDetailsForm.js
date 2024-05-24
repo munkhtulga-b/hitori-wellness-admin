@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select, Switch, Spin } from "antd";
+import { Button, Form, Input, Select, Switch, Spin, Checkbox } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { getYears, getMonths, getDays } from "@/app/_utils/helpers";
@@ -42,6 +42,7 @@ const UserDetailsForm = ({
           prefecture: data?.prefecture,
           tel: data?.tel,
           emergencyTel: data?.emergency_tel,
+          isAcceptMail: data?.is_accept_mail,
           status:
             data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
@@ -444,6 +445,19 @@ const UserDetailsForm = ({
           }}
         >
           <Input placeholder="電話番号" />
+        </Form.Item>
+
+        <Form.Item
+          name="isAcceptMail"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+          valuePropName="checked"
+          initialValue={true}
+        >
+          <Checkbox>キャンペーン・お知らせ等の情報をメールを送信する</Checkbox>
         </Form.Item>
 
         <Form.Item

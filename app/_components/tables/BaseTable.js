@@ -2,9 +2,12 @@
 
 import dayjs from "dayjs";
 import { Checkbox } from "antd";
+import { WarningOutlined, CheckOutlined } from "@ant-design/icons";
 import { nullSafety, thousandSeparator } from "@/app/_utils/helpers";
 import NoData from "../custom/NoData";
 import Image from "next/image";
+import _ from "lodash";
+import EEnumAdminLevelTypes from "@/app/_enums/EEnumAdminLevelTypes";
 
 const baseTableCellStyle = "tw-px-6 tw-py-4";
 const baseTableRowStyle = "tw-border-b tw-border-divider";
@@ -50,7 +53,26 @@ const BaseTable = ({
       }
     }
     if (column.type === "levelType") {
-      result = `タイプ${result}`;
+      result = (
+        <span>
+          {nullSafety(
+            _.find(EEnumAdminLevelTypes, { value: item[column.dataIndex] })
+              .label
+          )}
+        </span>
+      );
+    }
+    if (column.type === "emailVerified") {
+      result = (
+        <div className="tw-flex tw-justify-start tw-items-center tw-gap-2">
+          {item[column?.verifyIndex] ? (
+            <CheckOutlined style={{ fontSize: 14 }} />
+          ) : (
+            <WarningOutlined style={{ fontSize: 14 }} />
+          )}
+          {nullSafety(item[column.dataIndex])}
+        </div>
+      );
     }
     if (column.type === "tagList" && Array.isArray(item[column.dataIndex])) {
       result = (
@@ -209,13 +231,18 @@ const BaseTable = ({
           {item[column.dataIndex] ? (
             <>
               {Array.isArray(column.nestedDataIndex) ? (
-                <div className="tw-flex tw-justify-start tw-gap-2">
-                  {column.nestedDataIndex.map((i) => (
-                    <span key={i}>
-                      {nullSafety(item[column.dataIndex]?.[i])}
-                    </span>
-                  ))}
-                </div>
+                <>
+                  <div className="tw-flex tw-justify-start tw-gap-2">
+                    {column.nestedDataIndex.map((i) => (
+                      <span key={i}>
+                        {nullSafety(item[column.dataIndex]?.[i])}
+                      </span>
+                    ))}
+                  </div>
+                  {column.dataIndex === "member" && (
+                    <div>{nullSafety(item[column.dataIndex]?.id)}</div>
+                  )}
+                </>
               ) : (
                 <>
                   {nullSafety(item[column.dataIndex][column.nestedDataIndex])}
@@ -242,7 +269,9 @@ const BaseTable = ({
               <br />
               {column.nestedObject === "plan" &&
               item[column.dataIndex][0]?.end_date
-                ? `(${item[column.dataIndex][0]?.end_date})`
+                ? `(${dayjs(item[column.dataIndex][0]?.end_date).format(
+                    "YYYY年MM月DD日"
+                  )}まで有効)`
                 : ""}
             </>
           ) : (

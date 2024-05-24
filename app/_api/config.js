@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { redirectUnauthorized } from "./actions";
+import Cookies from "js-cookie";
 
 const fetchData = async (endpoint, method, body) => {
   const baseURL =
@@ -44,6 +45,7 @@ const fetchData = async (endpoint, method, body) => {
         if (accessResponse.ok && accessResponse.status !== 401) {
           window.location.reload();
         } else {
+          Cookies.remove("session");
           redirectUnauthorized();
         }
       } else {
