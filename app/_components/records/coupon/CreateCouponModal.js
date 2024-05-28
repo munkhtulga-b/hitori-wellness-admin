@@ -2,6 +2,7 @@ import $api from "@/app/_api";
 // import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import { parseNumberString, thousandSeparator } from "@/app/_utils/helpers";
 import { Button, Form, Input, Select, Radio, DatePicker } from "antd";
+import { PlusSquareOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -17,6 +18,7 @@ const CreateCouponModal = ({
   const [form] = Form.useForm();
   const [items, setItems] = useState(null);
   const studioIds = Form.useWatch("targetStudioIds", form);
+  const [discountItems, setDiscountItems] = useState([]);
   const [noMaxNum, setNoMaxNum] = useState(false);
   const [isAllStudios, setIsAllStudios] = useState(false);
   const [discountType, setDiscountType] = useState(1);
@@ -98,7 +100,25 @@ const CreateCouponModal = ({
       //     ? EEnumDatabaseStatus.ACTIVE.value
       //     : EEnumDatabaseStatus.INACTIVE.value,
     };
+    discountItems.forEach((item) => {
+      body.discountDetails.push({
+        itemId: params[`item-${item}`],
+        discountType: parseNumberString(params[`discountType-${item}`]),
+        discountValue: parseNumberString(params[`discountValue-${item}`]),
+      });
+    });
     onComplete(body);
+  };
+
+  const onAddDiscountItem = () => {
+    const shallow = _.cloneDeep(discountItems);
+    if (shallow.length) {
+      const lastItem = shallow[shallow.length - 1];
+      shallow.push(lastItem + 1);
+    } else {
+      shallow.push(1);
+    }
+    setDiscountItems(shallow);
   };
 
   return (
@@ -212,83 +232,93 @@ const CreateCouponModal = ({
           </Form.Item>
         </div>
 
-        <Form.Item
-          name="items"
-          label="対象商品選択"
-          rules={[
-            {
-              required: true,
-              message: "対象商品を選択してください。",
-            },
-          ]}
-        >
-          <Select
-            disabled={!items}
-            size="large"
-            mode="multiple"
-            style={{
-              width: "100%",
-            }}
-            placeholder="商品を選択"
-            options={items}
+        {discountItems.map((item) => (
+          <div key={item}>
+            <Form.Item
+              name={`item-${item}`}
+              label="対象商品選択"
+              rules={[
+                {
+                  required: true,
+                  message: "対象商品を選択してください。",
+                },
+              ]}
+            >
+              <Select
+                disabled={!items}
+                size="large"
+                style={{
+                  width: "100%",
+                }}
+                placeholder="商品を選択"
+                options={items}
+              />
+            </Form.Item>
+
+            <div className="tw-flex tw-justify-start tw-gap-2">
+              <Form.Item
+                name={`discountType-${item}`}
+                label="割引タイプ"
+                rules={[
+                  {
+                    required: true,
+                    message: "割合タイプを選択してください。",
+                  },
+                ]}
+                style={{ flex: 1 }}
+                initialValue={discountType}
+              >
+                <section className="tw-flex tw-flex-col tw-gap-2">
+                  <Radio
+                    value={1}
+                    checked={discountType === 1}
+                    onChange={() => {
+                      setDiscountType(1);
+                      form.setFieldValue("discountType", 1);
+                    }}
+                  >
+                    固定
+                  </Radio>
+                  <Radio
+                    value={2}
+                    checked={discountType === 2}
+                    onChange={() => {
+                      setDiscountType(2);
+                      form.setFieldValue("discountType", 2);
+                    }}
+                  >
+                    割合
+                  </Radio>
+                </section>
+              </Form.Item>
+              <Form.Item
+                name={`discountValue-${item}`}
+                label={`割合値 (${discountType === 1 ? "円" : "%"})`}
+                rules={[
+                  {
+                    required: true,
+                    message: "割合を設定をしてください。",
+                  },
+                ]}
+                getValueFromEvent={(e) => {
+                  const value = e.target.value;
+                  let numberString = value.replace(/\D/g, "");
+                  return thousandSeparator(numberString);
+                }}
+                style={{ flex: 1 }}
+              >
+                <Input placeholder="" />
+              </Form.Item>
+            </div>
+          </div>
+        ))}
+
+        <Form.Item label="商品追加">
+          <PlusSquareOutlined
+            style={{ fontSize: 20, cursor: "pointer" }}
+            onClick={() => onAddDiscountItem()}
           />
         </Form.Item>
-
-        <div className="tw-flex tw-justify-start tw-gap-2">
-          <Form.Item
-            name="discountType"
-            label="割引タイプ"
-            rules={[
-              {
-                required: true,
-                message: "割合タイプを選択してください。",
-              },
-            ]}
-            style={{ flex: 1 }}
-            initialValue={discountType}
-          >
-            <section className="tw-flex tw-flex-col tw-gap-2">
-              <Radio
-                value={1}
-                checked={discountType === 1}
-                onChange={() => {
-                  setDiscountType(1);
-                  form.setFieldValue("discountType", 1);
-                }}
-              >
-                固定
-              </Radio>
-              <Radio
-                value={2}
-                checked={discountType === 2}
-                onChange={() => {
-                  setDiscountType(2);
-                  form.setFieldValue("discountType", 2);
-                }}
-              >
-                割合
-              </Radio>
-            </section>
-          </Form.Item>
-          <Form.Item
-            name="discountValue"
-            label={`割合値 (${discountType === 1 ? "円" : "%"})`}
-            rules={[
-              {
-                required: true,
-                message: "割合を設定をしてください。",
-              },
-            ]}
-            getValueFromEvent={(e) => {
-              const value = e.target.value;
-              let numberString = value.replace(/\D/g, "");
-              return thousandSeparator(numberString);
-            }}
-            style={{ flex: 1 }}
-          >
-            <Input placeholder="" />
-          </Form.Item>
-        </div>
 
         <div className="tw-flex tw-flex-col tw-gap-1">
           <label className="tw-mb-2">利用可能店舗</label>

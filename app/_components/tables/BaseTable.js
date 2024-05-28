@@ -41,6 +41,9 @@ const BaseTable = ({
 
   const formatDataIndex = (item, column) => {
     let result = nullSafety(item[column.dataIndex]);
+    if (column.enum) {
+      result = _.find(column.enum, { value: item[column.dataIndex] })?.label;
+    }
     if (column.type === "date") {
       if (Array.isArray(column.dataIndex)) {
         result = `${dayjs
@@ -245,7 +248,15 @@ const BaseTable = ({
                 </>
               ) : (
                 <>
-                  {nullSafety(item[column.dataIndex][column.nestedDataIndex])}
+                  {column.dataIndex !== "new_value" && !item?.changed_field ? (
+                    <>
+                      {nullSafety(
+                        item[column.dataIndex][column.nestedDataIndex]
+                      )}
+                    </>
+                  ) : (
+                    <>{formatLogValue(item)}</>
+                  )}
                 </>
               )}
             </>
@@ -301,6 +312,73 @@ const BaseTable = ({
       );
     }
     return result;
+  };
+
+  const formatLogValue = ({ changed_field, new_value }) => {
+    let name = null;
+    let id = null;
+    let date = null;
+    // if (changed_field === "admin") {
+
+    // }
+    if (changed_field === "m_studio") {
+      name = new_value?.name;
+      id = new_value?.id;
+    }
+    if (changed_field === "t_member") {
+      name = `${new_value?.last_name} ${new_value?.first_name}`;
+      id = new_value?.id;
+    }
+    if (changed_field === "m_program") {
+      name = new_value?.name;
+      id = new_value?.id;
+    }
+    if (changed_field === "m_instructor") {
+      name = new_value?.name;
+      id = new_value?.id;
+    }
+    if (changed_field === "m_item") {
+      name = new_value?.name;
+      id = new_value?.id;
+    }
+    if (changed_field === "m_ticket") {
+      name = new_value?.name;
+      id = new_value?.id;
+    }
+    if (changed_field === "m_plan") {
+      name = new_value?.name;
+      id = new_value?.id;
+    }
+    if (changed_field === "m_coupon") {
+      name = new_value?.name;
+      id = new_value?.id;
+    }
+    // if (changed_field === "t_reservation") {
+    // }
+    if (changed_field === "t_shift_slot") {
+      name = new_value?.title;
+      id = new_value?.id;
+      date = `${dayjs(new_value?.start_at).format(
+        "YYYY/MM/DD HH:mm"
+      )} - ${dayjs(new_value?.end_at).format("YYYY/MM/DD HH:mm")}`;
+    }
+    // if (changed_field === "t_member_plan") {
+    // }
+    // if (changed_field === "t_member_ticket") {
+    // }
+    if (changed_field === "m_instructor_basic_slot") {
+      id = new_value?.id;
+      date = `${dayjs(new_value?.start_time).format(
+        "YYYY/MM/DD HH:mm"
+      )} - ${dayjs(new_value?.end_time).format("YYYY/MM/DD HH:mm")}`;
+    }
+    return (
+      <div className="tw-flex tw-flex-col">
+        {name ? <span>{nullSafety(name)}</span> : null}
+        <span className="tw-text-sm tw-text-secondary">{nullSafety(id)}</span>
+        {date ? <span>{date}</span> : null}
+      </div>
+    );
   };
 
   const getStatusData = (column, status) => {

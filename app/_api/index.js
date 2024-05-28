@@ -19,6 +19,7 @@ import * as staffSlot from "./cms/InstructorSlotController";
 import * as shiftSlot from "./cms/ShiftSlotController";
 import * as purchase from "./cms/PurchaseController";
 import * as post from "./cms/PostJPController";
+import * as log from "./cms/SystemLogController";
 
 const $api = {
   auth: {
@@ -42,6 +43,7 @@ const $api = {
     shiftSlot,
     purchase,
     post,
+    log,
   },
 };
 
