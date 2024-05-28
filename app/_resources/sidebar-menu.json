@@ -33,8 +33,8 @@
       {
         "text": "ログ",
         "icon": "/assets/sidebar/sidebar-log-icon.svg", 
-        "alt": "member-id",
-        "route": "/"
+        "alt": "log",
+        "route": "/cms/log"
       }
     ]
   }

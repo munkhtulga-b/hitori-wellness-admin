@@ -17,9 +17,14 @@ const fetchData = async (endpoint, method, body) => {
     const init = {
       method: method,
       headers: requestHeaders,
-      credentials: "include",
       cache: "default",
     };
+
+    if (process.env.NODE_ENV === "development") {
+      init.headers["Authorization"] = `Bearer ${Cookies.get("access_token")}`;
+    } else {
+      init["credentials"] = "include";
+    }
 
     if (body) {
       init["body"] = JSON.stringify(body);

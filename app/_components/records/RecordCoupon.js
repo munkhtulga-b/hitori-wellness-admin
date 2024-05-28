@@ -4,10 +4,9 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "./RecordTableFilters";
-import { Modal, Select, Pagination } from "antd";
+import { Modal, Pagination } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import CreateCouponModal from "./coupon/CreateCouponModal";
-import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import _ from "lodash";
 import { toast } from "react-toastify";
 
@@ -134,33 +133,7 @@ const RecordCoupon = ({
           onSearchClear={() => onFilterClear("name")}
           checkedRows={checkedRows}
           isRequesting={isRequesting}
-        >
-          <>
-            <Select
-              allowClear
-              size="large"
-              style={{
-                width: 200,
-              }}
-              options={[
-                {
-                  value: EEnumDatabaseStatus.ACTIVE.value,
-                  label: EEnumDatabaseStatus.ACTIVE.label,
-                },
-                {
-                  value: EEnumDatabaseStatus.INACTIVE.value,
-                  label: EEnumDatabaseStatus.INACTIVE.label,
-                },
-              ]}
-              onChange={(value) =>
-                value
-                  ? onFilterChange({ status: value })
-                  : onFilterClear("status")
-              }
-              placeholder="ステータス"
-            />
-          </>
-        </RecordTableFilters>
+        ></RecordTableFilters>
         <BaseTable
           tableId="admin-table"
           columns={columns}

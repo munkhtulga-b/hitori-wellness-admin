@@ -65,17 +65,18 @@ const ReservationSlotModal = ({
     if (column.obj) {
       if (column.type === "status") {
         result =
-          data[column.obj][column.value] === EEnumReservationStatus.ACTIVE.value
+          data[column.obj]?.[column.value] ===
+          EEnumReservationStatus.ACTIVE.value
             ? "予約中"
-            : data[column.obj][column.value] ===
+            : data[column.obj]?.[column.value] ===
               EEnumReservationStatus.CHECK_IN.value
             ? "チェックイン"
-            : data[column.obj][column.value] ===
+            : data[column.obj]?.[column.value] ===
               EEnumReservationStatus.CHECK_OUT.value
             ? "チェックアウト"
             : "キャンセル済み";
       } else {
-        result = data[column.obj][column.value];
+        result = data[column.obj]?.[column.value];
       }
     } else {
       if (column.type === "date") {
