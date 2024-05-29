@@ -20,15 +20,22 @@
         },
         {
             "label": "作成者",
-            "key": "created_user"
+            "key": "created_user",
+            "obj": "created_user",
+            "objKey": "email",
+            "type": "objectItem"
         },
         {
-            "label": "作成日時",
-            "key": "created_at"
+            "label": "作成日",
+            "key": "created_at",
+            "type": "date"
         },
         {
             "label": "更新者",
-            "key": "updated_user"
+            "key": "updated_user",
+            "obj": "updated_user",
+            "objKey": "email",
+            "type": "objectItem"
         },
         {
             "label": "更新日時",
@@ -96,30 +103,86 @@
     ],
     "studios": [
         {
-            "label": "ID",
-            "key": "id"
+            "label": "ステータス",
+            "key": "status",
+            "type": "status"
         },
         {
-            "label": "名称",
-            "key": "name"
+            "label": "サムネイル",
+            "key": "thumbnail_code"
         },
         {
             "label": "コード",
             "key": "code"
         },
         {
-            "label": "ステータス",
-            "key": "status",
-            "type": "status"
+            "label": "名称",
+            "key": "name"
         },
         {
             "label": "エリア",
             "key": "category_name"
         },
         {
+            "label": "郵便番号１",
+            "key": "zip_code1"
+        },
+        {
+            "label": "郵便番号２",
+            "key": "zip_code2"
+        },
+        {
+            "label": "都道府県",
+            "key": "prefecture"
+        },
+        {
+            "label": "市区町村",
+            "key": "address1"
+        },
+        {
+            "label": "町名・番地",
+            "key": "address2"
+        },
+        {
+            "label": "番号",
+            "key": "address3"
+        },
+        {
+            "label": "最大収容人数",
+            "key": "max_capacity"
+        },
+        {
             "label": "営業時間",
             "key": "timeperiod_details",
             "type": "timePeriod"
+        },
+        {
+            "label": "GoogleMap",
+            "key": "gmap_url"
+        },
+        {
+            "label": "店舗説明",
+            "key": "business_hours",
+            "type": "HTML"
+        },
+        {
+            "label": "作成者",
+            "key": "created_user",
+            "obj": "created_user",
+            "objKey": "email",
+            "type": "objectItem"
+        },
+        {
+            "label": "作成日",
+            "key": "created_at",
+            "type": "date"
+        },
+        {
+            "label": "更新者",
+            "key": "updated_user",
+            "obj": "updated_user",
+            "objKey": "email",
+            "type": "objectItem"
         },
         {
             "label": "更新日時",
@@ -128,6 +191,11 @@
         }
     ],
     "users": [
+        {
+            "label": "ステータス",
+            "key": "status",
+            "type": "status"
+        },
         {
             "label": "ID",
             "key": "id"
@@ -141,27 +209,69 @@
             "key": "first_name"
         },
         {
-            "label": "ステータス",
-            "key": "status",
-            "type": "status"
+            "label": "性別",
+            "key": "gender",
+            "type": "gender"
         },
         {
-            "label": "登録店舗",
-            "key": "t_member_plan",
-            "obj": "studio",
-            "objKey": "name",
-            "type": "singleListObjectItem"
+            "label": "生年月日",
+            "key": "birthday",
+            "type": "birthDate"
         },
         {
-            "label": "ブラン",
-            "key": "t_member_plan",
-            "obj": "plan",
-            "objKey": "name",
-            "type": "singleListObjectItem"
+            "label": "郵便番号１",
+            "key": "zip_code1"
+        },
+        {
+            "label": "郵便番号２",
+            "key": "zip_code2"
+        },
+        {
+            "label": "都道府県",
+            "key": "prefecture"
+        },
+        {
+            "label": "市区町村",
+            "key": "address1"
+        },
+        {
+            "label": "町名・番地",
+            "key": "address2"
+        },
+        {
+            "label": "番号",
+            "key": "address3"
+        },
+        {
+            "label": "電話番号",
+            "key": "tel"
+        },
+        {
+            "label": "緊急連絡先",
+            "key": "emegency_tel"
         },
         {
             "label": "メールアドレス",
             "key": "mail_address"
+        },
+        {
+            "label": "作成者",
+            "key": "created_user",
+            "obj": "created_user",
+            "objKey": "email",
+            "type": "objectItem"
+        },
+        {
+            "label": "作成日",
+            "key": "created_at",
+            "type": "date"
+        },
+        {
+            "label": "更新者",
+            "key": "updated_user",
+            "obj": "updated_user",
+            "objKey": "email",
+            "type": "objectItem"
         },
         {
             "label": "更新日時",
@@ -171,17 +281,65 @@
     ],
     "programs": [
         {
-            "label": "ID",
-            "key": "id"
+            "label": "ステータス",
+            "key": "status",
+            "type": "status"
         },
         {
             "label": "コード",
             "key": "code"
         },
         {
-            "label": "ステータス",
-            "key": "status",
-            "type": "status"
+            "label": "説明",
+            "key": "description",
+            "type": "HTML"
+        },
+        {
+            "label": "名称",
+            "key": "name"
+        },
+        {
+            "label": "利用時間",
+            "key": "service_minutes"
+        },
+        {
+            "label": "カテゴリ",
+            "key": "is_trial"
+        },
+        {
+            "label": "プラン制限",
+            "key": "plan_reserve_limit",
+            "itemKey": "name",
+            "type": "listItem"
+        },
+        {
+            "label": "チケット制限",
+            "key": "ticket_reserve_limit",
+            "itemKey": "name",
+            "type": "listItem"
+        },
+        {
+            "label": "サムネイル",
+            "key": "thumbnail_code"
+        },
+        {
+            "label": "作成者",
+            "key": "created_user",
+            "obj": "created_user",
+            "objKey": "email",
+            "type": "objectItem"
+        },
+        {
+            "label": "作成日",
+            "key": "created_at",
+            "type": "date"
+        },
+        {
+            "label": "更新者",
+            "key": "updated_user",
+            "obj": "updated_user",
+            "objKey": "email",
+            "type": "objectItem"
         },
         {
             "label": "更新日時",
@@ -191,23 +349,52 @@
     ],
     "staff": [
         {
-            "label": "ID",
-            "key": "id"
-        },
-        {
-            "label": "氏名",
-            "key": "name"
-        },
-        {
             "label": "ステータス",
             "key": "status",
             "type": "status"
+        },
+        {
+            "label": "コード",
+            "key": "code"
+        },
+        {
+            "label": "指名",
+            "key": "name"
+        },
+        {
+            "label": "説明",
+            "key": "description",
+            "type": "HTML"
+        },
+        {
+            "label": "性別",
+            "key": "gender",
+            "type": "gender"
         },
         {
             "label": "登録店舗",
             "key": "studio_ids",
             "itemKey": "name",
             "type": "listItem"
+        },
+        {
+            "label": "作成者",
+            "key": "created_user",
+            "obj": "created_user",
+            "objKey": "email",
+            "type": "objectItem"
+        },
+        {
+            "label": "作成日",
+            "key": "created_at",
+            "type": "date"
+        },
+        {
+            "label": "更新者",
+            "key": "updated_user",
+            "obj": "updated_user",
+            "objKey": "email",
+            "type": "objectItem"
         },
         {
             "label": "更新日時",
@@ -217,15 +404,16 @@
     ],
     "items": [
         {
-            "label": "ID",
-            "key": "id"
+            "label": "ステータス",
+            "key": "status",
+            "type": "status"
         },
         {
             "label": "コード",
             "key": "code"
         },
         {
-            "label": "名称",
+            "label": "指名",
             "key": "name"
         },
         {
@@ -233,15 +421,36 @@
             "key": "item_type"
         },
         {
-            "label": "ステータス",
-            "key": "status",
-            "type": "status"
+            "label": "チケット",
+            "key": "item_type",
+            "obj": "m_ticket",
+            "objKey": "name",
+            "type": "objectItem"
         },
         {
             "label": "金額（税込）",
             "key": "prices",
             "itemKey": "price",
             "type": "singleListItem"
+        },
+        {
+            "label": "作成者",
+            "key": "created_user",
+            "obj": "created_user",
+            "objKey": "email",
+            "type": "objectItem"
+        },
+        {
+            "label": "作成日",
+            "key": "created_at",
+            "type": "date"
+        },
+        {
+            "label": "更新者",
+            "key": "updated_user",
+            "obj": "updated_user",
+            "objKey": "email",
+            "type": "objectItem"
         },
         {
             "label": "更新日時",
@@ -251,29 +460,75 @@
     ],
     "plans": [
         {
-            "label": "ID",
-            "key": "id"
+            "label": "ステータス",
+            "key": "status",
+            "type": "status"
         },
         {
             "label": "コード",
             "key": "code"
         },
         {
-            "label": "名称",
+            "label": "指名",
             "key": "name"
         },
         {
-            "label": "ステータス",
-            "key": "status",
-            "type": "status"
+            "label": "説明",
+            "key": "description",
+            "type": "HTML"
         },
         {
-            "label": "初月会費（税込）",
+            "label": "初月費",
             "key": "first_month_price"
         },
         {
-            "label": "月会費（税込）",
+            "label": "月費",
             "key": "monthly_price"
+        },
+        {
+            "label": "入会費",
+            "key": "admission_fee"
+        },
+        {
+            "label": "1か月同時予約可能制限",
+            "key": "max_cc_reservable_num_by_plan"
+        },
+        {
+            "label": "1日同時予約可能制限",
+            "key": "max_reservable_num_at_day_by_plan"
+        },
+        {
+            "label": "解約制限",
+            "key": "is_enabled_withdraw"
+        },
+        {
+            "label": "登録可能店舗",
+            "key": "studios",
+            "itemKey": "name",
+            "type": "listItem"
+        },
+        {
+            "label": "予約可能店舗",
+            "key": "reservable_studio_type"
+        },
+        {
+            "label": "作成者",
+            "key": "created_user",
+            "obj": "created_user",
+            "objKey": "email",
+            "type": "objectItem"
+        },
+        {
+            "label": "作成日",
+            "key": "created_at",
+            "type": "date"
+        },
+        {
+            "label": "更新者",
+            "key": "updated_user",
+            "obj": "updated_user",
+            "objKey": "email",
+            "type": "objectItem"
         },
         {
             "label": "更新日時",
@@ -283,26 +538,62 @@
     ],
     "coupons": [
         {
-            "label": "ID",
-            "key": "id"
+            "label": "コード",
+            "key": "code"
         },
         {
             "label": "名称",
             "key": "name"
         },
         {
-            "label": "コード",
-            "key": "code"
-        },
-        {
-            "label": "適用期間",
+            "label": "適用開始時間",
             "key": "start_at",
             "type": "date"
         },
         {
-            "label": "適用期間",
+            "label": "適用終了時間",
             "key": "end_at",
             "type": "date"
+        },
+        {
+            "label": "最大使用回数",
+            "key": "max_use_num"
+        },
+        {
+            "label": "残り使用可能回数",
+            "key": "current_use_num"
+        },
+        {
+            "label": "対象商品",
+            "key": "discounts",
+            "itemKey": ["item_name", "discount_type", "discount_value"],
+            "prefixes": ["名称", "割引タイプ", "割引値"],
+            "type": "listItem"
+        },
+        {
+            "label": "利用可能店舗",
+            "key": "studio_ids",
+            "itemKey": "name",
+            "type": "listItem"
+        },
+        {
+            "label": "作成者",
+            "key": "created_user",
+            "obj": "created_user",
+            "objKey": "email",
+            "type": "objectItem"
+        },
+        {
+            "label": "作成日",
+            "key": "created_at",
+            "type": "date"
+        },
+        {
+            "label": "更新者",
+            "key": "updated_user",
+            "obj": "updated_user",
+            "objKey": "email",
+            "type": "objectItem"
         },
         {
             "label": "更新日時",
