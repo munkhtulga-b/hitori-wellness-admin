@@ -104,7 +104,6 @@ const RecordsPage = () => {
         }));
         setStudioFilterOptions(options);
       }
-      console.log(range, "asdasd");
       setPagination((prev) => ({ ...prev, total: range.split("/")[1] }));
     }
     setIsLoading(false);
