@@ -155,3 +155,15 @@ export const getDays = () => {
   }
   return days;
 };
+
+/**
+ * Removes HTML tags from a given string.
+ *
+ * @param {string} htmlString - The string containing HTML tags.
+ * @return {string} The string with HTML tags removed.
+ */
+export const stripHTMLstring = (htmlString) => {
+  if (htmlString) {
+    return htmlString.replace(/<\/?[^>]+(>|$)/g, "");
+  }
+};

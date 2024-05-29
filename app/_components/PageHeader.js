@@ -3,7 +3,7 @@ import { DownloadOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 import csvHeaders from "@/app/_resources/csv-export-headers.json";
 import dayjs from "dayjs";
-import { nullSafety } from "../_utils/helpers";
+import { nullSafety, stripHTMLstring } from "../_utils/helpers";
 import _ from "lodash";
 import EEnumDatabaseStatus from "../_enums/EEnumDatabaseStatus";
 import EEnumReservationStatus from "../_enums/EEnumReservationStatus";
@@ -18,47 +18,75 @@ const PageHeader = ({ title, isExportable, exportKey, data }) => {
   const exportTableToCSV = () => {
     const csvData = data.map((item) => {
       const row = {};
-      csvHeaders[exportKey].forEach(({ key, type, obj, objKey, itemKey }) => {
-        if (type === "timePeriod") {
-          row[
-            key
-          ] = `${item.timeperiod_details[0]?.start_hour} - ${item.timeperiod_details[0]?.end_hour}`;
-        } else if (type === "singleListObjectItem" && obj) {
-          row[key] = nullSafety(
-            item[key] && item[key]?.length ? item[key][0]?.[obj]?.[objKey] : "-"
-          );
-        } else if (type === "listItem" && itemKey) {
-          row[key] = item[key].map(({ [itemKey]: value }) => value).join(", ");
-        } else if (type === "singleListItem") {
-          row[key] = nullSafety(
-            item[key]?.length ? item[key][0][itemKey] : "-"
-          );
-        } else if (type === "objectItem" && objKey && obj) {
-          if (Array.isArray(objKey)) {
-            row[key] = objKey.map((i) => item[obj]?.[i]).join(", ");
+      csvHeaders[exportKey].forEach(
+        ({ key, type, obj, objKey, itemKey, prefixes }) => {
+          if (type === "timePeriod") {
+            row[
+              key
+            ] = `${item.timeperiod_details[0]?.start_hour} - ${item.timeperiod_details[0]?.end_hour}`;
+          } else if (type === "singleListObjectItem" && obj) {
+            row[key] = nullSafety(
+              item[key] && item[key]?.length
+                ? item[key][0]?.[obj]?.[objKey]
+                : "-"
+            );
+          } else if (type === "listItem" && itemKey) {
+            if (Array.isArray(itemKey)) {
+              let finalRow = "";
+              item[key].forEach((i) => {
+                let tempRow = "";
+                itemKey.forEach((j, jIndex) => {
+                  tempRow = `${tempRow}${tempRow?.length ? "," : ""} ${
+                    prefixes[jIndex]
+                  }: ${i[j]}`;
+                });
+                finalRow = `${finalRow}${
+                  finalRow?.length ? "\n" : ""
+                } ${tempRow}`;
+              });
+              row[key] = finalRow;
+            } else {
+              row[key] = item[key]
+                .map(({ [itemKey]: value }) => value)
+                .join(", ");
+            }
+          } else if (type === "singleListItem") {
+            row[key] = nullSafety(
+              item[key]?.length ? item[key][0][itemKey] : "-"
+            );
+          } else if (type === "objectItem" && objKey && obj) {
+            if (Array.isArray(objKey)) {
+              row[key] = objKey.map((i) => item[obj]?.[i]).join(", ");
+            } else {
+              row[key] = nullSafety(item[obj]?.[objKey]);
+            }
+          } else if (type === "date") {
+            row[key] = nullSafety(dayjs(item[key]).format("YYYY-MM-DD HH:mm"));
+          } else if (type === "birthDate") {
+            row[key] = nullSafety(
+              item[key] ? dayjs(item[key]).format("YYYY-MM-DD") : null
+            );
+          } else if (type === "status") {
+            const matchedKey = _.findKey(EEnumDatabaseStatus, {
+              value: item[key],
+            });
+            row[key] = matchedKey
+              ? EEnumDatabaseStatus[matchedKey].label
+              : nullSafety(item[key]);
+          } else if (type === "reservationStatus") {
+            const matchedKey = _.findKey(EEnumReservationStatus, {
+              value: item[key],
+            });
+            row[key] = matchedKey
+              ? EEnumReservationStatus[matchedKey].label
+              : nullSafety(item[key]);
+          } else if (type === "HTML") {
+            row[key] = stripHTMLstring(item[key]);
           } else {
-            row[key] = nullSafety(item[obj]?.[objKey]);
+            row[key] = nullSafety(item[key]);
           }
-        } else if (type === "date") {
-          row[key] = nullSafety(dayjs(item[key]).format("YYYY-MM-DD HH:mm"));
-        } else if (type === "status") {
-          const matchedKey = _.findKey(EEnumDatabaseStatus, {
-            value: item[key],
-          });
-          row[key] = matchedKey
-            ? EEnumDatabaseStatus[matchedKey].label
-            : nullSafety(item[key]);
-        } else if (type === "reservationStatus") {
-          const matchedKey = _.findKey(EEnumReservationStatus, {
-            value: item[key],
-          });
-          row[key] = matchedKey
-            ? EEnumReservationStatus[matchedKey].label
-            : nullSafety(item[key]);
-        } else {
-          row[key] = nullSafety(item[key]);
         }
-      });
+      );
       return row;
     });
     return csvData;
