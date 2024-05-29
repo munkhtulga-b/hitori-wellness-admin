@@ -102,9 +102,9 @@ const CreateCouponModal = ({
     };
     discountItems.forEach((item) => {
       body.discountDetails.push({
-        itemId: params[`item-${item}`],
-        discountType: parseNumberString(params[`discountType-${item}`]),
-        discountValue: parseNumberString(params[`discountValue-${item}`]),
+        itemId: params[`item-${item.id}`],
+        discountType: parseNumberString(item.discountType),
+        discountValue: parseNumberString(params[`discountValue-${item.id}`]),
       });
     });
     onComplete(body);
@@ -114,11 +114,26 @@ const CreateCouponModal = ({
     const shallow = _.cloneDeep(discountItems);
     if (shallow.length) {
       const lastItem = shallow[shallow.length - 1];
-      shallow.push(lastItem + 1);
+      shallow.push({
+        id: lastItem.id + 1,
+        discountType: 1,
+      });
     } else {
-      shallow.push(1);
+      shallow.push({
+        id: 1,
+        discountType: 1,
+      });
     }
     setDiscountItems(shallow);
+  };
+
+  const onDiscountTypeChange = ({ id }, type) => {
+    const shallow = _.cloneDeep(discountItems);
+    const itemIdx = shallow.map((i) => i.id).indexOf(id);
+    if (itemIdx !== -1) {
+      shallow[itemIdx].discountType = type;
+      setDiscountItems(shallow);
+    }
   };
 
   return (
@@ -233,9 +248,9 @@ const CreateCouponModal = ({
         </div>
 
         {discountItems.map((item) => (
-          <div key={item}>
+          <div key={item.id}>
             <Form.Item
-              name={`item-${item}`}
+              name={`item-${item.id}`}
               label="対象商品選択"
               rules={[
                 {
@@ -257,7 +272,7 @@ const CreateCouponModal = ({
 
             <div className="tw-flex tw-justify-start tw-gap-2">
               <Form.Item
-                name={`discountType-${item}`}
+                name={`discountType-${item.id}`}
                 label="割引タイプ"
                 rules={[
                   {
@@ -266,25 +281,23 @@ const CreateCouponModal = ({
                   },
                 ]}
                 style={{ flex: 1 }}
-                initialValue={discountType}
+                initialValue={1}
               >
                 <section className="tw-flex tw-flex-col tw-gap-2">
                   <Radio
                     value={1}
-                    checked={discountType === 1}
+                    checked={item.discountType === 1}
                     onChange={() => {
-                      setDiscountType(1);
-                      form.setFieldValue("discountType", 1);
+                      onDiscountTypeChange(item, 1);
                     }}
                   >
                     固定
                   </Radio>
                   <Radio
                     value={2}
-                    checked={discountType === 2}
+                    checked={item.discountType === 2}
                     onChange={() => {
-                      setDiscountType(2);
-                      form.setFieldValue("discountType", 2);
+                      onDiscountTypeChange(item, 2);
                     }}
                   >
                     割合
@@ -292,8 +305,8 @@ const CreateCouponModal = ({
                 </section>
               </Form.Item>
               <Form.Item
-                name={`discountValue-${item}`}
-                label={`割合値 (${discountType === 1 ? "円" : "%"})`}
+                name={`discountValue-${item.id}`}
+                label={`割合値 (${item.discountType === 1 ? "円" : "%"})`}
                 rules={[
                   {
                     required: true,
