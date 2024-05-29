@@ -21,7 +21,6 @@ const CreateCouponModal = ({
   const [discountItems, setDiscountItems] = useState([]);
   const [noMaxNum, setNoMaxNum] = useState(false);
   const [isAllStudios, setIsAllStudios] = useState(false);
-  const [discountType, setDiscountType] = useState(1);
 
   useEffect(() => {
     fetchItems();
@@ -36,29 +35,36 @@ const CreateCouponModal = ({
           startAt: dayjs(data?.start_at),
           endAt: dayjs(data?.end_at),
           maxUseNum: data?.max_use_num,
-          discountType: data?.discounts[0]?.discount_type,
-          items: _.map(data?.discounts, "item_id"),
           studioIds: _.map(data?.studio_ids, "id"),
           // status:
           //   data?.status === EEnumDatabaseStatus.ACTIVE.value ? true : false,
         });
-        setDiscountType(data?.discounts[0]?.discount_type);
         setNoMaxNum(data?.max_use_num === 0);
         setIsAllStudios(data?.studio_ids?.length === 0);
+        if (data?.discount_details?.length) {
+          setDiscountItems(
+            _.map(data?.discount_details, (detail, idx) => ({
+              id: idx + 1,
+              discountType: detail?.discount_type,
+            }))
+          );
+          setTimeout(() => {
+            data?.discount_details?.forEach((detail, idx) => {
+              form.setFieldValue(`item-${idx + 1}`, detail?.item_id);
+              form.setFieldValue(
+                `discountValue-${idx + 1}`,
+                detail?.discount_value
+              );
+            });
+          }, 200);
+        }
       }, 500);
-      setTimeout(() => {
-        form.setFieldValue("discountValue", data?.discounts[0]?.discount_value);
-      }, 200);
     }
   }, [data]);
 
   useEffect(() => {
     form.resetFields();
   }, [modalKey]);
-
-  useEffect(() => {
-    form.setFieldValue("discountValue", "");
-  }, [discountType]);
 
   useEffect(() => {
     if (studioIds?.length) {
