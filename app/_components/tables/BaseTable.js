@@ -311,6 +311,25 @@ const BaseTable = ({
         </>
       );
     }
+    if (column.type === "isEmpty") {
+      result = (
+        <>
+          {!column.dependentIndex ? (
+            <>
+              {item[column.dataIndex] == 0
+                ? column.isEmptyText
+                : item[column.dataIndex]}
+            </>
+          ) : (
+            <>
+              {item[column.dependentIndex] == 0
+                ? column.isEmptyText
+                : item[column.dataIndex]}
+            </>
+          )}
+        </>
+      );
+    }
     return result;
   };
 

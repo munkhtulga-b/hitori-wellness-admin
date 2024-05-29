@@ -29,6 +29,21 @@ const columns = [
     type: "date",
   },
   {
+    title: "最大使用回数",
+    dataIndex: "max_use_num",
+    customStyle: "",
+    isEmptyText: "無制限",
+    type: "isEmpty",
+  },
+  {
+    title: "残り使用回数",
+    dataIndex: "current_use_num",
+    dependentIndex: "max_use_num",
+    customStyle: "",
+    isEmptyText: "無制限",
+    type: "isEmpty",
+  },
+  {
     title: "更新日時",
     dataIndex: "updated_at",
     customStyle: "",

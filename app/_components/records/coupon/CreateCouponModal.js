@@ -332,7 +332,16 @@ const CreateCouponModal = ({
           </div>
         ))}
 
-        <Form.Item label="商品追加">
+        <Form.Item
+          name={"addDiscountItem"}
+          label="商品追加"
+          rules={[
+            {
+              required: discountItems?.length ? false : true,
+              message: "商品を選択してください。",
+            },
+          ]}
+        >
           <PlusSquareOutlined
             style={{ fontSize: 20, cursor: "pointer" }}
             onClick={() => onAddDiscountItem()}
