@@ -136,12 +136,7 @@ const StudioShiftSlotModal = ({
       for (let i = 0; i < 24; i++) {
         if (
           i <
-            dayjs(
-              selectedStudio.timeperiod_details[0].start_hour,
-              "HH:mm"
-            ).hour() ||
-          i >
-            dayjs(selectedStudio.timeperiod_details[0].end_hour, "HH:mm").hour()
+          dayjs(selectedStudio.timeperiod_details[0].start_hour, "HH:mm").hour()
         ) {
           result.push(i);
         }
