@@ -122,10 +122,9 @@ const StudioShiftSlotModal = ({
           current < dayjs(startAt).subtract(1, "day");
       } else {
         result =
-          current &&
-          (current < dayjs().startOf("day") ||
-            current > dayjs().add(6, "day").add(23, "hour").add(59, "minute") ||
-            current < dayjs(startAt).subtract(1, "day"));
+          current < dayjs(startAt) ||
+          current >
+            dayjs(startAt).add(6, "day").add(23, "hour").add(59, "minute");
       }
     }
     return result;

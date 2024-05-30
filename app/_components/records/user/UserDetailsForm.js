@@ -99,7 +99,10 @@ const UserDetailsForm = ({
     const body = {
       ...omitted,
       birthday: dateOfBirth,
-      status: EEnumDatabaseStatus.ACTIVE.value,
+      status:
+        params.status === true
+          ? EEnumDatabaseStatus.ACTIVE.value
+          : EEnumDatabaseStatus.INACTIVE.value,
     };
     onComplete(body);
   };
