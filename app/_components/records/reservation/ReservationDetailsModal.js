@@ -54,7 +54,7 @@ const ReservationDetailsModal = ({ data, closeModal, fetchList }) => {
   const formatData = (column) => {
     let result = "-";
     if (column.obj) {
-      result = data[column.obj]?.[column.value];
+      result = nullSafety(data[column.obj]?.[column.value]);
     } else {
       if (column.type === "date") {
         if (Array.isArray(column.value)) {

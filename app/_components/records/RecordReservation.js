@@ -37,7 +37,7 @@ const columns = [
     type: "nestedObjectItem",
   },
   {
-    title: "営業時間 ",
+    title: "予約作成時間",
     dataIndex: "created_at",
     customStyle: "",
     type: "date",

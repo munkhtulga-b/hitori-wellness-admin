@@ -27,6 +27,7 @@ const columns = [
   {
     title: "カテゴリー",
     dataIndex: "item_type",
+    enum: EEnumItemTypes,
     customStyle: "",
     type: null,
   },

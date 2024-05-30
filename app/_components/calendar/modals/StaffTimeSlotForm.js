@@ -145,10 +145,9 @@ const StaffTimeSlotForm = ({
           current < dayjs(startTime).subtract(1, "day");
       } else {
         result =
-          current &&
-          (current < dayjs().startOf("day") ||
-            current > dayjs().add(6, "day").add(23, "hour").add(59, "minute") ||
-            current < dayjs(startTime).subtract(1, "day"));
+          current < dayjs(startTime) ||
+          current >
+            dayjs(startTime).add(6, "day").add(23, "hour").add(59, "minute");
       }
     }
     return result;

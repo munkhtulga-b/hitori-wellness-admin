@@ -150,7 +150,7 @@ const SystemLog = () => {
                   ? onFilterChange({ table: value })
                   : onFilterClear("table");
               }}
-              placeholder="対象データ"
+              placeholder="対象データベース"
             />
           </>
         </RecordTableFilters>

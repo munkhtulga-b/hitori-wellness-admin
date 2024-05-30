@@ -153,15 +153,12 @@ const CalendarPage = () => {
   };
 
   const onDateReset = (value) => {
-    if (dateType === "week") {
-      setSelectedWeek(value);
-      handleFetch({
-        studioId: selectedStudio.id,
-        startAt: value.start,
-      });
-    } else {
-      setSelectedDay(value);
-    }
+    setSelectedWeek(value);
+    setSelectedDay(dayjs());
+    handleFetch({
+      studioId: selectedStudio.id,
+      startAt: value.start,
+    });
   };
 
   // Scroll to top function

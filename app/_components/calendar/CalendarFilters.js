@@ -79,14 +79,10 @@ const CalendarFilters = ({
   };
 
   const handleDateReset = () => {
-    if (dateType === "week") {
-      onDateReset({
-        start: dayjs().startOf("week").format("YYYY-MM-DD"),
-        end: dayjs().endOf("week").format("YYYY-MM-DD"),
-      });
-    } else {
-      onDateReset(dayjs());
-    }
+    onDateReset({
+      start: dayjs().startOf("week").format("YYYY-MM-DD"),
+      end: dayjs().endOf("week").format("YYYY-MM-DD"),
+    });
   };
 
   return (

@@ -4,8 +4,7 @@ import $api from "@/app/_api";
 import BaseTable from "@/app/_components/tables/BaseTable";
 import { useEffect, useState } from "react";
 import RecordTableFilters from "@/app/_components/records/RecordTableFilters";
-import { Modal, Pagination, Select } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
+import { Pagination, Select } from "antd";
 import _ from "lodash";
 import EEnumPaymentStatus from "@/app/_enums/EEnumPaymentStatus";
 import PageHeader from "@/app/_components/PageHeader";
@@ -61,7 +60,7 @@ const columns = [
     dataIndex: ["brand", "card_last4"],
     nestedDataIndex: "payment_card_details",
     prefixes: ["", "XXXX XXXX XXXX"],
-    customStyle: "",
+    customStyle: "noEvent",
     styles: [],
     type: "stackedList",
   },
@@ -76,7 +75,6 @@ const columns = [
 const PurchaseHistory = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [list, setList] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
   const [studios, setStudios] = useState(null);
   const [filters, setFilters] = useState({});
@@ -85,7 +83,6 @@ const PurchaseHistory = () => {
     count: 10,
     total: 0,
   });
-  const [selectedRow, setSelectedRow] = useState(null);
 
   useEffect(() => {
     fetchPurchases();
@@ -202,10 +199,6 @@ const PurchaseHistory = () => {
           data={list}
           isLoading={isLoading}
           isCheckable={false}
-          onClickName={(row) => {
-            setSelectedRow(row);
-            setIsModalOpen(true);
-          }}
         />
         <section className="tw-flex tw-justify-center">
           <Pagination
@@ -216,24 +209,6 @@ const PurchaseHistory = () => {
           />
         </section>
       </div>
-
-      <Modal
-        title="店舗新規登録"
-        open={isModalOpen}
-        footer={null}
-        onCancel={() => setIsModalOpen(false)}
-        styles={{
-          header: {
-            marginBottom: 24,
-          },
-          content: {
-            padding: 40,
-          },
-        }}
-        closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
-      >
-        {selectedRow?.id}
-      </Modal>
     </>
   );
 };

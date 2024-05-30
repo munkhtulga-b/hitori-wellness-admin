@@ -139,7 +139,7 @@ const PlanFormOne = ({
 
         <Form.Item
           name="description"
-          label="月会費"
+          label="説明"
           rules={[
             {
               required: true,

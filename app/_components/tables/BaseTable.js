@@ -102,9 +102,15 @@ const BaseTable = ({
     if (column.type === "stackedList" && Array.isArray(column.dataIndex)) {
       result = (
         <div
-          onClick={() => (onClickName ? onClickName(item) : {})}
+          onClick={() =>
+            onClickName && column.customStyle !== "noEvent"
+              ? onClickName(item)
+              : {}
+          }
           className={`tw-flex tw-justify-start tw-items-center tw-gap-3 ${
-            onClickName ? "tw-cursor-pointer" : ""
+            onClickName && column.customStyle !== "noEvent"
+              ? "tw-cursor-pointer"
+              : ""
           }`}
         >
           {column.imageIndex ? (
