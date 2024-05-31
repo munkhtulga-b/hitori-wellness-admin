@@ -11,7 +11,7 @@ const cspHeader = `
     form-action 'self';
     frame-ancestors 'none';
     upgrade-insecure-requests;
-    connect-src 'self' https://api.hitoriwellness.jp/;`
+    connect-src 'self' https://api.hitoriwellness.jp/ https://dev.api.hitoriwellness.jp/;`
   .replace(/\s{2,}/g, " ")
   .trim();
 

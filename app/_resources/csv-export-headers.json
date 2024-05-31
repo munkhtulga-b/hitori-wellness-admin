@@ -628,17 +628,17 @@
             "type": "objectItem"
         },
         {
-            "label": "営業時間",
+            "label": "予約作成時間",
             "key": "created_at",
             "type": "date"
         },
         {
-            "label": "営業時間",
+            "label": "予約開始時間",
             "key": "start_at",
             "type": "date"
         },
         {
-            "label": "営業時間",
+            "label": "予約終了時間",
             "key": "end_at",
             "type": "date"
         },

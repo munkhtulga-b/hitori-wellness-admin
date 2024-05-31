@@ -37,6 +37,7 @@ const PlanFormTwo = ({
           studioIds: _.map(data?.studios, "id"),
           reservableStudioDetails: _.map(data?.reservable_studios, "id"),
         });
+        setReservableStudioType(data?.reservable_studio_type);
         setPurchaseAllStudios(data?.studios?.length === 0);
       }, 500);
     }
@@ -64,21 +65,18 @@ const PlanFormTwo = ({
   }, [reservableStudioDetails]);
 
   useEffect(() => {
-    if (
-      reservableStudioType === EEnumReservableStudioType.ALL ||
-      reservableStudioType === EEnumReservableStudioType.HOME
-    ) {
+    console.log(reservableStudioType);
+    if (reservableStudioType === EEnumReservableStudioType.ALL) {
       form.setFieldValue("reservableStudioType", reservableStudioType);
-      form.setFieldValue("reservableStudioDetails", []);
+    }
+    if (reservableStudioType === EEnumReservableStudioType.HOME) {
+      form.setFieldValue("reservableStudioType", reservableStudioType);
     }
   }, [reservableStudioType]);
 
   const beforeComplete = (params) => {
     if (params.expireMonth) {
       params.expireMonth = parseNumberString(params.expireMonth);
-    }
-    if (purchaseAllStudios) {
-      params.studioIds = [];
     }
     params.maxCcReservableNumByPlan = parseNumberString(
       params.maxCcReservableNumByPlan

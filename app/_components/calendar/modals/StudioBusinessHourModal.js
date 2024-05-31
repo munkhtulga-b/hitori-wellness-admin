@@ -44,8 +44,10 @@ const StudioBusinessHourModal = ({
       dayjs(startHour, "HH:mm"),
       "hour"
     );
-    if (timeDifference >= 23) {
+    if (timeDifference >= 24) {
       form.setFieldValue("isTwentyFourHour", true);
+    } else {
+      form.setFieldValue("isTwentyFourHour", false);
     }
   }, [startHour, endHour]);
 

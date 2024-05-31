@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - dev
+      - release
 
 jobs:
   deploy:
@@ -21,5 +21,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /var/www/html/besta_fe_admin
-            git pull origin dev
+            git pull origin release
             ./deploy.sh
