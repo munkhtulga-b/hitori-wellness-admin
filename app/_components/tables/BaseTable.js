@@ -343,9 +343,9 @@ const BaseTable = ({
     let name = null;
     let id = null;
     let date = null;
-    // if (changed_field === "admin") {
-
-    // }
+    if (changed_field === "admin") {
+      console.log(new_value);
+    }
     if (changed_field === "m_studio") {
       name = new_value?.name;
       id = new_value?.id;
