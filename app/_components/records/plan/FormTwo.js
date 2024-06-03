@@ -37,6 +37,11 @@ const PlanFormTwo = ({
           studioIds: _.map(data?.studios, "id"),
           reservableStudioDetails: _.map(data?.reservable_studios, "id"),
         });
+        if (data?.is_expire) {
+          setTimeout(() => {
+            form.setFieldValue("expireMonth", data?.expire_month);
+          }, 200);
+        }
         setHasExpirationDate(data?.is_expire);
         setReservableStudioType(data?.reservable_studio_type);
         setPurchaseAllStudios(data?.studios?.length === 0);
@@ -83,6 +88,9 @@ const PlanFormTwo = ({
   const beforeComplete = (params) => {
     if (params.expireMonth) {
       params.expireMonth = parseNumberString(params.expireMonth);
+    }
+    if (purchaseAllStudios) {
+      params.studioIds = [];
     }
     params.maxCcReservableNumByPlan = parseNumberString(
       params.maxCcReservableNumByPlan
