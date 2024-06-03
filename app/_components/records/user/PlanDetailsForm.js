@@ -1,6 +1,8 @@
 import $api from "@/app/_api";
+import EEnumMemberPlanStatus from "@/app/_enums/EEnumMemberPlanStatus";
 import { nullSafety } from "@/app/_utils/helpers";
 import { Button, Form, Popconfirm } from "antd";
+import _ from "lodash";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -57,7 +59,12 @@ const PlanDetailsForm = ({ data, closeModal, fetchData }) => {
                   data?.t_member_plan?.length
                     ? data?.t_member_plan[0]?.plan?.name
                     : "-"
-                )}
+                )}{" "}
+                {`(${
+                  _.find(EEnumMemberPlanStatus, {
+                    value: data?.t_member_plan[0]?.status,
+                  })?.label
+                })`}
               </span>
               <Popconfirm
                 title="注意事項"
@@ -74,7 +81,10 @@ const PlanDetailsForm = ({ data, closeModal, fetchData }) => {
               >
                 <Button
                   loading={isRequesting}
-                  disabled={data?.t_member_plan[0]?.status !== "ACTIVE"}
+                  disabled={
+                    data?.t_member_plan[0]?.status !==
+                    EEnumMemberPlanStatus.ACTIVE.value
+                  }
                   type="primary"
                   danger
                 >

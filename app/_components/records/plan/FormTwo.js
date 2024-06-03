@@ -37,6 +37,7 @@ const PlanFormTwo = ({
           studioIds: _.map(data?.studios, "id"),
           reservableStudioDetails: _.map(data?.reservable_studios, "id"),
         });
+        setHasExpirationDate(data?.is_expire);
         setReservableStudioType(data?.reservable_studio_type);
         setPurchaseAllStudios(data?.studios?.length === 0);
       }, 500);
@@ -55,6 +56,12 @@ const PlanFormTwo = ({
   }, [studioIds]);
 
   useEffect(() => {
+    if (hasExpirationDate) {
+      form.setFieldValue("isEnabledWithdraw", false);
+    }
+  }, [hasExpirationDate]);
+
+  useEffect(() => {
     if (reservableStudioDetails?.length) {
       form.setFieldValue(
         "reservableStudioType",
@@ -65,7 +72,6 @@ const PlanFormTwo = ({
   }, [reservableStudioDetails]);
 
   useEffect(() => {
-    console.log(reservableStudioType);
     if (reservableStudioType === EEnumReservableStudioType.ALL) {
       form.setFieldValue("reservableStudioType", reservableStudioType);
     }
@@ -103,7 +109,7 @@ const PlanFormTwo = ({
           initialValue={false}
           valuePropName="checked"
         >
-          <Checkbox />
+          <Checkbox disabled>制限しない</Checkbox>
         </Form.Item>
 
         <Form.Item
@@ -112,7 +118,7 @@ const PlanFormTwo = ({
           initialValue={false}
           valuePropName="checked"
         >
-          <Checkbox />
+          <Checkbox>制限しない</Checkbox>
         </Form.Item>
 
         <Form.Item
@@ -137,7 +143,7 @@ const PlanFormTwo = ({
             rules={[
               {
                 required: true,
-                message: "Please input studio name",
+                message: "有効期限を設定してください。",
               },
             ]}
             getValueFromEvent={(e) => {
