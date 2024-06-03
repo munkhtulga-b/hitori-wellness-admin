@@ -109,7 +109,7 @@ const PlanFormTwo = ({
           initialValue={false}
           valuePropName="checked"
         >
-          <Checkbox disabled>制限しない</Checkbox>
+          <Checkbox disabled={hasExpirationDate}>制限しない</Checkbox>
         </Form.Item>
 
         <Form.Item
