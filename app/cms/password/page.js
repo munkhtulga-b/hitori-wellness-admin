@@ -5,16 +5,22 @@ import { Button, Form, Input, message } from "antd";
 import { isValidPassword } from "@/app/_utils/helpers";
 import $api from "@/app/_api";
 import PageHeader from "@/app/_components/PageHeader";
+import PasswordCretaria from "@/app/_components/custom/PasswordCretaria";
 
 const ChangePassword = () => {
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const [isLoading, setIsLoading] = useState(false);
 
+  const newPassword = Form.useWatch("newPassword", form);
+
   const onFinish = (params) => {
-    if (!isValidPassword(params.newConfirm)) {
+    if (
+      !isValidPassword(params.confirm)?.cretariasMet < 2 ||
+      !isValidPassword(params.confirm)?.isLongEnough
+    ) {
       return messageApi.error(
-        "半角英大文字、半角英小文字、数字、記号の中から3種類を含む8文字以上を指定してください。"
+        "半角英大文字、半角英小文字、数字、記号の中から2種類を含む8文字以上を指定してください。"
       );
     }
     changePassword(params);
@@ -96,11 +102,7 @@ const ChangePassword = () => {
               <Input.Password placeholder="半角英数8文字以上" />
             </Form.Item>
             <section className="tw-my-[28px]">
-              <div className="tw-bg-grayLight tw-p-4 tw-rounded-xl tw-border tw-border-info">
-                <p className="tw-text-sm tw-leading-6 tw-tracking-[0.12px]">
-                  半角英大文字、半角英小文字、数字、記号の中から3種類を含む8文字以上を指定してください。
-                </p>
-              </div>
+              <PasswordCretaria password={newPassword} />
             </section>
             <Form.Item>
               <Button

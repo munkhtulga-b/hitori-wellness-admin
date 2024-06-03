@@ -22,7 +22,7 @@
         "text": "入館記録",
         "icon": "/assets/sidebar/sidebar-admin-icon.svg",
         "alt": "member-id",
-        "route": "/"
+        "route": "/cms/check-ins"
       },
       {
         "text": "管理ユーザー",
