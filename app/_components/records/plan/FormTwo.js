@@ -63,6 +63,8 @@ const PlanFormTwo = ({
   useEffect(() => {
     if (hasExpirationDate) {
       form.setFieldValue("isEnabledWithdraw", false);
+    } else {
+      form.setFieldValue("expireMonth", 0);
     }
   }, [hasExpirationDate]);
 
