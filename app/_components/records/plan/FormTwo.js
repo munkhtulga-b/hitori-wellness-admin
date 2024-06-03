@@ -63,8 +63,6 @@ const PlanFormTwo = ({
   useEffect(() => {
     if (hasExpirationDate) {
       form.setFieldValue("isEnabledWithdraw", false);
-    } else {
-      form.setFieldValue("expireMonth", 0);
     }
   }, [hasExpirationDate]);
 
@@ -90,6 +88,8 @@ const PlanFormTwo = ({
   const beforeComplete = (params) => {
     if (params.expireMonth) {
       params.expireMonth = parseNumberString(params.expireMonth);
+    } else {
+      params.expireMonth = 0;
     }
     if (purchaseAllStudios) {
       params.studioIds = [];
@@ -169,7 +169,7 @@ const PlanFormTwo = ({
 
         <Form.Item
           name="maxCcReservableNumByPlan"
-          label="1か月同時予約可能制限"
+          label=" 1ヶ月同時予約可能制限"
           rules={[
             {
               required: true,
