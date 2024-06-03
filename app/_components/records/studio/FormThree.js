@@ -33,7 +33,7 @@ const StudioFormThree = ({
         startHour: dayjs(data?.timeperiod_details[0]?.start_hour, "HH:mm"),
         endHour: dayjs(data?.timeperiod_details[0]?.end_hour, "HH:mm"),
         gmapUrl: data?.gmap_url,
-        isTwentyFourHour: timeDifference >= 23,
+        isTwentyFourHour: timeDifference >= 24,
         businessHours: data?.business_hours,
       });
     }
@@ -51,7 +51,7 @@ const StudioFormThree = ({
       dayjs(startHour, "HH:mm"),
       "hour"
     );
-    if (timeDifference >= 23) {
+    if (timeDifference >= 24) {
       form.setFieldValue("isTwentyFourHour", true);
     } else {
       form.setFieldValue("isTwentyFourHour", false);
