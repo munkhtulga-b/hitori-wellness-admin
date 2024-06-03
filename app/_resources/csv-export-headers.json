@@ -490,7 +490,7 @@
             "key": "admission_fee"
         },
         {
-            "label": "1か月同時予約可能制限",
+            "label": " 1ヶ月同時予約可能制限",
             "key": "max_cc_reservable_num_by_plan"
         },
         {
