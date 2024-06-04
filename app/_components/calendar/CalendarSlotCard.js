@@ -25,9 +25,6 @@ const CalendarSlotCard = ({ item, itemIndex, hourIndex, handleSlotClick }) => {
       if (status === EEnumReservationStatus.CHECK_IN.value) {
         result = "tw-bg-bgCalendarGreen tw-border-calendarGreen";
       }
-      if (status === EEnumReservationStatus.CHECK_OUT.value) {
-        result = "tw-bg-bgCalendarGreen tw-border-calendarGreen";
-      }
     }
     return result;
   };

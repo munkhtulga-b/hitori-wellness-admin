@@ -9,7 +9,7 @@ const EEnumMemberPlanStatus = {
   },
   SCHEDULED_CANCEL: {
     value: "SCHEDULED_CANCEL",
-    label: "キャンセル申請済み",
+    label: "解約申請済み",
   },
   SCHEDULED_CHANGE: {
     value: "SCHEDULED_CHANGE",

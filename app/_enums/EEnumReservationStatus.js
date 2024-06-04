@@ -7,10 +7,6 @@ const EEnumReservationStatus = {
     value: 3,
     label: "チェックイン",
   },
-  CHECK_OUT: {
-    value: 4,
-    label: "チェックアウト",
-  },
   CANCELLED: {
     value: 5,
     label: "キャンセル済み",
