@@ -122,7 +122,7 @@ const StudioShiftSlotModal = ({
           current < dayjs(startAt).subtract(1, "day");
       } else {
         result =
-          current < dayjs(startAt) ||
+          current < dayjs(startAt).startOf("day") ||
           current >
             dayjs(startAt).add(6, "day").add(23, "hour").add(59, "minute");
       }
@@ -130,20 +130,20 @@ const StudioShiftSlotModal = ({
     return result;
   };
 
-  const disabledTimes = () => {
-    let result = [];
-    if (selectedStudio.timeperiod_details?.length) {
-      for (let i = 0; i < 24; i++) {
-        if (
-          i <
-          dayjs(selectedStudio.timeperiod_details[0].start_hour, "HH:mm").hour()
-        ) {
-          result.push(i);
-        }
-      }
-    }
-    return result;
-  };
+  // const disabledTimes = () => {
+  //   let result = [];
+  //   if (selectedStudio.timeperiod_details?.length) {
+  //     for (let i = 0; i < 24; i++) {
+  //       if (
+  //         i <
+  //         dayjs(selectedStudio.timeperiod_details[0].start_hour, "HH:mm").hour()
+  //       ) {
+  //         result.push(i);
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // };
 
   const resetForm = () => {
     form.resetFields();
@@ -198,9 +198,9 @@ const StudioShiftSlotModal = ({
             minuteStep={30}
             format={"YYYY-MM-DD HH:mm"}
             disabledDate={(current) => disabledDates(current, "start")}
-            disabledTime={() => ({
-              disabledHours: () => disabledTimes(),
-            })}
+            // disabledTime={() => ({
+            //   disabledHours: () => disabledTimes(),
+            // })}
             className="tw-w-full"
           />
         </Form.Item>
@@ -223,9 +223,9 @@ const StudioShiftSlotModal = ({
             minuteStep={30}
             format={"YYYY-MM-DD HH:mm"}
             disabledDate={(current) => disabledDates(current, "end")}
-            disabledTime={() => ({
-              disabledHours: () => disabledTimes(),
-            })}
+            // disabledTime={() => ({
+            //   disabledHours: () => disabledTimes(),
+            // })}
             className="tw-w-full"
           />
         </Form.Item>

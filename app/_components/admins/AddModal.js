@@ -3,13 +3,30 @@ import { Form, Input, Select, Button } from "antd";
 import _ from "lodash";
 import { useEffect } from "react";
 
-const AddModal = ({ studios, isRequesting, onConfirm, modalKey }) => {
+const AddModal = ({ data, studios, isRequesting, onConfirm, modalKey }) => {
   const [form] = Form.useForm();
   const levelType = Form.useWatch("levelType", form);
 
   useEffect(() => {
     form.resetFields();
   }, [modalKey]);
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        mailAddress: data?.mail_address,
+        levelType: data?.level_type,
+      });
+      if (data?.level_type !== EEnumAdminLevelTypes.type1.value) {
+        setTimeout(() => {
+          form.setFieldValue(
+            "studios",
+            _.map(data?.studios, ({ id, name }) => ({ value: id, label: name }))
+          );
+        }, 200);
+      }
+    }
+  }, [data]);
 
   const beforeComplete = (params) => {
     if (levelType === EEnumAdminLevelTypes.type1.value) {

@@ -41,6 +41,16 @@ const BaseTable = ({
 
   const formatDataIndex = (item, column) => {
     let result = nullSafety(item[column.dataIndex]);
+    if (column.isClickable) {
+      result = (
+        <span
+          className={`${column.isClickable ? "tw-cursor-pointer" : ""}`}
+          onClick={() => (column.isClickable ? onClickName(item) : {})}
+        >
+          {nullSafety(item[column.dataIndex])}
+        </span>
+      );
+    }
     if (column.enum) {
       result = _.find(column.enum, { value: item[column.dataIndex] })?.label;
     }
