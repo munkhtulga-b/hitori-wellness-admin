@@ -15,6 +15,7 @@ import RecordCoupon from "@/app/_components/records/RecordCoupon";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import $api from "@/app/_api";
 import _ from "lodash";
+import $csv from "@/app/_resources/csv-data-fetchers";
 
 const RecordsPage = () => {
   const router = useRouter();
@@ -41,6 +42,9 @@ const RecordsPage = () => {
   const [plans, setPlans] = useState(null);
   const [coupons, setCoupons] = useState(null);
   const [reservations, setReservations] = useState(null);
+
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportRawData, setExportRawData] = useState(null);
 
   useEffect(() => {
     const tabKey = searchParams.get("tab");
@@ -343,35 +347,6 @@ const RecordsPage = () => {
     return result;
   };
 
-  const exportData = () => {
-    let result = [];
-    if (activeKey === "studios") {
-      result = studios;
-    }
-    if (activeKey === "users") {
-      result = users;
-    }
-    if (activeKey === "programs") {
-      result = programs;
-    }
-    if (activeKey === "staff") {
-      result = staff;
-    }
-    if (activeKey === "items") {
-      result = items;
-    }
-    if (activeKey === "plans") {
-      result = plans;
-    }
-    if (activeKey === "coupons") {
-      result = coupons;
-    }
-    if (activeKey === "reservations") {
-      result = reservations;
-    }
-    return result;
-  };
-
   // Scroll to top function
   const scrollToTop = () => {
     window.scrollTo({
@@ -390,6 +365,15 @@ const RecordsPage = () => {
     }
   };
 
+  const onExport = async () => {
+    setIsExporting(true);
+    const { isOk, data } = await $csv[activeKey]();
+    if (isOk) {
+      setExportRawData(data);
+    }
+    setIsExporting(false);
+  };
+
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
@@ -397,7 +381,9 @@ const RecordsPage = () => {
           title={pageTitle()}
           isExportable={true}
           exportKey={activeKey}
-          data={exportData()}
+          data={exportRawData}
+          isExporting={isExporting}
+          onExport={onExport}
         />
         <Tabs
           destroyInactiveTabPane

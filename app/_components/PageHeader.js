@@ -1,4 +1,5 @@
 import { Button } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { DownloadOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 import csvHeaders from "@/app/_resources/csv-export-headers.json";
@@ -7,8 +8,25 @@ import { nullSafety, stripHTMLstring } from "../_utils/helpers";
 import _ from "lodash";
 import EEnumDatabaseStatus from "../_enums/EEnumDatabaseStatus";
 import EEnumReservationStatus from "../_enums/EEnumReservationStatus";
+import { useEffect } from "react";
 
-const PageHeader = ({ title, isExportable, exportKey, data }) => {
+const PageHeader = ({
+  title,
+  isExportable,
+  exportKey,
+  data,
+  onExport,
+  isExporting,
+}) => {
+  useEffect(() => {
+    if (data) {
+      const downloadLink = document.querySelector("#export-csv-link");
+      if (downloadLink) {
+        downloadLink?.click();
+      }
+    }
+  }, [data]);
+
   /**
    * Generate CSV data from the provided 'data' array by mapping each item to a CSV row.
    *
@@ -96,27 +114,56 @@ const PageHeader = ({ title, isExportable, exportKey, data }) => {
     <>
       <section className="tw-flex tw-justify-between tw-items-start">
         <span className="tw-text-xxl tw-font-medium">{title ?? ""}</span>
-        {isExportable && data?.length ? (
-          <CSVLink
-            data={exportTableToCSV()}
-            headers={csvHeaders[exportKey]}
-            filename={`hitori-wellness-${exportKey}-table-${dayjs().format(
-              "YYYY-MM-DD"
-            )}.csv`}
-          >
-            <Button
-              type="primary"
-              size="large"
-              style={{ backgroundColor: "#EFEFF1" }}
-            >
-              <div className="tw-flex tw-justify-start tw-items-center tw-gap-2">
-                <DownloadOutlined style={{ fontSize: 20, color: "#121316" }} />
-                <span className="tw-tracking-[0.14px] tw-text-primary">
-                  エクスポート
-                </span>
-              </div>
-            </Button>
-          </CSVLink>
+        {isExportable ? (
+          <>
+            {data?.length ? (
+              <CSVLink
+                id="export-csv-link"
+                data={exportTableToCSV()}
+                headers={csvHeaders[exportKey]}
+                filename={`hitori-wellness-${exportKey}-table-${dayjs().format(
+                  "YYYY-MM-DD"
+                )}.csv`}
+              >
+                <Button
+                  type="primary"
+                  size="large"
+                  style={{ backgroundColor: "#EFEFF1" }}
+                >
+                  <div className="tw-flex tw-justify-start tw-items-center tw-gap-2">
+                    <DownloadOutlined
+                      style={{ fontSize: 20, color: "#121316" }}
+                    />
+                    <span className="tw-tracking-[0.14px] tw-text-primary">
+                      エクスポート
+                    </span>
+                  </div>
+                </Button>
+              </CSVLink>
+            ) : (
+              <Button
+                type="primary"
+                size="large"
+                style={{ backgroundColor: "#EFEFF1" }}
+                onClick={() => onExport()}
+              >
+                <div className="tw-flex tw-justify-start tw-items-center tw-gap-2">
+                  {!isExporting ? (
+                    <DownloadOutlined
+                      style={{ fontSize: 20, color: "#121316" }}
+                    />
+                  ) : (
+                    <LoadingOutlined
+                      style={{ fontSize: 20, color: "#121316" }}
+                    />
+                  )}
+                  <span className="tw-tracking-[0.14px] tw-text-primary">
+                    エクスポート
+                  </span>
+                </div>
+              </Button>
+            )}
+          </>
         ) : null}
       </section>
     </>

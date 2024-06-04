@@ -10,6 +10,7 @@ import AddModal from "@/app/_components/admins/AddModal";
 import _ from "lodash";
 import { toast } from "react-toastify";
 import PageHeader from "@/app/_components/PageHeader";
+import $csv from "@/app/_resources/csv-data-fetchers";
 
 const columns = [
   {
@@ -17,6 +18,7 @@ const columns = [
     dataIndex: "mail_address",
     customStyle: "",
     type: null,
+    isClickable: true,
   },
   {
     title: "権限タイプ",
@@ -47,6 +49,10 @@ const UsersPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState(null);
+  const [selectedRow, setSelectedRow] = useState(null);
+
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportRawData, setExportRawData] = useState(null);
 
   useEffect(() => {
     fetchAdmins();
@@ -73,7 +79,7 @@ const UsersPage = () => {
     }
   };
 
-  const registerAdmin = async (params) => {
+  const createAdmin = async (params) => {
     setIsRequesting(true);
     const { isOk } = await $api.admin.admin.create(params);
     if (isOk) {
@@ -81,6 +87,18 @@ const UsersPage = () => {
       setIsModalOpen(false);
       setModalKey((prev) => prev + 1);
       toast.success("管理ユーザーが招待されました。");
+    }
+    setIsRequesting(false);
+  };
+
+  const updateAdmin = async (params) => {
+    setIsRequesting(true);
+    const { isOk } = await $api.admin.admin.update(selectedRow.id, params);
+    if (isOk) {
+      await fetchAdmins();
+      setIsModalOpen(false);
+      setModalKey((prev) => prev + 1);
+      toast.success("管理ユーザーが更新されました。");
     }
     setIsRequesting(false);
   };
@@ -117,6 +135,15 @@ const UsersPage = () => {
     }
   };
 
+  const onExport = async () => {
+    setIsExporting(true);
+    const { isOk, data } = await $csv.admins();
+    if (isOk) {
+      setExportRawData(data);
+    }
+    setIsExporting(false);
+  };
+
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
@@ -124,12 +151,17 @@ const UsersPage = () => {
           title={`管理ユーザー`}
           isExportable={true}
           exportKey="admins"
-          data={admins}
+          data={exportRawData}
+          isExporting={isExporting}
+          onExport={onExport}
         />
         <AdminTableFilters
           studios={studios}
           onDelete={onDelete}
-          onAdd={() => setIsModalOpen(true)}
+          onAdd={() => {
+            setSelectedRow(null);
+            setIsModalOpen(true);
+          }}
           onSearch={(value) => onFilterChange({ mailAddress: value })}
           onLevelTypeChange={(value) => onFilterChange({ levelType: value })}
           onStudioChange={(value) => onFilterChange({ studioId: value })}
@@ -145,11 +177,15 @@ const UsersPage = () => {
           isCheckable={true}
           checkedRows={checkedRows}
           onRowCheck={(rows) => setCheckedRows(rows)}
+          onClickName={(row) => {
+            setSelectedRow(row);
+            setIsModalOpen(true);
+          }}
         />
       </div>
 
       <Modal
-        title="新規登録"
+        title={selectedRow ? "管理ユーザー情報" : "新規登録"}
         open={isModalOpen}
         footer={null}
         onCancel={() => setIsModalOpen(false)}
@@ -162,12 +198,14 @@ const UsersPage = () => {
           },
         }}
         closeIcon={<CloseOutlined style={{ fontSize: 24 }} />}
+        destroyOnClose
       >
         <AddModal
           studios={studios}
           isRequesting={isRequesting}
-          onConfirm={registerAdmin}
+          onConfirm={selectedRow ? updateAdmin : createAdmin}
           modalKey={modalKey}
+          data={selectedRow}
         />
       </Modal>
     </>
