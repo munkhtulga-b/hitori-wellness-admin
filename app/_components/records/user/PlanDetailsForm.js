@@ -62,7 +62,9 @@ const PlanDetailsForm = ({ data, closeModal, fetchData }) => {
                         ? data?.t_member_plan[0]?.plan?.name
                         : "-"
                     )}{" "}
-                    {data?.t_member_plan?.length
+                    {data?.t_member_plan?.length &&
+                    data?.t_member_plan[0]?.status !==
+                      EEnumMemberPlanStatus.ACTIVE.value
                       ? `(${
                           _.find(EEnumMemberPlanStatus, {
                             value: data?.t_member_plan[0]?.status,
