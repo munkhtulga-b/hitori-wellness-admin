@@ -71,9 +71,6 @@ const ReservationSlotModal = ({
             : data[column.obj]?.[column.value] ===
               EEnumReservationStatus.CHECK_IN.value
             ? "チェックイン"
-            : data[column.obj]?.[column.value] ===
-              EEnumReservationStatus.CHECK_OUT.value
-            ? "チェックアウト"
             : "キャンセル済み";
       } else {
         result = data[column.obj]?.[column.value];

@@ -55,21 +55,9 @@ const EEnumLogDataTypes = {
     value: "t_member_plan",
     label: "会員プラン",
   },
-  MEMBER_TICKET: {
-    value: "t_member_ticket",
-    label: "会員チケット",
-  },
   STAFF_SLOT: {
     value: "m_instructor_basic_slot",
     label: "スタッフシフト",
-  },
-  PURCHASE: {
-    value: "t_purchase",
-    label: "購入データー",
-  },
-  NONE: {
-    value: "NONE",
-    label: "なし",
   },
 };
 

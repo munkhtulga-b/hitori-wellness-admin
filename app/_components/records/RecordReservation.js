@@ -72,11 +72,6 @@ const columns = [
         text: EEnumReservationStatus.CHECK_IN.label,
         style: "tw-bg-bgActive tw-text-statusActive",
       },
-      {
-        id: EEnumReservationStatus.CHECK_OUT.value,
-        text: EEnumReservationStatus.CHECK_OUT.label,
-        style: "tw-bg-bgActive tw-text-statusActive",
-      },
     ],
     customStyle: "",
     type: "status",

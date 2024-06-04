@@ -45,7 +45,7 @@ const PlanDetailsForm = ({ data, closeModal, fetchData }) => {
               {nullSafety(
                 data?.t_member_plan?.length
                   ? data?.t_member_plan[0]?.studio?.name
-                  : "-"
+                  : "未登録"
               )}
             </span>
           </ListContainer>
@@ -55,16 +55,26 @@ const PlanDetailsForm = ({ data, closeModal, fetchData }) => {
           <ListContainer>
             <div className="tw-flex tw-justify-between tw-items-center tw-gap-4">
               <span className="tw-leading-[22px] tw-tracking-[0.14px]">
-                {nullSafety(
-                  data?.t_member_plan?.length
-                    ? data?.t_member_plan[0]?.plan?.name
-                    : "-"
-                )}{" "}
-                {`(${
-                  _.find(EEnumMemberPlanStatus, {
-                    value: data?.t_member_plan[0]?.status,
-                  })?.label
-                })`}
+                {data?.t_member_plan?.length ? (
+                  <>
+                    {nullSafety(
+                      data?.t_member_plan?.length
+                        ? data?.t_member_plan[0]?.plan?.name
+                        : "-"
+                    )}{" "}
+                    {data?.t_member_plan?.length
+                      ? `(${
+                          _.find(EEnumMemberPlanStatus, {
+                            value: data?.t_member_plan[0]?.status,
+                          })?.label
+                        })`
+                      : null}
+                  </>
+                ) : (
+                  <span className="tw-leading-[22px] tw-tracking-[0.14px]">
+                    未加入
+                  </span>
+                )}
               </span>
               <Popconfirm
                 title="注意事項"
@@ -110,7 +120,7 @@ const PlanDetailsForm = ({ data, closeModal, fetchData }) => {
                 ))}
               </ul>
             ) : (
-              <>No tickets</>
+              <>未所持</>
             )}
           </ListContainer>
         </Form.Item>
