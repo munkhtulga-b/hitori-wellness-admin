@@ -165,7 +165,7 @@ const ProgramFormTwo = ({
         <Form.Item>
           <div className="tw-flex tw-justify-end tw-items-start tw-gap-2">
             <Button size="large" onClick={() => onBack()}>
-              キャンセル
+              戻る
             </Button>
             <Button
               loading={isRequesting}

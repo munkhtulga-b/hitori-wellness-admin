@@ -221,6 +221,7 @@ const RecordProgram = ({
           }}
           onComplete={!selectedRow ? createProgram : updateProgram}
           isRequesting={isRequesting}
+          onCancel={() => setIsModalOpen(false)}
         />
       </Modal>
     </>
