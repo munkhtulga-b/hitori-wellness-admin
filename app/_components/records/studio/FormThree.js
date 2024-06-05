@@ -47,11 +47,11 @@ const StudioFormThree = ({
   }, [isTwentyFourHour]);
 
   useEffect(() => {
-    const timeDifference = dayjs(endHour, "HH:mm").diff(
+    const minuteDiff = dayjs(endHour, "HH:mm").diff(
       dayjs(startHour, "HH:mm"),
-      "hour"
+      "minute"
     );
-    if (timeDifference >= 24) {
+    if (minuteDiff >= 1430) {
       form.setFieldValue("isTwentyFourHour", true);
     } else {
       form.setFieldValue("isTwentyFourHour", false);
@@ -78,6 +78,30 @@ const StudioFormThree = ({
     ];
     const body = _.omit(params, ["startHour", "endHour", "isTwentyFourHour"]);
     onComplete(body);
+  };
+
+  const disabledEndTime = () => {
+    let result = [];
+    if (startHour) {
+      for (let i = 0; i < 24; i++) {
+        if (i <= dayjs(startHour, "HH:mm").hour()) {
+          result.push(i);
+        }
+      }
+    }
+    return result;
+  };
+
+  const disabledStartTime = () => {
+    let result = [];
+    if (endHour) {
+      for (let i = 0; i < 24; i++) {
+        if (i >= dayjs(endHour, "HH:mm").hour()) {
+          result.push(i);
+        }
+      }
+    }
+    return result;
   };
 
   return (
@@ -108,6 +132,11 @@ const StudioFormThree = ({
                 format="HH:mm"
                 showNow={false}
                 minuteStep={30}
+                disabledTime={() => ({
+                  disabledHours: () => {
+                    return disabledStartTime();
+                  },
+                })}
                 className="tw-w-full"
               />
             </Form.Item>
@@ -127,6 +156,11 @@ const StudioFormThree = ({
                 format="HH:mm"
                 showNow={false}
                 minuteStep={30}
+                disabledTime={() => ({
+                  disabledHours: () => {
+                    return disabledEndTime();
+                  },
+                })}
                 className="tw-w-full"
               />
             </Form.Item>
