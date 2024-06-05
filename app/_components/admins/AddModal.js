@@ -19,10 +19,7 @@ const AddModal = ({ data, studios, isRequesting, onConfirm, modalKey }) => {
       });
       if (data?.level_type !== EEnumAdminLevelTypes.type1.value) {
         setTimeout(() => {
-          form.setFieldValue(
-            "studios",
-            _.map(data?.studios, ({ id, name }) => ({ value: id, label: name }))
-          );
+          form.setFieldValue("studios", _.map(data?.studios, "id"));
         }, 200);
       }
     }

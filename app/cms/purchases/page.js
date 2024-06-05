@@ -8,6 +8,7 @@ import { Pagination, Select } from "antd";
 import _ from "lodash";
 import EEnumPaymentStatus from "@/app/_enums/EEnumPaymentStatus";
 import PageHeader from "@/app/_components/PageHeader";
+import $csv from "@/app/_resources/csv-data-fetchers";
 
 const columns = [
   {
@@ -84,6 +85,9 @@ const PurchaseHistory = () => {
     total: 0,
   });
 
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportRawData, setExportRawData] = useState(null);
+
   useEffect(() => {
     fetchPurchases();
     fetchStudios();
@@ -144,6 +148,15 @@ const PurchaseHistory = () => {
     fetchPurchases(queries);
   };
 
+  const onExport = async () => {
+    setIsExporting(true);
+    const { isOk, data } = await $csv.purchases();
+    if (isOk) {
+      setExportRawData(data);
+    }
+    setIsExporting(false);
+  };
+
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
@@ -151,7 +164,9 @@ const PurchaseHistory = () => {
           title={`購入履歴`}
           isExportable={true}
           exportKey={"purchases"}
-          data={list}
+          data={exportRawData}
+          isExporting={isExporting}
+          onExport={onExport}
         />
         <RecordTableFilters
           onAdd={null}
