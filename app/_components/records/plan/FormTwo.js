@@ -173,7 +173,7 @@ const PlanFormTwo = ({
           rules={[
             {
               required: true,
-              message: "1か月同時予約回数を設定してください。",
+              message: "1ヶ月同時予約可能制限",
             },
           ]}
           getValueFromEvent={(e) => {

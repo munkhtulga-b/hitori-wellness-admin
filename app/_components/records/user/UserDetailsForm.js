@@ -330,7 +330,7 @@ const UserDetailsForm = ({
               rules={[
                 {
                   required: true,
-                  message: "郵便番号１を入力してください。",
+                  message: "郵便番号を入力してください。",
                   whitespace: false,
                 },
               ]}
@@ -347,7 +347,7 @@ const UserDetailsForm = ({
               rules={[
                 {
                   required: true,
-                  message: "郵便番号２を入力してください。",
+                  message: "郵便番号を入力してください。",
                   whitespace: false,
                 },
               ]}
