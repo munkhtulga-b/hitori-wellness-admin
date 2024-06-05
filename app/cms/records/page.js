@@ -382,6 +382,7 @@ const RecordsPage = () => {
           isExportable={true}
           exportKey={activeKey}
           data={exportRawData}
+          setData={setExportRawData}
           isExporting={isExporting}
           onExport={onExport}
         />
