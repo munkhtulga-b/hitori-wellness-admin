@@ -15,6 +15,7 @@ const PageHeader = ({
   isExportable,
   exportKey,
   data,
+  setData,
   onExport,
   isExporting,
 }) => {
@@ -23,6 +24,9 @@ const PageHeader = ({
       const downloadLink = document.querySelector("#export-csv-link");
       if (downloadLink) {
         downloadLink?.click();
+        setTimeout(() => {
+          setData(null);
+        }, 200);
       }
     }
   }, [data]);
