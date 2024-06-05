@@ -72,6 +72,14 @@ const fetchReservations = async () => {
   };
 };
 
+const fetchPurchases = async () => {
+  const { isOk, data } = await $api.admin.purchase.getMany();
+  return {
+    isOk,
+    data,
+  };
+};
+
 const $csv = {
   admins: fetchAdmins,
   studios: fetchStudios,
@@ -82,6 +90,7 @@ const $csv = {
   plans: fetchPlans,
   coupons: fetchCoupons,
   reservations: fetchReservations,
+  purchases: fetchPurchases,
 };
 
 export default $csv;
