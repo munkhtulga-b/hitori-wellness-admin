@@ -41,7 +41,7 @@ const PageHeader = ({
     const csvData = data.map((item) => {
       const row = {};
       csvHeaders[exportKey].forEach(
-        ({ key, type, obj, objKey, itemKey, prefixes }) => {
+        ({ key, type, obj, objKey, itemKey, prefixes, isEmptyText }) => {
           if (type === "timePeriod") {
             row[
               key
@@ -68,9 +68,23 @@ const PageHeader = ({
               });
               row[key] = finalRow;
             } else {
-              row[key] = item[key]
-                .map(({ [itemKey]: value }) => value)
-                .join(", ");
+              if (item[key]?.length === 0 && isEmptyText) {
+                row[key] = isEmptyText;
+              } else {
+                row[key] = item[key]
+                  .map(({ [itemKey]: value }) => value)
+                  .join(", ");
+              }
+            }
+          } else if (type === "objectListItem") {
+            if (item[obj]?.[objKey]?.length === 0 && isEmptyText) {
+              row[key] = isEmptyText;
+            } else {
+              if (item[obj]?.[objKey]?.length) {
+                row[key] = item[obj]?.[objKey]
+                  .map(({ [itemKey]: value }) => value)
+                  .join(", ");
+              }
             }
           } else if (type === "singleListItem") {
             row[key] = nullSafety(

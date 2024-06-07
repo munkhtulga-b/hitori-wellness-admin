@@ -196,7 +196,7 @@ const PurchaseHistory = () => {
               allowClear
               size="large"
               style={{
-                width: 120,
+                width: 240,
               }}
               options={studios}
               onChange={(value) => {

@@ -138,6 +138,7 @@ const CreateCouponModal = ({
     const itemIdx = shallow.map((i) => i.id).indexOf(id);
     if (itemIdx !== -1) {
       shallow[itemIdx].discountType = type;
+      form.setFieldValue(`discountValue-${id}`, null);
       setDiscountItems(shallow);
     }
   };
@@ -312,16 +313,51 @@ const CreateCouponModal = ({
               </Form.Item>
               <Form.Item
                 name={`discountValue-${item.id}`}
-                label={`割合値 (${item.discountType === 1 ? "円" : "%"})`}
+                label={`割合値 (${item.discountType === 2 ? "%" : "円"})`}
                 rules={[
                   {
                     required: true,
                     message: "割合を設定をしてください。",
                   },
+                  {
+                    validator: (_, value) => {
+                      if (item.discountType === 2) {
+                        const numericValue = parseInt(
+                          value.replace(/\D/g, ""),
+                          10
+                        );
+                        if (numericValue > 100) {
+                          return Promise.reject(
+                            new Error("値は100以下である必要があります。")
+                          );
+                        }
+                        if (value.startsWith("0")) {
+                          return Promise.reject(
+                            new Error("値は0から始めることはできません。")
+                          );
+                        }
+                      }
+                      return Promise.resolve();
+                    },
+                  },
                 ]}
                 getValueFromEvent={(e) => {
                   const value = e.target.value;
                   let numberString = value.replace(/\D/g, "");
+
+                  if (item.discountType === 2) {
+                    // Limit to max 3 digits for discountType 2
+                    numberString = numberString.slice(0, 3);
+
+                    // Ensure value is not greater than 100 and does not start with 0 when discountType is 2
+                    if (parseInt(numberString, 10) > 100) {
+                      numberString = "100";
+                    }
+                    if (numberString.startsWith("0")) {
+                      numberString = numberString.slice(1);
+                    }
+                  }
+
                   return thousandSeparator(numberString);
                 }}
                 style={{ flex: 1 }}
