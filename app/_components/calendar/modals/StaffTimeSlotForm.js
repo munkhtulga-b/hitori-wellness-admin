@@ -7,13 +7,7 @@ import _ from "lodash";
 import { toast } from "react-toastify";
 import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 
-const StaffTimeSlotForm = ({
-  data,
-  closeModal,
-  fetchList,
-  selectedStudio,
-  selectedWeek,
-}) => {
+const StaffTimeSlotForm = ({ data, closeModal, fetchList, selectedStudio }) => {
   const [form] = Form.useForm();
   const calendarStore = useCalendarStore((state) => state.body);
   const startTime = Form.useWatch("startTime", form);
@@ -72,10 +66,7 @@ const StaffTimeSlotForm = ({
     setIsRequesting(true);
     const { isOk } = await $api.admin.staffSlot.create(body);
     if (isOk) {
-      await fetchList({
-        studioId: selectedStudio?.id,
-        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
-      });
+      await fetchList();
       resetForm();
       closeModal(false);
       toast.success("登録されました。");
@@ -87,10 +78,7 @@ const StaffTimeSlotForm = ({
     setIsRequesting(true);
     const { isOk } = await $api.admin.staffSlot.update(data.id, body);
     if (isOk) {
-      await fetchList({
-        studioId: selectedStudio?.id,
-        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
-      });
+      await fetchList();
       resetForm();
       closeModal(false);
       toast.success("更新されました。");
@@ -102,10 +90,7 @@ const StaffTimeSlotForm = ({
     setIsDeleting(true);
     const { isOk } = await $api.admin.staffSlot.destroy(data.id);
     if (isOk) {
-      await fetchList({
-        studioId: selectedStudio?.id,
-        startAt: dayjs(selectedWeek.start).format("YYYY-MM-DD"),
-      });
+      await fetchList();
       closeModal();
       toast.success("削除されました。");
     }
