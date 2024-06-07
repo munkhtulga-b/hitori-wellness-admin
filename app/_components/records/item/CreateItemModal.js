@@ -146,11 +146,11 @@ const CreateItemModal = ({
           <>
             <Form.Item
               name="expiresDays"
-              label="有効期限制限"
+              label="有効期限"
               rules={[
                 {
                   required: true,
-                  message: "金額を入力してください。",
+                  message: "有効期限を設定してください。",
                 },
               ]}
               getValueFromEvent={(e) => {

@@ -258,7 +258,10 @@ const CalendarPage = () => {
         }
         open={isModalOpen}
         footer={null}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => {
+          setSelectedSettingsOption(null);
+          setIsModalOpen(false);
+        }}
         styles={{
           header: {
             marginBottom: 24,
@@ -273,7 +276,10 @@ const CalendarPage = () => {
         <CalendarSettingsModal
           selectedSettingsOption={selectedSettingsOption}
           setSelectedSettingsOption={setSelectedSettingsOption}
-          closeModal={() => setIsModalOpen(false)}
+          closeModal={() => {
+            setSelectedSettingsOption(null);
+            setIsModalOpen(false);
+          }}
           fetchStudios={fetchStudios}
           fetchList={
             calendarType === "member"

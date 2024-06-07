@@ -16,7 +16,8 @@
             "label": "店舗",
             "key": "studios",
             "itemKey": "name",
-            "type": "listItem"
+            "type": "listItem",
+            "isEmptyText": "全店舗"
         },
         {
             "label": "作成者",
@@ -248,7 +249,7 @@
         },
         {
             "label": "緊急連絡先",
-            "key": "emegency_tel"
+            "key": "emergency_tel"
         },
         {
             "label": "メールアドレス",
@@ -375,7 +376,8 @@
             "label": "登録店舗",
             "key": "studio_ids",
             "itemKey": "name",
-            "type": "listItem"
+            "type": "listItem",
+            "isEmptyText": "全店舗"
         },
         {
             "label": "作成者",
@@ -422,10 +424,19 @@
         },
         {
             "label": "チケット",
-            "key": "item_type",
+            "key": "ticket_name",
             "obj": "m_ticket",
             "objKey": "name",
             "type": "objectItem"
+        },
+        {
+            "label": "利用可能店舗",
+            "key": "studio_ids",
+            "obj": "m_ticket",
+            "objKey": "studio_ids",
+            "itemKey": "name",
+            "type": "objectListItem",
+            "isEmptyText": "全店舗"
         },
         {
             "label": "金額（税込）",
@@ -505,7 +516,8 @@
             "label": "登録可能店舗",
             "key": "studios",
             "itemKey": "name",
-            "type": "listItem"
+            "type": "listItem",
+            "isEmptyText": "全店舗"
         },
         {
             "label": "予約可能店舗",
@@ -574,7 +586,8 @@
             "label": "利用可能店舗",
             "key": "studio_ids",
             "itemKey": "name",
-            "type": "listItem"
+            "type": "listItem",
+            "isEmptyText": "全店舗"
         },
         {
             "label": "作成者",
