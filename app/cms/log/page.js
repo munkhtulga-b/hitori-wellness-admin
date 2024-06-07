@@ -8,8 +8,8 @@ import PageHeader from "@/app/_components/PageHeader";
 import RecordTableFilters from "@/app/_components/records/RecordTableFilters";
 import EEnumLogOperations from "@/app/_enums/EEnumLogOperations";
 import _ from "lodash";
-import BaseTable from "@/app/_components/tables/BaseTable";
 import EEnumLogDataTypes from "@/app/_enums/EEnumLogDataTypes";
+import ActionLogTable from "@/app/_components/tables/ActionLogTable";
 
 const columns = [
   {
@@ -23,7 +23,7 @@ const columns = [
     title: "対象データ ",
     dataIndex: "new_value",
     nestedDataIndex: "id",
-    type: "nestedObjectItem",
+    type: "logValue",
   },
   {
     title: "タスク",
@@ -154,7 +154,7 @@ const SystemLog = () => {
             />
           </>
         </RecordTableFilters>
-        <BaseTable
+        <ActionLogTable
           tableId="admin-table"
           columns={columns}
           data={list}
