@@ -2,7 +2,7 @@ import $api from "@/app/_api";
 // import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import { parseNumberString, thousandSeparator } from "@/app/_utils/helpers";
 import { Button, Form, Input, Select, Radio, DatePicker } from "antd";
-import { PlusSquareOutlined } from "@ant-design/icons";
+import { PlusSquareOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -131,6 +131,21 @@ const CreateCouponModal = ({
       });
     }
     setDiscountItems(shallow);
+    setTimeout(() => {
+      form.setFieldValue(
+        `discountValue-${shallow[shallow.length - 1].id}`,
+        null
+      );
+    }, 100);
+  };
+
+  const onRemoveDiscountItem = (item) => {
+    const shallow = _.cloneDeep(discountItems);
+    const itemIdx = _.findIndex(shallow, (i) => i.id === item.id);
+    if (itemIdx !== -1) {
+      shallow.splice(itemIdx, 1);
+      setDiscountItems(shallow);
+    }
   };
 
   const onDiscountTypeChange = ({ id }, type) => {
@@ -364,6 +379,10 @@ const CreateCouponModal = ({
               >
                 <Input placeholder="" />
               </Form.Item>
+              <CloseCircleOutlined
+                style={{ cursor: "pointer", fontSize: 20, marginLeft: 10 }}
+                onClick={() => onRemoveDiscountItem(item)}
+              />
             </div>
           </div>
         ))}

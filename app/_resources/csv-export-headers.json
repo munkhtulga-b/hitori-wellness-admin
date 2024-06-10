@@ -594,11 +594,13 @@
     {
       "label": "適用開始時間",
       "key": "start_at",
+      "dateFormat": "YYYY/MM/DD",
       "type": "date"
     },
     {
       "label": "適用終了時間",
       "key": "end_at",
+      "dateFormat": "YYYY/MM/DD",
       "type": "date"
     },
     {

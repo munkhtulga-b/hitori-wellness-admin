@@ -59,6 +59,7 @@ const PageHeader = ({
           isSomethingValue,
           isSomethingText,
           enumKey,
+          dateFormat,
         }) => {
           if (type === "timePeriod") {
             row[
@@ -108,9 +109,12 @@ const PageHeader = ({
               }
             }
           } else if (type === "singleListItem") {
-            if (Array.isArray(itemKey)) {
+            if (Array.isArray(itemKey) && item[key]?.length) {
               row[key] = itemKey
-                .map((i, iIndex) => `${prefixes?.[iIndex]}${item[key]?.[0][i]}`)
+                .map(
+                  (i, iIndex) =>
+                    `${prefixes?.[iIndex]}${nullSafety(item[key]?.[0]?.[i])}`
+                )
                 .join(", ");
             } else {
               row[key] = nullSafety(
@@ -132,7 +136,11 @@ const PageHeader = ({
               row[key] = nullSafety(item[obj]?.[objKey]);
             }
           } else if (type === "date") {
-            row[key] = nullSafety(dayjs(item[key]).format("YYYY-MM-DD HH:mm"));
+            row[key] = nullSafety(
+              dayjs(item[key]).format(
+                dateFormat ? dateFormat : "YYYY-MM-DD HH:mm"
+              )
+            );
           } else if (type === "birthDate") {
             row[key] = nullSafety(
               item[key] ? dayjs(item[key]).format("YYYY-MM-DD") : null

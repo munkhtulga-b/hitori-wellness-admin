@@ -147,7 +147,7 @@ const ProgramFormOne = ({
           valuePropName="checked"
           initialValue={false}
         >
-          <div className="tw-flex tw-flex-col tw-gap-6">
+          <div className="tw-flex tw-flex-col tw-gap-2">
             <Radio
               checked={isTrial === false}
               onChange={() => setIsTrial(false)}
