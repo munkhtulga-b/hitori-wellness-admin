@@ -8,6 +8,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import EEnumReservationStatus from "@/app/_enums/EEnumReservationStatus";
 import _ from "lodash";
 import ReservationDetailsModal from "./reservation/ReservationDetailsModal";
+import $api from "@/app/_api";
 
 const columns = [
   {
@@ -86,6 +87,7 @@ const RecordReservation = ({
   pagination,
   setPagination,
 }) => {
+  const [programs, setPrograms] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [modalKey, setModalKey] = useState(0);
   const [filters, setFilters] = useState({});
@@ -93,7 +95,19 @@ const RecordReservation = ({
 
   useEffect(() => {
     fetchData();
+    fetchPrograms();
   }, []);
+
+  const fetchPrograms = async () => {
+    const { isOk, data } = await $api.admin.program.getMany();
+    if (isOk) {
+      const sorted = _.map(data, ({ id: value, name: label }) => ({
+        value,
+        label,
+      }));
+      setPrograms(sorted);
+    }
+  };
 
   const onFilterChange = (filter) => {
     const shallowFilters = _.merge(filters, filter, {
@@ -148,6 +162,21 @@ const RecordReservation = ({
               placeholder="登録店舗"
             />
             <Select
+              disabled={!programs}
+              allowClear
+              size="large"
+              style={{
+                width: 240,
+              }}
+              options={programs}
+              onChange={(value) => {
+                value
+                  ? onFilterChange({ program: value })
+                  : onFilterClear("program");
+              }}
+              placeholder="プログラム"
+            />
+            <Select
               allowClear
               size="large"
               style={{
@@ -163,6 +192,20 @@ const RecordReservation = ({
                   : onFilterClear("status")
               }
               placeholder="ステータス"
+            />
+            <Select
+              allowClear
+              size="large"
+              style={{
+                width: 150,
+              }}
+              options={[]}
+              // onChange={(value) =>
+              //   value
+              //     ? onFilterChange({ staff: value })
+              //     : onFilterClear("staff")
+              // }
+              placeholder="スタッフ"
             />
           </>
         </RecordTableFilters>
