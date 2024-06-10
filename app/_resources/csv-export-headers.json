@@ -447,7 +447,8 @@
     },
     {
       "label": "説明",
-      "key": "description"
+      "key": "description",
+      "type": "HTML"
     },
     {
       "label": "カテゴリー",
