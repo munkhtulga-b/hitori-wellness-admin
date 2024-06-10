@@ -71,7 +71,7 @@ const columns = [
     type: "stackedList",
   },
   {
-    title: "合計",
+    title: "合計金額",
     dataIndex: "price",
     customStyle: "",
     type: "price",

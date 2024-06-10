@@ -58,11 +58,15 @@ const BaseTable = ({
       if (Array.isArray(column.dataIndex)) {
         result = `${dayjs
           .utc(item[column.dataIndex[0]])
-          .format("YYYY-MM-DD HH:mm")} - ${dayjs
+          .format(
+            column.dateFormat ? column.dateFormat : "YYYY-MM-DD HH:mm"
+          )} - ${dayjs
           .utc(item[column.dataIndex[1]])
-          .format("YYYY-MM-DD HH:mm")}`;
+          .format(column.dateFormat ? column.dateFormat : "YYYY-MM-DD HH:mm")}`;
       } else {
-        result = dayjs(result).format("YYYY-MM-DD HH:mm");
+        result = dayjs(result).format(
+          column.dateFormat ? column.dateFormat : "YYYY-MM-DD HH:mm"
+        );
       }
     }
     if (column.type === "levelType") {
