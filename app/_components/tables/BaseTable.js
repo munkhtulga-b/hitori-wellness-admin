@@ -179,7 +179,7 @@ const BaseTable = ({
                 ) : !Array.isArray(stackItem) && column.nestedDataIndex ? (
                   <>
                     {column.prefixes ? `${column.prefixes[idx]} ` : ""}{" "}
-                    {nullSafety(item[column.nestedDataIndex][stackItem])}
+                    {nullSafety(item[column.nestedDataIndex]?.[stackItem])}
                   </>
                 ) : (
                   <>{nullSafety(item[stackItem])}</>
