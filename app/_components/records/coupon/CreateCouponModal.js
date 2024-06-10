@@ -323,7 +323,7 @@ const CreateCouponModal = ({
                     validator: (_, value) => {
                       if (item.discountType === 2) {
                         const numericValue = parseInt(
-                          value.replace(/\D/g, ""),
+                          value.toString().replace(/\D/g, ""),
                           10
                         );
                         if (numericValue > 100) {
@@ -331,7 +331,7 @@ const CreateCouponModal = ({
                             new Error("値は100以下である必要があります。")
                           );
                         }
-                        if (value.startsWith("0")) {
+                        if (value.toString().startsWith("0")) {
                           return Promise.reject(
                             new Error("値は0から始めることはできません。")
                           );
