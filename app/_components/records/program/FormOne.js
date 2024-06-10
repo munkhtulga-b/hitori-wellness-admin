@@ -31,6 +31,8 @@ const ProgramFormOne = ({
           description: data?.description,
           serviceMinutes: dayjs(duration.format("HH:mm"), "HH:mm"),
         });
+        setIsTrial(data?.is_trial);
+        setDescription(data?.description);
       }, 500);
     }
   }, [data]);
