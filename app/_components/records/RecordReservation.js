@@ -37,13 +37,7 @@ const columns = [
     type: "nestedObjectItem",
   },
   {
-    title: "予約作成時間",
-    dataIndex: "created_at",
-    customStyle: "",
-    type: "date",
-  },
-  {
-    title: "予約タイムスロット",
+    title: "予約日時",
     dataIndex: ["start_at", "end_at"],
     customStyle: "",
     type: "date",
@@ -75,6 +69,12 @@ const columns = [
     ],
     customStyle: "",
     type: "status",
+  },
+  {
+    title: "予約作成",
+    dataIndex: "created_at",
+    customStyle: "",
+    type: "date",
   },
 ];
 
@@ -151,7 +151,7 @@ const RecordReservation = ({
               allowClear
               size="large"
               style={{
-                width: 120,
+                width: 150,
               }}
               options={_.map(EEnumReservationStatus, (value) => ({
                 label: value.label,

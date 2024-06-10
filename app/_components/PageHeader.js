@@ -9,6 +9,13 @@ import _ from "lodash";
 import EEnumDatabaseStatus from "../_enums/EEnumDatabaseStatus";
 import EEnumReservationStatus from "../_enums/EEnumReservationStatus";
 import { useEffect } from "react";
+import EEnumReservableStudioType from "../_enums/EEnumReservableStudioType";
+
+const enums = {
+  databaseStatus: EEnumDatabaseStatus,
+  reservationStatus: EEnumReservationStatus,
+  reservableStudioType: EEnumReservableStudioType,
+};
 
 const PageHeader = ({
   title,
@@ -41,11 +48,25 @@ const PageHeader = ({
     const csvData = data.map((item) => {
       const row = {};
       csvHeaders[exportKey].forEach(
-        ({ key, type, obj, objKey, itemKey, prefixes, isEmptyText }) => {
+        ({
+          key,
+          type,
+          obj,
+          objKey,
+          itemKey,
+          prefixes,
+          isEmptyText,
+          isSomethingValue,
+          isSomethingText,
+          enumKey,
+        }) => {
           if (type === "timePeriod") {
             row[
               key
             ] = `${item.timeperiod_details[0]?.start_hour} - ${item.timeperiod_details[0]?.end_hour}`;
+          } else if (type === "enum") {
+            const matched = _.find(enums[enumKey], { value: item[key] });
+            row[key] = nullSafety(matched?.label);
           } else if (type === "singleListObjectItem" && obj) {
             row[key] = nullSafety(
               item[key] && item[key]?.length
@@ -87,12 +108,26 @@ const PageHeader = ({
               }
             }
           } else if (type === "singleListItem") {
+            if (Array.isArray(itemKey)) {
+              row[key] = itemKey
+                .map((i, iIndex) => `${prefixes?.[iIndex]}${item[key]?.[0][i]}`)
+                .join(", ");
+            } else {
+              row[key] = nullSafety(
+                item[key]?.length ? item[key][0][itemKey] : "-"
+              );
+            }
+          } else if (type === "singleListObjectItem") {
             row[key] = nullSafety(
-              item[key]?.length ? item[key][0][itemKey] : "-"
+              item[key] && item[key]?.length
+                ? item[key][0]?.[obj]?.[objKey]
+                : "-"
             );
           } else if (type === "objectItem" && objKey && obj) {
             if (Array.isArray(objKey)) {
-              row[key] = objKey.map((i) => item[obj]?.[i]).join(", ");
+              row[key] = objKey
+                .map((i, iIndex) => `${prefixes?.[iIndex]}${item[obj]?.[i]}`)
+                .join(", ");
             } else {
               row[key] = nullSafety(item[obj]?.[objKey]);
             }
@@ -102,22 +137,14 @@ const PageHeader = ({
             row[key] = nullSafety(
               item[key] ? dayjs(item[key]).format("YYYY-MM-DD") : null
             );
-          } else if (type === "status") {
-            const matchedKey = _.findKey(EEnumDatabaseStatus, {
-              value: item[key],
-            });
-            row[key] = matchedKey
-              ? EEnumDatabaseStatus[matchedKey].label
-              : nullSafety(item[key]);
-          } else if (type === "reservationStatus") {
-            const matchedKey = _.findKey(EEnumReservationStatus, {
-              value: item[key],
-            });
-            row[key] = matchedKey
-              ? EEnumReservationStatus[matchedKey].label
-              : nullSafety(item[key]);
           } else if (type === "HTML") {
             row[key] = stripHTMLstring(item[key]);
+          } else if (type === "isSomething") {
+            if (item[key] == isSomethingValue) {
+              row[key] = isSomethingText;
+            } else {
+              row[key] = nullSafety(item[key]);
+            }
           } else {
             row[key] = nullSafety(item[key]);
           }

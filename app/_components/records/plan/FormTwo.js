@@ -17,11 +17,7 @@ const PlanFormTwo = ({
   const studioIds = Form.useWatch("studioIds", form);
   const [purchaseAllStudios, setPurchaseAllStudios] = useState(false);
   const [reservableStudioType, setReservableStudioType] = useState(
-    EEnumReservableStudioType.ALL
-  );
-  const reservableStudioDetails = Form.useWatch(
-    "reservableStudioDetails",
-    form
+    EEnumReservableStudioType.ALL.value
   );
 
   useEffect(() => {
@@ -67,20 +63,10 @@ const PlanFormTwo = ({
   }, [hasExpirationDate]);
 
   useEffect(() => {
-    if (reservableStudioDetails?.length) {
-      form.setFieldValue(
-        "reservableStudioType",
-        EEnumReservableStudioType.PARTIAL
-      );
-      setReservableStudioType(EEnumReservableStudioType.PARTIAL);
-    }
-  }, [reservableStudioDetails]);
-
-  useEffect(() => {
-    if (reservableStudioType === EEnumReservableStudioType.ALL) {
+    if (reservableStudioType === EEnumReservableStudioType.ALL.value) {
       form.setFieldValue("reservableStudioType", reservableStudioType);
     }
-    if (reservableStudioType === EEnumReservableStudioType.HOME) {
+    if (reservableStudioType === EEnumReservableStudioType.HOME.value) {
       form.setFieldValue("reservableStudioType", reservableStudioType);
     }
   }, [reservableStudioType]);
@@ -255,27 +241,29 @@ const PlanFormTwo = ({
                 message: "Please input studio name",
               },
             ]}
-            initialValue={EEnumReservableStudioType.ALL}
+            initialValue={EEnumReservableStudioType.ALL.value}
             style={{ marginBottom: 0 }}
           >
             <div className="tw-flex tw-flex-col tw-gap-1">
               <Radio
-                checked={reservableStudioType === EEnumReservableStudioType.ALL}
+                checked={
+                  reservableStudioType === EEnumReservableStudioType.ALL.value
+                }
                 onChange={() =>
-                  setReservableStudioType(EEnumReservableStudioType.ALL)
+                  setReservableStudioType(EEnumReservableStudioType.ALL.value)
                 }
               >
-                全店舗利用
+                {EEnumReservableStudioType.ALL.label}
               </Radio>
               <Radio
                 checked={
-                  reservableStudioType === EEnumReservableStudioType.HOME
+                  reservableStudioType === EEnumReservableStudioType.HOME.value
                 }
                 onChange={() =>
-                  setReservableStudioType(EEnumReservableStudioType.HOME)
+                  setReservableStudioType(EEnumReservableStudioType.HOME.value)
                 }
               >
-                登録店舗
+                {EEnumReservableStudioType.HOME.label}
               </Radio>
             </div>
           </Form.Item>

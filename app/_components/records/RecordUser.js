@@ -50,7 +50,7 @@ const columns = [
     type: "singleListObjectItem",
   },
   {
-    title: "ブラン",
+    title: "プラン",
     dataIndex: "t_member_plan",
     nestedObject: "plan",
     nestedDataIndex: "name",

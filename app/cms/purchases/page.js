@@ -13,10 +13,15 @@ import $csv from "@/app/_resources/csv-data-fetchers";
 const columns = [
   {
     title: "商品",
-    dataIndex: "item",
-    nestedDataIndex: ["code", "name"],
+    dataIndex: ["name", "code"],
+    nestedDataIndex: "item",
+    imageIndex: null,
+    styles: [
+      "tw-leading-[22px] tw-tracking-[0.14px]",
+      "tw-text-sm tw-tracking-[0.12px]",
+    ],
     customStyle: "",
-    type: "flexList",
+    type: "stackedList",
   },
   {
     title: "日時",
@@ -165,6 +170,7 @@ const PurchaseHistory = () => {
           isExportable={true}
           exportKey={"purchases"}
           data={exportRawData}
+          setData={setExportRawData}
           isExporting={isExporting}
           onExport={onExport}
         />
