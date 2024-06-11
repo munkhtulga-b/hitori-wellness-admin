@@ -54,6 +54,7 @@ const UserDetailsForm = ({
   }, [data]);
 
   useEffect(() => {
+    if (data) return;
     const fullPostalCode = `${zipCode1}${zipCode2}`;
     const fetchAddress = async () => {
       setIsFetching(true);
