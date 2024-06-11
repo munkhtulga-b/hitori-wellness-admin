@@ -114,7 +114,10 @@ const StaffTimeSlotForm = ({ data, closeModal, fetchList, selectedStudio }) => {
   };
 
   const disabledDates = (current, type) => {
-    let result = current && current < dayjs().startOf("day");
+    let result =
+      current &&
+      (current < dayjs().startOf("day") ||
+        current > dayjs().add(1, "month").endOf("month"));
     if (type === "start") {
       if (isRepeat) {
         result =
