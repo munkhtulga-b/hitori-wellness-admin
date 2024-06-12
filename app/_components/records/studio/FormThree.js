@@ -122,7 +122,7 @@ const StudioFormThree = ({
               rules={[
                 {
                   required: true,
-                  message: "Please input prefecture",
+                  message: "開店時間を設定してください。",
                   type: "object",
                 },
               ]}
@@ -146,7 +146,7 @@ const StudioFormThree = ({
               rules={[
                 {
                   required: true,
-                  message: "Please input prefecture",
+                  message: "閉店時間を設定してください。",
                   type: "object",
                 },
               ]}

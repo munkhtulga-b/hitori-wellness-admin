@@ -300,7 +300,8 @@ const StaffTimeSlotForm = ({ data, closeModal, fetchList, selectedStudio }) => {
             <DatePicker
               format={"YYYY/MM/DD"}
               disabledDate={(current) =>
-                current < dayjs().subtract(1, "day").endOf("day")
+                current < dayjs().subtract(1, "day").endOf("day") ||
+                current > dayjs().add(1, "month").endOf("month")
               }
               className="tw-w-full"
             />

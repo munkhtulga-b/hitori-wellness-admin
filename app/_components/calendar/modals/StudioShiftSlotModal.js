@@ -274,7 +274,8 @@ const StudioShiftSlotModal = ({
               className="tw-w-full"
               format={"YYYY/MM/DD"}
               disabledDate={(current) =>
-                current < dayjs().startOf("day").subtract(1, "day")
+                current < dayjs().startOf("day").subtract(1, "day") ||
+                current > dayjs().add(1, "month").endOf("month")
               }
             />
           </Form.Item>

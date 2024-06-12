@@ -24,8 +24,8 @@ const PlanFormTwo = ({
     if (data) {
       setTimeout(() => {
         form.setFieldsValue({
-          isEnabledWithdraw: data?.is_enabled_withdraw,
-          isEnabledChangePlan: data?.is_enabled_change_plan,
+          isEnabledWithdraw: !data?.is_enabled_withdraw,
+          isEnabledChangePlan: !data?.is_enabled_change_plan,
           isExpire: data?.is_expire,
           maxCcReservableNumByPlan: data?.max_cc_reservable_num_by_plan,
           maxReservableNumAtDayByPlan: data?.max_reservable_num_at_day_by_plan,
@@ -80,6 +80,8 @@ const PlanFormTwo = ({
     if (purchaseAllStudios) {
       params.studioIds = [];
     }
+    params.isEnabledWithdraw = !params.isEnabledWithdraw;
+    params.isEnabledChangePlan = !params.isEnabledChangePlan;
     params.maxCcReservableNumByPlan = parseNumberString(
       params.maxCcReservableNumByPlan
     );
@@ -101,25 +103,25 @@ const PlanFormTwo = ({
       >
         <Form.Item
           name="isEnabledWithdraw"
-          label="メンバーサイトからのキャンセル制限"
+          label="プラン解約制限"
           initialValue={false}
           valuePropName="checked"
         >
-          <Checkbox disabled={hasExpirationDate}>制限しない</Checkbox>
+          <Checkbox disabled={hasExpirationDate}>制限する</Checkbox>
         </Form.Item>
 
         <Form.Item
           name="isEnabledChangePlan"
-          label="プラン変更の制限"
+          label="プラン変更制限"
           initialValue={false}
           valuePropName="checked"
         >
-          <Checkbox>制限しない</Checkbox>
+          <Checkbox>制限する</Checkbox>
         </Form.Item>
 
         <Form.Item
           name="isExpire"
-          label="有効期限制限"
+          label="長期契約"
           rules={[
             {
               required: false,
@@ -130,7 +132,7 @@ const PlanFormTwo = ({
           style={{ flex: 1 }}
         >
           <Checkbox onChange={(e) => setHasExpirationDate(e.target.checked)}>
-            期限内はキャンセル不可となります。
+            月数を入力する
           </Checkbox>
         </Form.Item>
         {hasExpirationDate && (
@@ -139,7 +141,7 @@ const PlanFormTwo = ({
             rules={[
               {
                 required: true,
-                message: "有効期限を設定してください。",
+                message: "月数を入力してください。",
               },
             ]}
             getValueFromEvent={(e) => {
@@ -155,11 +157,11 @@ const PlanFormTwo = ({
 
         <Form.Item
           name="maxCcReservableNumByPlan"
-          label=" 1ヶ月同時予約可能制限"
+          label="同時予約可能回数"
           rules={[
             {
               required: true,
-              message: "1ヶ月同時予約可能制限を設定してください。",
+              message: "同時予約可能回数を設定してください。",
             },
           ]}
           getValueFromEvent={(e) => {
@@ -173,11 +175,11 @@ const PlanFormTwo = ({
 
         <Form.Item
           name="maxReservableNumAtDayByPlan"
-          label="1日同時予約可能制限"
+          label="1日同時予約可能回数"
           rules={[
             {
               required: true,
-              message: "1日同時予約回数を設定してください。",
+              message: "1日同時予約可能回数を設定してください。",
             },
           ]}
           getValueFromEvent={(e) => {
@@ -280,7 +282,7 @@ const PlanFormTwo = ({
               htmlType="submit"
               size="large"
             >
-              次へ
+              保存
             </Button>
           </div>
         </Form.Item>
