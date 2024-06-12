@@ -120,6 +120,7 @@ const CreateProgramModal = ({
           isRequesting={isRequesting}
         />
       ),
+      disabled: !Object.keys(requestBody).length,
     },
   ];
 
