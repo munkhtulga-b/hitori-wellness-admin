@@ -86,6 +86,7 @@ const CreatePlanModal = ({
           />
         </>
       ),
+      disabled: !Object.keys(requestBody).length,
     },
   ];
 

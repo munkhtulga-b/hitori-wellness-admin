@@ -78,6 +78,7 @@ const CreateCouponModal = ({
       const sorted = _.map(data, ({ id: value, name: label }) => ({
         value,
         label,
+        disabledItemId: null,
       }));
       setItems(sorted);
     }
