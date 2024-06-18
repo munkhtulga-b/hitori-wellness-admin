@@ -94,6 +94,7 @@ const CreateStudioModal = ({
           modalKey={modalKey}
         />
       ),
+      disabled: !Object.keys(requestBody).length,
     },
     {
       key: 3,
@@ -107,6 +108,7 @@ const CreateStudioModal = ({
           modalKey={modalKey}
         />
       ),
+      disabled: !Object.keys(requestBody).length < 4,
     },
   ];
 
