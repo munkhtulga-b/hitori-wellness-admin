@@ -41,6 +41,16 @@ const BaseTable = ({
 
   const formatDataIndex = (item, column) => {
     let result = nullSafety(item[column.dataIndex]);
+    if (column.isClickable) {
+      result = (
+        <span
+          className={`${column.isClickable ? "tw-cursor-pointer" : ""}`}
+          onClick={() => (column.isClickable ? onClickName(item) : {})}
+        >
+          {nullSafety(item[column.dataIndex])}
+        </span>
+      );
+    }
     if (column.enum) {
       result = _.find(column.enum, { value: item[column.dataIndex] })?.label;
     }
@@ -48,11 +58,15 @@ const BaseTable = ({
       if (Array.isArray(column.dataIndex)) {
         result = `${dayjs
           .utc(item[column.dataIndex[0]])
-          .format("YYYY-MM-DD HH:mm")} - ${dayjs
+          .format(
+            column.dateFormat ? column.dateFormat : "YYYY-MM-DD HH:mm"
+          )} - ${dayjs
           .utc(item[column.dataIndex[1]])
-          .format("YYYY-MM-DD HH:mm")}`;
+          .format(column.dateFormat ? column.dateFormat : "YYYY-MM-DD HH:mm")}`;
       } else {
-        result = dayjs(result).format("YYYY-MM-DD HH:mm");
+        result = dayjs(result).format(
+          column.dateFormat ? column.dateFormat : "YYYY-MM-DD HH:mm"
+        );
       }
     }
     if (column.type === "levelType") {
@@ -169,7 +183,7 @@ const BaseTable = ({
                 ) : !Array.isArray(stackItem) && column.nestedDataIndex ? (
                   <>
                     {column.prefixes ? `${column.prefixes[idx]} ` : ""}{" "}
-                    {nullSafety(item[column.nestedDataIndex][stackItem])}
+                    {nullSafety(item[column.nestedDataIndex]?.[stackItem])}
                   </>
                 ) : (
                   <>{nullSafety(item[stackItem])}</>
@@ -254,15 +268,7 @@ const BaseTable = ({
                 </>
               ) : (
                 <>
-                  {column.dataIndex !== "new_value" && !item?.changed_field ? (
-                    <>
-                      {nullSafety(
-                        item[column.dataIndex][column.nestedDataIndex]
-                      )}
-                    </>
-                  ) : (
-                    <>{formatLogValue(item)}</>
-                  )}
+                  {nullSafety(item[column.dataIndex][column.nestedDataIndex])}
                 </>
               )}
             </>
@@ -337,73 +343,6 @@ const BaseTable = ({
       );
     }
     return result;
-  };
-
-  const formatLogValue = ({ changed_field, new_value }) => {
-    let name = null;
-    let id = null;
-    let date = null;
-    if (changed_field === "admin") {
-      console.log(new_value);
-    }
-    if (changed_field === "m_studio") {
-      name = new_value?.name;
-      id = new_value?.id;
-    }
-    if (changed_field === "t_member") {
-      name = `${new_value?.last_name} ${new_value?.first_name}`;
-      id = new_value?.id;
-    }
-    if (changed_field === "m_program") {
-      name = new_value?.name;
-      id = new_value?.id;
-    }
-    if (changed_field === "m_instructor") {
-      name = new_value?.name;
-      id = new_value?.id;
-    }
-    if (changed_field === "m_item") {
-      name = new_value?.name;
-      id = new_value?.id;
-    }
-    if (changed_field === "m_ticket") {
-      name = new_value?.name;
-      id = new_value?.id;
-    }
-    if (changed_field === "m_plan") {
-      name = new_value?.name;
-      id = new_value?.id;
-    }
-    if (changed_field === "m_coupon") {
-      name = new_value?.name;
-      id = new_value?.id;
-    }
-    // if (changed_field === "t_reservation") {
-    // }
-    if (changed_field === "t_shift_slot") {
-      name = new_value?.title;
-      id = new_value?.id;
-      date = `${dayjs(new_value?.start_at).format(
-        "YYYY/MM/DD HH:mm"
-      )} - ${dayjs(new_value?.end_at).format("YYYY/MM/DD HH:mm")}`;
-    }
-    // if (changed_field === "t_member_plan") {
-    // }
-    // if (changed_field === "t_member_ticket") {
-    // }
-    if (changed_field === "m_instructor_basic_slot") {
-      id = new_value?.id;
-      date = `${dayjs(new_value?.start_time).format(
-        "YYYY/MM/DD HH:mm"
-      )} - ${dayjs(new_value?.end_time).format("YYYY/MM/DD HH:mm")}`;
-    }
-    return (
-      <div className="tw-flex tw-flex-col">
-        {name ? <span>{nullSafety(name)}</span> : null}
-        <span className="tw-text-sm tw-text-secondary">{nullSafety(id)}</span>
-        {date ? <span>{date}</span> : null}
-      </div>
-    );
   };
 
   const getStatusData = (column, status) => {

@@ -213,7 +213,7 @@ const CalendarFilters = ({
                   onStudioChange(_.find(studios, { id: value }));
                 }}
                 value={selectedStudio.id}
-                style={{ width: 200 }}
+                style={{ width: 240 }}
               />
               <Button size="large" onClick={() => setIsSettingsModalOpen(true)}>
                 <div className="tw-flex tw-justify-center tw-items-center tw-gap-2">

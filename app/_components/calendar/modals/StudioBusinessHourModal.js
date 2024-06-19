@@ -40,11 +40,11 @@ const StudioBusinessHourModal = ({
   }, [isTwentyFourHour]);
 
   useEffect(() => {
-    const timeDifference = dayjs(endHour, "HH:mm").diff(
+    const minuteDiff = dayjs(endHour, "HH:mm").diff(
       dayjs(startHour, "HH:mm"),
-      "hour"
+      "minute"
     );
-    if (timeDifference >= 24) {
+    if (minuteDiff >= 1430) {
       form.setFieldValue("isTwentyFourHour", true);
     } else {
       form.setFieldValue("isTwentyFourHour", false);

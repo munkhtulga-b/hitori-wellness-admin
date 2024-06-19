@@ -24,6 +24,28 @@ const columns = [
     type: "stackedList",
   },
   {
+    title: "利用時間",
+    dataIndex: "service_minutes",
+    customStyle: "",
+    type: null,
+  },
+  {
+    title: "カテゴリー",
+    dataIndex: "is_trial",
+    customStyle: "",
+    enum: [
+      {
+        value: true,
+        label: "体験",
+      },
+      {
+        value: false,
+        label: "会員",
+      },
+    ],
+    type: null,
+  },
+  {
     title: "ステータス",
     dataIndex: "status",
     enum: [
@@ -221,6 +243,7 @@ const RecordProgram = ({
           }}
           onComplete={!selectedRow ? createProgram : updateProgram}
           isRequesting={isRequesting}
+          onCancel={() => setIsModalOpen(false)}
         />
       </Modal>
     </>

@@ -16,8 +16,8 @@ const ChangePassword = () => {
 
   const onFinish = (params) => {
     if (
-      !isValidPassword(params.confirm)?.cretariasMet < 2 ||
-      !isValidPassword(params.confirm)?.isLongEnough
+      isValidPassword(params.newConfirm)?.cretariasMet < 2 ||
+      !isValidPassword(params.newConfirm)?.isLongEnough
     ) {
       return messageApi.error(
         "半角英大文字、半角英小文字、数字、記号の中から2種類を含む8文字以上を指定してください。"

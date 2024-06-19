@@ -277,9 +277,9 @@ const CalendarMember = ({
                   ))}
                 </section>
                 <section
-                  className={`tw-flex tw-flex-col tw-w-full tw-overflow-hidden`}
+                  className={`tw-flex tw-flex-col tw-w-full tw-overflow-clip`}
                 >
-                  <div className="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-mb-2">
+                  <div className="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-mb-2 tw-sticky tw-top-[84px] tw-z-[99] tw-bg-white">
                     <span className="tw-leading-[26px] tw-tracking-[0.14px]">
                       {dayjs(
                         generateDaysInWeek()[dayjs(selectedDay).day()].day

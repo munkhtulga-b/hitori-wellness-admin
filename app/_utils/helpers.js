@@ -118,13 +118,15 @@ export const parseNumberString = (value) => {
  *
  * @return {Array} An array of objects containing the value and label of each year.
  */
-export const getYears = () => {
+export const getYears = (min, max) => {
   const years = [];
-  for (let i = 0; i < 100; i++) {
-    years.push({
-      value: dayjs().year() - i,
-      label: dayjs().year() - i,
-    });
+  if (min && max) {
+    for (let i = min; i < max; i++) {
+      years.push({
+        value: dayjs().year() - i,
+        label: dayjs().year() - i,
+      });
+    }
   }
   return years;
 };
@@ -152,16 +154,29 @@ export const getMonths = () => {
 /**
  * Generates an array of days with padded values from 01 to 31.
  *
- * @return {Array} An array of objects containing 'value' and 'label' properties.
+ * @param {number} year - The year for which the days are to be generated.
+ * @param {number} month - The month for which the days are to be generated.
+ * @return {Array<string>} An array of strings representing the days of the month with padded values from 01 to 31.
  */
-export const getDays = () => {
-  const days = [];
-  for (let day = 1; day <= 31; day++) {
-    days.push({
-      value: day.toString().padStart(2, "0"),
-      label: day.toString().padStart(2, "0"),
-    });
+export const getDays = (year, month) => {
+  if (!year || !month) {
+    return [];
   }
+  // Create a dayjs object for the first day of the given month and year
+  const date = dayjs(`${year}-${month}-01`);
+
+  // Get the number of days in the month
+  const daysInMonth = date.daysInMonth();
+
+  // Generate an array of days for the month
+  const days = Array.from({ length: daysInMonth }, (_, i) => {
+    const day = String(i + 1).padStart(2, "0");
+    return {
+      value: day,
+      label: day,
+    };
+  });
+
   return days;
 };
 

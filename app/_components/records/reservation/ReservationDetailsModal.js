@@ -74,8 +74,6 @@ const ReservationDetailsModal = ({ data, closeModal, fetchList }) => {
             ? EEnumReservationStatus.ACTIVE.label
             : data[column.value] === EEnumReservationStatus.CHECK_IN.value
             ? EEnumReservationStatus.CHECK_IN.label
-            : data[column.value] === EEnumReservationStatus.CHECK_OUT.value
-            ? EEnumReservationStatus.CHECK_OUT.label
             : data[column.value] === EEnumReservationStatus.CANCELLED.value
             ? EEnumReservationStatus.CANCELLED.label
             : EEnumReservationStatus.AUTOMATIC_CANCELLATION.label;

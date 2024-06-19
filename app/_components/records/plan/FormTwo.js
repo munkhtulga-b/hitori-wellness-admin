@@ -17,19 +17,15 @@ const PlanFormTwo = ({
   const studioIds = Form.useWatch("studioIds", form);
   const [purchaseAllStudios, setPurchaseAllStudios] = useState(false);
   const [reservableStudioType, setReservableStudioType] = useState(
-    EEnumReservableStudioType.ALL
-  );
-  const reservableStudioDetails = Form.useWatch(
-    "reservableStudioDetails",
-    form
+    EEnumReservableStudioType.ALL.value
   );
 
   useEffect(() => {
     if (data) {
       setTimeout(() => {
         form.setFieldsValue({
-          isEnabledWithdraw: data?.is_enabled_withdraw,
-          isEnabledChangePlan: data?.is_enabled_change_plan,
+          isEnabledWithdraw: !data?.is_enabled_withdraw,
+          isEnabledChangePlan: !data?.is_enabled_change_plan,
           isExpire: data?.is_expire,
           maxCcReservableNumByPlan: data?.max_cc_reservable_num_by_plan,
           maxReservableNumAtDayByPlan: data?.max_reservable_num_at_day_by_plan,
@@ -37,6 +33,11 @@ const PlanFormTwo = ({
           studioIds: _.map(data?.studios, "id"),
           reservableStudioDetails: _.map(data?.reservable_studios, "id"),
         });
+        if (data?.is_expire) {
+          setTimeout(() => {
+            form.setFieldValue("expireMonth", data?.expire_month);
+          }, 200);
+        }
         setHasExpirationDate(data?.is_expire);
         setReservableStudioType(data?.reservable_studio_type);
         setPurchaseAllStudios(data?.studios?.length === 0);
@@ -57,25 +58,15 @@ const PlanFormTwo = ({
 
   useEffect(() => {
     if (hasExpirationDate) {
-      form.setFieldValue("isEnabledWithdraw", false);
+      form.setFieldValue("isEnabledWithdraw", true);
     }
   }, [hasExpirationDate]);
 
   useEffect(() => {
-    if (reservableStudioDetails?.length) {
-      form.setFieldValue(
-        "reservableStudioType",
-        EEnumReservableStudioType.PARTIAL
-      );
-      setReservableStudioType(EEnumReservableStudioType.PARTIAL);
-    }
-  }, [reservableStudioDetails]);
-
-  useEffect(() => {
-    if (reservableStudioType === EEnumReservableStudioType.ALL) {
+    if (reservableStudioType === EEnumReservableStudioType.ALL.value) {
       form.setFieldValue("reservableStudioType", reservableStudioType);
     }
-    if (reservableStudioType === EEnumReservableStudioType.HOME) {
+    if (reservableStudioType === EEnumReservableStudioType.HOME.value) {
       form.setFieldValue("reservableStudioType", reservableStudioType);
     }
   }, [reservableStudioType]);
@@ -83,7 +74,14 @@ const PlanFormTwo = ({
   const beforeComplete = (params) => {
     if (params.expireMonth) {
       params.expireMonth = parseNumberString(params.expireMonth);
+    } else {
+      params.expireMonth = 0;
     }
+    if (purchaseAllStudios) {
+      params.studioIds = [];
+    }
+    params.isEnabledWithdraw = !params.isEnabledWithdraw;
+    params.isEnabledChangePlan = !params.isEnabledChangePlan;
     params.maxCcReservableNumByPlan = parseNumberString(
       params.maxCcReservableNumByPlan
     );
@@ -105,25 +103,25 @@ const PlanFormTwo = ({
       >
         <Form.Item
           name="isEnabledWithdraw"
-          label="メンバーサイトからのキャンセル制限"
+          label="プラン解約制限"
           initialValue={false}
           valuePropName="checked"
         >
-          <Checkbox disabled>制限しない</Checkbox>
+          <Checkbox disabled={hasExpirationDate}>制限する</Checkbox>
         </Form.Item>
 
         <Form.Item
           name="isEnabledChangePlan"
-          label="プラン変更の制限"
+          label="プラン変更制限"
           initialValue={false}
           valuePropName="checked"
         >
-          <Checkbox>制限しない</Checkbox>
+          <Checkbox>制限する</Checkbox>
         </Form.Item>
 
         <Form.Item
           name="isExpire"
-          label="有効期限制限"
+          label="長期契約"
           rules={[
             {
               required: false,
@@ -134,7 +132,7 @@ const PlanFormTwo = ({
           style={{ flex: 1 }}
         >
           <Checkbox onChange={(e) => setHasExpirationDate(e.target.checked)}>
-            期限内はキャンセル不可となります。
+            月数を入力する
           </Checkbox>
         </Form.Item>
         {hasExpirationDate && (
@@ -143,7 +141,7 @@ const PlanFormTwo = ({
             rules={[
               {
                 required: true,
-                message: "有効期限を設定してください。",
+                message: "月数を入力してください。",
               },
             ]}
             getValueFromEvent={(e) => {
@@ -159,11 +157,11 @@ const PlanFormTwo = ({
 
         <Form.Item
           name="maxCcReservableNumByPlan"
-          label="1か月同時予約可能制限"
+          label="同時予約可能回数"
           rules={[
             {
               required: true,
-              message: "1か月同時予約回数を設定してください。",
+              message: "同時予約可能回数を設定してください。",
             },
           ]}
           getValueFromEvent={(e) => {
@@ -177,11 +175,11 @@ const PlanFormTwo = ({
 
         <Form.Item
           name="maxReservableNumAtDayByPlan"
-          label="1日同時予約可能制限"
+          label="1日同時予約可能回数"
           rules={[
             {
               required: true,
-              message: "1日同時予約回数を設定してください。",
+              message: "1日同時予約可能回数を設定してください。",
             },
           ]}
           getValueFromEvent={(e) => {
@@ -245,27 +243,29 @@ const PlanFormTwo = ({
                 message: "Please input studio name",
               },
             ]}
-            initialValue={EEnumReservableStudioType.ALL}
+            initialValue={EEnumReservableStudioType.ALL.value}
             style={{ marginBottom: 0 }}
           >
             <div className="tw-flex tw-flex-col tw-gap-1">
               <Radio
-                checked={reservableStudioType === EEnumReservableStudioType.ALL}
+                checked={
+                  reservableStudioType === EEnumReservableStudioType.ALL.value
+                }
                 onChange={() =>
-                  setReservableStudioType(EEnumReservableStudioType.ALL)
+                  setReservableStudioType(EEnumReservableStudioType.ALL.value)
                 }
               >
-                全店舗利用
+                {EEnumReservableStudioType.ALL.label}
               </Radio>
               <Radio
                 checked={
-                  reservableStudioType === EEnumReservableStudioType.HOME
+                  reservableStudioType === EEnumReservableStudioType.HOME.value
                 }
                 onChange={() =>
-                  setReservableStudioType(EEnumReservableStudioType.HOME)
+                  setReservableStudioType(EEnumReservableStudioType.HOME.value)
                 }
               >
-                登録店舗
+                {EEnumReservableStudioType.HOME.label}
               </Radio>
             </div>
           </Form.Item>
@@ -274,7 +274,7 @@ const PlanFormTwo = ({
         <Form.Item>
           <div className="tw-flex tw-justify-end tw-items-start tw-gap-2">
             <Button size="large" onClick={() => onBack()}>
-              キャンセル
+              戻る
             </Button>
             <Button
               loading={isRequesting}
@@ -282,7 +282,7 @@ const PlanFormTwo = ({
               htmlType="submit"
               size="large"
             >
-              次へ
+              保存
             </Button>
           </div>
         </Form.Item>

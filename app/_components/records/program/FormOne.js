@@ -31,6 +31,8 @@ const ProgramFormOne = ({
           description: data?.description,
           serviceMinutes: dayjs(duration.format("HH:mm"), "HH:mm"),
         });
+        setIsTrial(data?.is_trial);
+        setDescription(data?.description);
       }, 500);
     }
   }, [data]);
@@ -147,7 +149,7 @@ const ProgramFormOne = ({
           valuePropName="checked"
           initialValue={false}
         >
-          <div className="tw-flex tw-flex-col tw-gap-6">
+          <div className="tw-flex tw-flex-col tw-gap-2">
             <Radio
               checked={isTrial === false}
               onChange={() => setIsTrial(false)}

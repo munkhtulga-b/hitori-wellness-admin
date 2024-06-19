@@ -18,6 +18,8 @@ const UserDetailsForm = ({
   const [genderValue, setGenderValue] = useState(null);
   const zipCode2 = Form.useWatch("zipCode2", form);
   const zipCode1 = Form.useWatch("zipCode1", form);
+  const birthYear = Form.useWatch("birthYear", form);
+  const birthMonth = Form.useWatch("birthMonth", form);
   const [isFetching, setIsFetching] = useState(false);
   const [address, setAddress] = useState(null);
 
@@ -52,6 +54,7 @@ const UserDetailsForm = ({
   }, [data]);
 
   useEffect(() => {
+    if (data) return;
     const fullPostalCode = `${zipCode1}${zipCode2}`;
     const fetchAddress = async () => {
       setIsFetching(true);
@@ -186,7 +189,7 @@ const UserDetailsForm = ({
                 {
                   required: true,
                   message: "姓（カナ）を入力してください。",
-                  pattern: /^[\u30A1-\u30F6\s]+$/, // Katakana characters and spaces
+                  pattern: /^[\u30A1-\u30F6\u30FC\s]+$/, // Katakana characters and spaces
                   whitespace: true,
                 },
               ]}
@@ -199,7 +202,7 @@ const UserDetailsForm = ({
                 {
                   required: true,
                   message: "名（カナ）を入力してください。",
-                  pattern: /^[\u30A1-\u30F6\s]+$/, // Katakana characters and spaces
+                  pattern: /^[\u30A1-\u30F6\u30FC\s]+$/, // Katakana characters and spaces
                   whitespace: true,
                 },
               ]}
@@ -226,7 +229,7 @@ const UserDetailsForm = ({
                   width: "100%",
                 }}
                 size="large"
-                options={getYears()}
+                options={getYears(15, 100)}
                 placeholder="1990"
               />
             </Form.Item>
@@ -258,11 +261,12 @@ const UserDetailsForm = ({
               ]}
             >
               <Select
+                disabled={!birthYear || !birthMonth}
                 style={{
                   width: "100%",
                 }}
                 size="large"
-                options={getDays()}
+                options={getDays(birthYear, birthMonth)}
                 placeholder="01"
               />
             </Form.Item>
@@ -309,13 +313,40 @@ const UserDetailsForm = ({
           label="電話番号"
           rules={[
             {
-              required: true,
-              message: "電話番号を入力してください。",
-              whitespace: false,
+              validator: (_, value) => {
+                // Allow only digits and hyphens, with at most one hyphen between digits
+                const pattern = /^(?!.*--)(?!-)(?!.*-$)(\d+-?)*\d+$/;
+
+                // Count the number of hyphens to adjust the length check
+                const hyphenCount = value?.split("-")?.length - 1 || 0;
+                const minLength = 10 + hyphenCount;
+                const maxLength = 11 + hyphenCount;
+
+                if (!value) {
+                  return Promise.reject(
+                    new Error("電話番号を入力してください。")
+                  );
+                }
+
+                if (!pattern.test(value)) {
+                  return Promise.reject(
+                    new Error("電話番号を入力してください。")
+                  );
+                }
+
+                if (value.length < minLength || value.length > maxLength) {
+                  return Promise.reject(
+                    new Error("電話番号を入力してください。")
+                  );
+                }
+
+                return Promise.resolve();
+              },
             },
           ]}
           getValueFromEvent={(e) => {
             const value = e.target.value;
+            // Remove any character that is not a digit or hyphen
             return value.replace(/[^0-9-]/g, "");
           }}
         >
@@ -330,7 +361,7 @@ const UserDetailsForm = ({
               rules={[
                 {
                   required: true,
-                  message: "郵便番号１を入力してください。",
+                  message: "郵便番号を入力してください。",
                   whitespace: false,
                 },
               ]}
@@ -347,7 +378,7 @@ const UserDetailsForm = ({
               rules={[
                 {
                   required: true,
-                  message: "郵便番号２を入力してください。",
+                  message: "郵便番号を入力してください。",
                   whitespace: false,
                 },
               ]}
@@ -437,9 +468,31 @@ const UserDetailsForm = ({
           label="緊急連絡先"
           rules={[
             {
-              required: false,
-              message: "緊急連絡先電話番号を入力してください。",
-              whitespace: false,
+              validator: (_, value) => {
+                const pattern = /^(?!-)(?!.*-$)[0-9-]+$/;
+                const minLength = 10 + (value?.split("-")?.length - 1 || 0);
+                const maxLength = 11 + (value?.split("-")?.length - 1 || 0);
+
+                if (!value) {
+                  return Promise.reject(
+                    new Error("電話番号を入力してください。")
+                  );
+                }
+
+                if (!pattern.test(value)) {
+                  return Promise.reject(
+                    new Error("電話番号を入力してください。")
+                  );
+                }
+
+                if (value.length < minLength || value.length > maxLength) {
+                  return Promise.reject(
+                    new Error(`電話番号を入力してください。`)
+                  );
+                }
+
+                return Promise.resolve();
+              },
             },
           ]}
           getValueFromEvent={(e) => {

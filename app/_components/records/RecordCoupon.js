@@ -26,6 +26,7 @@ const columns = [
     title: "適用期間",
     dataIndex: ["start_at", "end_at"],
     customStyle: "",
+    dateFormat: "YYYY/MM/DD",
     type: "date",
   },
   {

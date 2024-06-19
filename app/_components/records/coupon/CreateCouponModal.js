@@ -2,7 +2,7 @@ import $api from "@/app/_api";
 // import EEnumDatabaseStatus from "@/app/_enums/EEnumDatabaseStatus";
 import { parseNumberString, thousandSeparator } from "@/app/_utils/helpers";
 import { Button, Form, Input, Select, Radio, DatePicker } from "antd";
-import { PlusSquareOutlined } from "@ant-design/icons";
+import { PlusSquareOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -21,6 +21,7 @@ const CreateCouponModal = ({
   const [discountItems, setDiscountItems] = useState([]);
   const [noMaxNum, setNoMaxNum] = useState(false);
   const [isAllStudios, setIsAllStudios] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
     fetchItems();
@@ -78,6 +79,7 @@ const CreateCouponModal = ({
       const sorted = _.map(data, ({ id: value, name: label }) => ({
         value,
         label,
+        disabledItemId: null,
       }));
       setItems(sorted);
     }
@@ -131,6 +133,21 @@ const CreateCouponModal = ({
       });
     }
     setDiscountItems(shallow);
+    setTimeout(() => {
+      form.setFieldValue(
+        `discountValue-${shallow[shallow.length - 1].id}`,
+        null
+      );
+    }, 100);
+  };
+
+  const onRemoveDiscountItem = (item) => {
+    const shallow = _.cloneDeep(discountItems);
+    const itemIdx = _.findIndex(shallow, (i) => i.id === item.id);
+    if (itemIdx !== -1) {
+      shallow.splice(itemIdx, 1);
+      setDiscountItems(shallow);
+    }
   };
 
   const onDiscountTypeChange = ({ id }, type) => {
@@ -138,8 +155,27 @@ const CreateCouponModal = ({
     const itemIdx = shallow.map((i) => i.id).indexOf(id);
     if (itemIdx !== -1) {
       shallow[itemIdx].discountType = type;
+      form.setFieldValue(`discountValue-${id}`, null);
       setDiscountItems(shallow);
     }
+  };
+
+  const onDiscountItemChange = ({ id }, value) => {
+    const shallowSelectedItems = _.cloneDeep(selectedItems);
+    const matchedSelectedItem = _.find(
+      shallowSelectedItems,
+      (i) => i.id === id
+    );
+    if (matchedSelectedItem) {
+      matchedSelectedItem.value = value;
+      setSelectedItems(shallowSelectedItems);
+    } else {
+      shallowSelectedItems.push({
+        id,
+        value,
+      });
+    }
+    setSelectedItems(shallowSelectedItems);
   };
 
   return (
@@ -273,6 +309,7 @@ const CreateCouponModal = ({
                 }}
                 placeholder="商品を選択"
                 options={items}
+                onChange={(value) => onDiscountItemChange(item, value)}
               />
             </Form.Item>
 
@@ -312,22 +349,61 @@ const CreateCouponModal = ({
               </Form.Item>
               <Form.Item
                 name={`discountValue-${item.id}`}
-                label={`割合値 (${item.discountType === 1 ? "円" : "%"})`}
+                label={`割合値 (${item.discountType === 2 ? "%" : "円"})`}
                 rules={[
                   {
                     required: true,
                     message: "割合を設定をしてください。",
                   },
+                  {
+                    validator: (_, value) => {
+                      if (item.discountType === 2) {
+                        const numericValue = parseInt(
+                          value.toString().replace(/\D/g, ""),
+                          10
+                        );
+                        if (numericValue > 100) {
+                          return Promise.reject(
+                            new Error("値は100以下である必要があります。")
+                          );
+                        }
+                        if (value.toString().startsWith("0")) {
+                          return Promise.reject(
+                            new Error("値は0から始めることはできません。")
+                          );
+                        }
+                      }
+                      return Promise.resolve();
+                    },
+                  },
                 ]}
                 getValueFromEvent={(e) => {
                   const value = e.target.value;
                   let numberString = value.replace(/\D/g, "");
+
+                  if (item.discountType === 2) {
+                    // Limit to max 3 digits for discountType 2
+                    numberString = numberString.slice(0, 3);
+
+                    // Ensure value is not greater than 100 and does not start with 0 when discountType is 2
+                    if (parseInt(numberString, 10) > 100) {
+                      numberString = "100";
+                    }
+                    if (numberString.startsWith("0")) {
+                      numberString = numberString.slice(1);
+                    }
+                  }
+
                   return thousandSeparator(numberString);
                 }}
                 style={{ flex: 1 }}
               >
                 <Input placeholder="" />
               </Form.Item>
+              <CloseCircleOutlined
+                style={{ cursor: "pointer", fontSize: 20, marginLeft: 10 }}
+                onClick={() => onRemoveDiscountItem(item)}
+              />
             </div>
           </div>
         ))}

@@ -8,14 +8,20 @@ import { Pagination, Select } from "antd";
 import _ from "lodash";
 import EEnumPaymentStatus from "@/app/_enums/EEnumPaymentStatus";
 import PageHeader from "@/app/_components/PageHeader";
+import $csv from "@/app/_resources/csv-data-fetchers";
 
 const columns = [
   {
     title: "商品",
-    dataIndex: "item",
-    nestedDataIndex: ["code", "name"],
+    dataIndex: ["name", "code"],
+    nestedDataIndex: "item",
+    imageIndex: null,
+    styles: [
+      "tw-leading-[22px] tw-tracking-[0.14px]",
+      "tw-text-sm tw-tracking-[0.12px]",
+    ],
     customStyle: "",
-    type: "flexList",
+    type: "stackedList",
   },
   {
     title: "日時",
@@ -65,7 +71,7 @@ const columns = [
     type: "stackedList",
   },
   {
-    title: "合計",
+    title: "合計金額",
     dataIndex: "price",
     customStyle: "",
     type: "price",
@@ -83,6 +89,9 @@ const PurchaseHistory = () => {
     count: 10,
     total: 0,
   });
+
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportRawData, setExportRawData] = useState(null);
 
   useEffect(() => {
     fetchPurchases();
@@ -144,6 +153,15 @@ const PurchaseHistory = () => {
     fetchPurchases(queries);
   };
 
+  const onExport = async () => {
+    setIsExporting(true);
+    const { isOk, data } = await $csv.purchases();
+    if (isOk) {
+      setExportRawData(data);
+    }
+    setIsExporting(false);
+  };
+
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-6">
@@ -151,7 +169,10 @@ const PurchaseHistory = () => {
           title={`購入履歴`}
           isExportable={true}
           exportKey={"purchases"}
-          data={list}
+          data={exportRawData}
+          setData={setExportRawData}
+          isExporting={isExporting}
+          onExport={onExport}
         />
         <RecordTableFilters
           onAdd={null}
@@ -181,7 +202,7 @@ const PurchaseHistory = () => {
               allowClear
               size="large"
               style={{
-                width: 120,
+                width: 240,
               }}
               options={studios}
               onChange={(value) => {

@@ -84,7 +84,7 @@ const TextEditor = ({ value, onChange }) => {
           onCreated={setEditor}
           onChange={(editor) => onChange(editor.getHtml())}
           mode="default"
-          style={{ height: "300px", overflowY: "hidden" }}
+          style={{ height: "300px" }}
         />
       </div>
     </>
