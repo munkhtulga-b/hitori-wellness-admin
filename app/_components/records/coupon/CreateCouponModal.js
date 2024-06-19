@@ -21,6 +21,7 @@ const CreateCouponModal = ({
   const [discountItems, setDiscountItems] = useState([]);
   const [noMaxNum, setNoMaxNum] = useState(false);
   const [isAllStudios, setIsAllStudios] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
     fetchItems();
@@ -159,6 +160,24 @@ const CreateCouponModal = ({
     }
   };
 
+  const onDiscountItemChange = ({ id }, value) => {
+    const shallowSelectedItems = _.cloneDeep(selectedItems);
+    const matchedSelectedItem = _.find(
+      shallowSelectedItems,
+      (i) => i.id === id
+    );
+    if (matchedSelectedItem) {
+      matchedSelectedItem.value = value;
+      setSelectedItems(shallowSelectedItems);
+    } else {
+      shallowSelectedItems.push({
+        id,
+        value,
+      });
+    }
+    setSelectedItems(shallowSelectedItems);
+  };
+
   return (
     <>
       <Form
@@ -290,6 +309,7 @@ const CreateCouponModal = ({
                 }}
                 placeholder="商品を選択"
                 options={items}
+                onChange={(value) => onDiscountItemChange(item, value)}
               />
             </Form.Item>
 

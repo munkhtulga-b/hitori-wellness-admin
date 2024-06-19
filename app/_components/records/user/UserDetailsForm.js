@@ -189,7 +189,7 @@ const UserDetailsForm = ({
                 {
                   required: true,
                   message: "姓（カナ）を入力してください。",
-                  pattern: /^[\u30A1-\u30F6\s]+$/, // Katakana characters and spaces
+                  pattern: /^[\u30A1-\u30F6\u30FC\s]+$/, // Katakana characters and spaces
                   whitespace: true,
                 },
               ]}
@@ -202,7 +202,7 @@ const UserDetailsForm = ({
                 {
                   required: true,
                   message: "名（カナ）を入力してください。",
-                  pattern: /^[\u30A1-\u30F6\s]+$/, // Katakana characters and spaces
+                  pattern: /^[\u30A1-\u30F6\u30FC\s]+$/, // Katakana characters and spaces
                   whitespace: true,
                 },
               ]}
