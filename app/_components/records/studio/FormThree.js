@@ -224,6 +224,7 @@ const StudioFormThree = ({
             value={warningDesc}
             onChange={setWarningDesc}
             placeholderText={"説明文"}
+            maxLength={250}
           />
         </Form.Item>
         <Form.Item>
