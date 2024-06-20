@@ -18,6 +18,7 @@ const StudioFormThree = ({
   const startHour = Form.useWatch("startHour", form);
   const endHour = Form.useWatch("endHour", form);
   const [businessHours, setBusinessHours] = useState("");
+  const [warningDesc, setWarningDesc] = useState("");
 
   useEffect(() => {
     form.resetFields();
@@ -35,6 +36,7 @@ const StudioFormThree = ({
         gmapUrl: data?.gmap_url,
         isTwentyFourHour: timeDifference >= 24,
         businessHours: data?.business_hours,
+        warningDesc: data?.warning_desc,
       });
     }
   }, [data]);
@@ -63,6 +65,12 @@ const StudioFormThree = ({
       form.setFieldValue("businessHours", businessHours);
     }
   }, [businessHours]);
+
+  useEffect(() => {
+    if (warningDesc) {
+      form.setFieldValue("warningDesc", warningDesc);
+    }
+  }, [warningDesc]);
 
   const beforeComplete = (params) => {
     params.timeperiodDetails = [
@@ -201,6 +209,22 @@ const StudioFormThree = ({
           ]}
         >
           <TextEditor value={businessHours} onChange={setBusinessHours} />
+        </Form.Item>
+        <Form.Item
+          name="warningDesc"
+          label="入館案内"
+          rules={[
+            {
+              required: false,
+              message: "店舗説明を入力してください。",
+            },
+          ]}
+        >
+          <TextEditor
+            value={warningDesc}
+            onChange={setWarningDesc}
+            placeholderText={"説明文"}
+          />
         </Form.Item>
         <Form.Item>
           <div className="tw-flex tw-justify-end tw-items-start tw-gap-2 tw-mt-6">
