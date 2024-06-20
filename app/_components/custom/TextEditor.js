@@ -18,7 +18,7 @@ const Toolbar = dynamic(
   }
 );
 
-const TextEditor = ({ value, onChange, placeholderText }) => {
+const TextEditor = ({ value, onChange, placeholderText, maxLength }) => {
   // editor instance
   const [editor, setEditor] = useState(null); // TS syntax
 
@@ -41,6 +41,7 @@ const TextEditor = ({ value, onChange, placeholderText }) => {
   const editorConfig = {
     // JS syntax
     placeholder: placeholderText || "説明文",
+    maxLength: maxLength,
   };
 
   useEffect(() => {
