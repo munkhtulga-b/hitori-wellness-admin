@@ -82,6 +82,7 @@ const CreateStudioModal = ({
           modalKey={modalKey}
         />
       ),
+      disabled: activeKey === 2 || activeKey === 3,
     },
     {
       key: 2,
@@ -94,7 +95,7 @@ const CreateStudioModal = ({
           modalKey={modalKey}
         />
       ),
-      disabled: !Object.keys(requestBody).length,
+      disabled: activeKey === 3 || activeKey === 1,
     },
     {
       key: 3,
@@ -108,7 +109,7 @@ const CreateStudioModal = ({
           modalKey={modalKey}
         />
       ),
-      disabled: !Object.keys(requestBody).length < 4,
+      disabled: activeKey === 1 || activeKey === 2,
     },
   ];
 
