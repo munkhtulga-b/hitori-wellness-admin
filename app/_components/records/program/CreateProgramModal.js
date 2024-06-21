@@ -105,6 +105,7 @@ const CreateProgramModal = ({
           modalKey={modalKey}
         />
       ),
+      disabled: activeKey === 2,
     },
     {
       key: 2,
@@ -120,7 +121,7 @@ const CreateProgramModal = ({
           isRequesting={isRequesting}
         />
       ),
-      disabled: !Object.keys(requestBody).length && !data,
+      disabled: activeKey === 1,
     },
   ];
 

@@ -26,21 +26,9 @@ const ProgramFormTwo = ({
 
   useEffect(() => {
     if (sortedPlans && sortedTickets && data) {
-      const previousPlanDetails = _.map(
-        data?.plan_reserve_limit,
-        ({ id, name }) => ({
-          value: id,
-          label: name,
-        })
-      );
-      const previousTicketDetails = _.map(
-        data?.ticket_reserve_limit,
-        ({ id, name }) => ({
-          value: id,
-          label: name,
-        })
-      );
       setTimeout(() => {
+        const previousPlanDetails = _.map(data?.plan_reserve_limit, "id");
+        const previousTicketDetails = _.map(data?.ticket_reserve_limit, "id");
         form.setFieldsValue({
           planReserveLimitDetails: previousPlanDetails,
           ticketReserveLimitDetails: previousTicketDetails,

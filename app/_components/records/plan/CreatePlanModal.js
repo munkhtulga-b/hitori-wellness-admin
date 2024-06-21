@@ -70,6 +70,7 @@ const CreatePlanModal = ({
           />
         </>
       ),
+      disabled: activeKey === 2,
     },
     {
       key: 2,
@@ -86,7 +87,7 @@ const CreatePlanModal = ({
           />
         </>
       ),
-      disabled: !Object.keys(requestBody).length,
+      disabled: activeKey === 1,
     },
   ];
 
