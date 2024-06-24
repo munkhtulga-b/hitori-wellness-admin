@@ -52,6 +52,7 @@ const CreateItemModal = ({
   const handleItemTypeChange = (value) => {
     setItemType(value);
     form.setFieldValue("itemType", value);
+    form.validateFields(["itemType"]);
   };
 
   const isPriceReadOnly = () => {
