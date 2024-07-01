@@ -130,7 +130,12 @@ const PageHeader = ({
           } else if (type === "objectItem" && objKey && obj) {
             if (Array.isArray(objKey)) {
               row[key] = objKey
-                .map((i, iIndex) => `${prefixes?.[iIndex]}${item[obj]?.[i]}`)
+                .map(
+                  (i, iIndex) =>
+                    `${prefixes?.[iIndex] ? prefixes[iIndex] : ""}${
+                      item[obj]?.[i]
+                    }`
+                )
                 .join(", ");
             } else {
               row[key] = nullSafety(item[obj]?.[objKey]);

@@ -1,4 +1,5 @@
 import $api from "../_api";
+import EEnumReservationStatus from "../_enums/EEnumReservationStatus";
 
 const fetchAdmins = async () => {
   const { isOk, data } = await $api.admin.admin.getMany();
@@ -80,6 +81,16 @@ const fetchPurchases = async () => {
   };
 };
 
+const fetchCheckins = async () => {
+  const { isOk, data } = await $api.admin.reservation.getMany({
+    status: EEnumReservationStatus.CHECK_IN.value,
+  });
+  return {
+    isOk,
+    data,
+  };
+};
+
 const $csv = {
   admins: fetchAdmins,
   studios: fetchStudios,
@@ -91,6 +102,7 @@ const $csv = {
   coupons: fetchCoupons,
   reservations: fetchReservations,
   purchases: fetchPurchases,
+  checkins: fetchCheckins,
 };
 
 export default $csv;

@@ -33,6 +33,7 @@ module.exports = {
         cancelled: "#732126",
         disabled: "#1C20243D",
         grayLight: "#505050",
+        graySoft: "#838795",
         grayMedium: "#232429",
         aquaMedium: "#0A3C6B",
         tableHeader: "#3F4145",
