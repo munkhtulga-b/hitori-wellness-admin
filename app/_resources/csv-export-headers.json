@@ -705,5 +705,43 @@
       "label": "スタッフ",
       "key": "empty_column"
     }
+  ],
+  "checkins": [
+    {
+      "label": "ID",
+      "key": "id"
+    },
+    {
+      "label": "ステータス",
+      "key": "status",
+      "enumKey": "reservationStatus",
+      "type": "enum"
+    },
+    {
+      "label": "日時",
+      "key": "checkin_at",
+      "type": "date"
+    },
+    {
+      "label": "氏名",
+      "key": "member",
+      "obj": "member",
+      "objKey": ["last_name", "first_name"],
+      "type": "objectItem"
+    },
+    {
+      "label": "登録店舗",
+      "key": "studio_name",
+      "obj": "m_studio",
+      "objKey": "name",
+      "type": "objectItem"
+    },
+    {
+      "label": "登録店舗",
+      "key": "device_id",
+      "obj": "booking",
+      "objKey": "device_id",
+      "type": "objectItem"
+    }
   ]
 }
