@@ -121,8 +121,16 @@ const ActionLogTable = ({
         "YYYY/MM/DD HH:mm"
       )} - ${dayjs(new_value?.end_at).format("YYYY/MM/DD HH:mm")}`;
     }
-    // if (changed_field === "t_member_plan") {
-    // }
+    if (changed_field === "t_member_plan") {
+      if (
+        action === EEnumLogOperations.UPDATE.value &&
+        new_value &&
+        new_value?.option_ids?.plan
+      ) {
+        name = new_value?.option_ids?.plan?.name;
+        id = new_value?.option_ids?.plan?.id;
+      }
+    }
     // if (changed_field === "t_member_ticket") {
     // }
     if (changed_field === "m_instructor_basic_slot") {
