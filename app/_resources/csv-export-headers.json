@@ -737,7 +737,7 @@
       "type": "objectItem"
     },
     {
-      "label": "登録店舗",
+      "label": "デバイスID",
       "key": "device_id",
       "obj": "booking",
       "objKey": "device_id",
