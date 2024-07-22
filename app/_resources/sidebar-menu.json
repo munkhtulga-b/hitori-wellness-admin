@@ -40,7 +40,8 @@
       "text": "ダッシュボード",
       "icon": "/assets/sidebar/sidebar-dashboard-icon.svg",
       "alt": "dashboard",
-      "route": "/cms/dashboard"
+      "route": "/cms/dashboard",
+      "permittedRoles": [1, 2]
     }
   ]
 }
