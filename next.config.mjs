@@ -8,8 +8,9 @@ const cspHeader = `
     font-src 'self';
     object-src 'none';
     base-uri 'self';
+    frame-src 'self' https://lookerstudio.google.com/;
+    frame-ancestors 'self' https://lookerstudio.google.com/;
     form-action 'self';
-    frame-ancestors 'none';
     upgrade-insecure-requests;
     connect-src 'self' https://api.hitoriwellness.jp/ https://dev.api.hitoriwellness.jp/ https://gymapi.reddtech.ai/;`
   .replace(/\s{2,}/g, " ")

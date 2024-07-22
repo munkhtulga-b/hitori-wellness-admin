@@ -1,41 +1,46 @@
 {
-    "main": [
-      {
-        "text": "カレンダー ",
-        "icon": "/assets/sidebar/sidebar-calendar-icon.svg",
-        "alt": "calendar",
-        "route": "/cms"
-      },
-      {
-        "text": "データベース",
-        "icon": "/assets/sidebar/sidebar-database-icon.svg",
-        "alt": "user",
-        "route": "/cms/records"
-      },
-      {
-        "text": "購入履歴",
-        "icon": "/assets/sidebar/sidebar-purchase-icon.svg",
-        "alt": "purchase",
-        "route": "/cms/purchases"
-      },
-      {
-        "text": "入館記録",
-        "icon": "/assets/sidebar/sidebar-admin-icon.svg",
-        "alt": "member-id",
-        "route": "/cms/check-ins"
-      },
-      {
-        "text": "管理ユーザー",
-        "icon": "/assets/sidebar/sidebar-user-icon.svg",
-        "alt": "member-id",
-        "route": "/cms/admins"
-      },
-      {
-        "text": "ログ",
-        "icon": "/assets/sidebar/sidebar-log-icon.svg", 
-        "alt": "log",
-        "route": "/cms/log"
-      }
-    ]
-  }
-  
+  "main": [
+    {
+      "text": "カレンダー ",
+      "icon": "/assets/sidebar/sidebar-calendar-icon.svg",
+      "alt": "calendar",
+      "route": "/cms"
+    },
+    {
+      "text": "データベース",
+      "icon": "/assets/sidebar/sidebar-database-icon.svg",
+      "alt": "user",
+      "route": "/cms/records"
+    },
+    {
+      "text": "購入履歴",
+      "icon": "/assets/sidebar/sidebar-purchase-icon.svg",
+      "alt": "purchase",
+      "route": "/cms/purchases"
+    },
+    {
+      "text": "入館記録",
+      "icon": "/assets/sidebar/sidebar-admin-icon.svg",
+      "alt": "member-id",
+      "route": "/cms/check-ins"
+    },
+    {
+      "text": "管理ユーザー",
+      "icon": "/assets/sidebar/sidebar-user-icon.svg",
+      "alt": "member-id",
+      "route": "/cms/admins"
+    },
+    {
+      "text": "ログ",
+      "icon": "/assets/sidebar/sidebar-log-icon.svg",
+      "alt": "log",
+      "route": "/cms/log"
+    },
+    {
+      "text": "ダッシュボード",
+      "icon": "/assets/sidebar/sidebar-dashboard-icon.svg",
+      "alt": "dashboard",
+      "route": "/cms/dashboard"
+    }
+  ]
+}
