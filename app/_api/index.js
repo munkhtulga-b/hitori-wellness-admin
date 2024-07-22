@@ -20,6 +20,7 @@ import * as shiftSlot from "./cms/ShiftSlotController";
 import * as purchase from "./cms/PurchaseController";
 import * as post from "./cms/PostJPController";
 import * as log from "./cms/SystemLogController";
+import * as looker from "./cms/LookerController";
 
 const $api = {
   auth: {
@@ -44,6 +45,7 @@ const $api = {
     purchase,
     post,
     log,
+    looker,
   },
 };
 
